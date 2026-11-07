@@ -23,13 +23,15 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
   const stateRef = useRef<VehicleState>(vehicleState);
   stateRef.current = vehicleState;
 
+  const currentSpeed = useRef<number>(0);
+  const currentSteering = useRef<number>(0);
+
   const setControlKey = useCallback((key: string, pressed: boolean) => {
     keysPressed.current[key.toLowerCase()] = pressed;
   }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Avoid capturing shortcuts if typing in an input
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
       keysPressed.current[e.key.toLowerCase()] = true;
     };
@@ -53,61 +55,73 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     const left = (keys['a'] || keys['arrowleft']) ? 1 : 0;
     const right = (keys['d'] || keys['arrowright']) ? 1 : 0;
 
-    const throttle = forward - backward;
-    const steer = left - right;
+    const targetThrottle = forward - backward;
+    const targetSteer = left - right;
 
-    let { position, rotationY, speed, steering, isHeadlightsOn, isEngineStarted } = stateRef.current;
+    let { position, rotationY, isHeadlightsOn, isEngineStarted } = stateRef.current;
 
-    // Acceleration & Braking
-    const maxSpeed = 18.0;
-    const accel = 12.0;
-    const friction = 4.5;
+    // Ultra-smooth acceleration & braking dynamics
+    const maxSpeed = 22.0;
+    const maxReverse = -8.0;
+    const accelRate = 14.0;
+    const brakeRate = 18.0;
+    const coastFriction = 5.0;
 
-    if (throttle !== 0) {
-      speed += throttle * accel * delta;
-      speed = Math.max(-maxSpeed * 0.4, Math.min(maxSpeed, speed));
-    } else {
-      // Natural deceleration
-      if (Math.abs(speed) < 0.1) {
-        speed = 0;
+    if (targetThrottle > 0) {
+      currentSpeed.current += accelRate * delta;
+      if (currentSpeed.current > maxSpeed) currentSpeed.current = maxSpeed;
+    } else if (targetThrottle < 0) {
+      if (currentSpeed.current > 0) {
+        currentSpeed.current -= brakeRate * delta;
       } else {
-        speed -= Math.sign(speed) * friction * delta;
+        currentSpeed.current -= (accelRate * 0.6) * delta;
+        if (currentSpeed.current < maxReverse) currentSpeed.current = maxReverse;
+      }
+    } else {
+      // Natural rolling friction / coasting
+      if (Math.abs(currentSpeed.current) < 0.1) {
+        currentSpeed.current = 0;
+      } else {
+        currentSpeed.current -= Math.sign(currentSpeed.current) * coastFriction * delta;
       }
     }
 
-    // Steering response
-    const maxSteer = 0.55;
-    const steerSpeed = 4.0;
-    if (steer !== 0) {
-      steering += steer * steerSpeed * delta;
-      steering = Math.max(-maxSteer, Math.min(maxSteer, steering));
-    } else {
-      steering -= Math.sign(steering) * steerSpeed * 1.5 * delta;
-      if (Math.abs(steering) < 0.05) steering = 0;
+    // Smooth progressive steering with speed-dependent response
+    const maxSteerAngle = 0.52;
+    const steerDamping = 6.0;
+    const targetAngle = targetSteer * maxSteerAngle;
+    currentSteering.current += (targetAngle - currentSteering.current) * Math.min(delta * steerDamping, 1.0);
+
+    // Turn vehicle smoothly when moving
+    const speedRatio = currentSpeed.current / maxSpeed;
+    if (Math.abs(currentSpeed.current) > 0.05) {
+      const turnMultiplier = currentSpeed.current >= 0 ? 1.8 : -1.8;
+      rotationY += currentSteering.current * turnMultiplier * delta;
     }
 
-    // Turn when moving
-    if (Math.abs(speed) > 0.05) {
-      const turnRate = (speed / maxSpeed) * steering * 2.2;
-      rotationY += turnRate * delta;
-    }
-
-    // Update X and Z position along heading
-    const dx = Math.sin(rotationY) * speed * delta;
-    const dz = Math.cos(rotationY) * speed * delta;
+    // Compute delta X and Z
+    const dx = Math.sin(rotationY) * currentSpeed.current * delta;
+    const dz = Math.cos(rotationY) * currentSpeed.current * delta;
 
     let newX = position[0] + dx;
     let newZ = position[2] + dz;
 
-    // Soft city boundary boundaries ([-120, 120])
-    newX = Math.max(-110, Math.min(110, newX));
-    newZ = Math.max(-110, Math.min(110, newZ));
+    // Soft boundary cushioning (smoothly prevent leaving city district)
+    const boundLimit = 100;
+    if (Math.abs(newX) > boundLimit) {
+      newX = Math.sign(newX) * boundLimit;
+      currentSpeed.current *= 0.5; // gentle slow-down instead of jarring wall stop
+    }
+    if (Math.abs(newZ) > boundLimit) {
+      newZ = Math.sign(newZ) * boundLimit;
+      currentSpeed.current *= 0.5;
+    }
 
     const nextState: VehicleState = {
-      position: [newX, position[1], newZ],
+      position: [newX, 0.45, newZ],
       rotationY,
-      speed,
-      steering,
+      speed: currentSpeed.current,
+      steering: currentSteering.current,
       isHeadlightsOn,
       isEngineStarted
     };
@@ -117,6 +131,8 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
   }, []);
 
   const resetPosition = useCallback((pos: [number, number, number] = [0, 0.45, 0], rotY = 0) => {
+    currentSpeed.current = 0;
+    currentSteering.current = 0;
     setVehicleState(prev => ({
       ...prev,
       position: pos,
@@ -134,4 +150,3 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     setVehicleState
   };
 }
-

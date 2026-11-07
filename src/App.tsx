@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { scenesList } from './data/scenes';
 import { featuredProjects } from './data/projects';
-import { SceneCheckpoint, ProjectLandmark } from './types';
+import { ProjectLandmark } from './types';
 import { useAudio } from './hooks/useAudio';
 import { useVehicleControls } from './hooks/useVehicleControls';
 import { CityWorld } from './components/3d/CityWorld';
@@ -12,11 +12,11 @@ import { ProjectDetailModal } from './components/ui/ProjectDetailModal';
 import { TechSkillsOverlay } from './components/ui/TechSkillsOverlay';
 import { ExperienceDistrictView } from './components/ui/ExperienceDistrictView';
 import { EducationModal } from './components/ui/EducationModal';
-import { AchievementsModal } from './components/ui/AchievementsModal';
 import { ContactModal } from './components/ui/ContactModal';
 import { CharacterProfileModal } from './components/ui/CharacterProfileModal';
 import { Full2DPortfolio } from './components/ui/Full2DPortfolio';
 import { IntroOverlay } from './components/ui/IntroOverlay';
+import { InteractivePromptCapsule } from './components/ui/InteractivePromptCapsule';
 
 export function App() {
   const [currentSceneId, setCurrentSceneId] = useState<number>(1);
@@ -29,7 +29,6 @@ export function App() {
   const [isSkillsOpen, setIsSkillsOpen] = useState<boolean>(false);
   const [isExperienceOpen, setIsExperienceOpen] = useState<boolean>(false);
   const [isEducationOpen, setIsEducationOpen] = useState<boolean>(false);
-  const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isContactOpen, setIsContactOpen] = useState<boolean>(false);
   const [isCharacterProfileOpen, setIsCharacterProfileOpen] = useState<boolean>(false);
 
@@ -41,13 +40,39 @@ export function App() {
 
   const currentScene = scenesList.find(s => s.id === currentSceneId) || scenesList[0];
 
+  // Dynamic landmark proximity in driving mode
+  const nearLandmark = useMemo(() => {
+    if (!isDrivingMode) return null;
+    const [x, , z] = vehicleState.position;
+
+    const landmarks: Array<{ name: string; pos: [number, number]; action: () => void }> = [
+      { name: "Bayora Citadel", pos: [-45, -35], action: () => setSelectedProject(featuredProjects[0]) },
+      { name: "Eurogrip Ustaad Hub", pos: [45, -35], action: () => setSelectedProject(featuredProjects[1]) },
+      { name: "PayPal Resolve Spire", pos: [-45, 45], action: () => setSelectedProject(featuredProjects[2]) },
+      { name: "WebGuard AI Dome", pos: [45, 45], action: () => setSelectedProject(featuredProjects[3]) },
+      { name: "Technology Tower", pos: [0, -45], action: () => setIsSkillsOpen(true) },
+      { name: "Education Boulevard", pos: [-35, -15], action: () => setIsEducationOpen(true) },
+      { name: "Experience District", pos: [-30, 35], action: () => setIsExperienceOpen(true) },
+      { name: "Contact Garage", pos: [30, 35], action: () => setIsContactOpen(true) },
+      { name: "Central Grand Plaza", pos: [0, 0], action: () => setIsCharacterProfileOpen(true) }
+    ];
+
+    for (const lm of landmarks) {
+      const dist = Math.hypot(x - lm.pos[0], z - lm.pos[1]);
+      if (dist < 18) {
+        return lm;
+      }
+    }
+    return null;
+  }, [isDrivingMode, vehicleState.position]);
+
   // Run vehicle physics loop when driving mode is active
   useEffect(() => {
     let animationFrameId: number;
     let lastTime = performance.now();
 
     const loop = (time: number) => {
-      const delta = Math.min((time - lastTime) / 1000, 0.1);
+      const delta = Math.min((time - lastTime) / 1000, 0.08);
       lastTime = time;
 
       if (isDrivingMode) {
@@ -91,14 +116,13 @@ export function App() {
     setIsDrivingMode(false);
     playChime(480);
 
-    // If scene 3 (ignition) selected, trigger ignition effects
     if (id === 3) {
       handleIgnition();
     }
   }, [handleIgnition, playChime]);
 
-  // Context action from director nav
-  const handleSceneAction = (sceneId: number) => {
+  // Context action from director nav or capsule
+  const handleSceneAction = useCallback((sceneId: number) => {
     playChime(600);
     switch (sceneId) {
       case 2:
@@ -106,6 +130,7 @@ export function App() {
         break;
       case 3:
         handleIgnition();
+        setIsDrivingMode(true);
         break;
       case 4:
         setIsEducationOpen(true);
@@ -114,22 +139,28 @@ export function App() {
         setIsSkillsOpen(true);
         break;
       case 6:
-        // Open first project if none selected
         setSelectedProject(featuredProjects[0]);
         break;
       case 7:
-        setIsAchievementsOpen(true);
-        break;
-      case 8:
         setIsExperienceOpen(true);
         break;
-      case 9:
+      case 8:
         setIsContactOpen(true);
         break;
       default:
         break;
     }
-  };
+  }, [handleIgnition, playChime]);
+
+  // Trigger for the capsule button
+  const handleCapsuleTrigger = useCallback(() => {
+    if (isDrivingMode && nearLandmark) {
+      playChime(600);
+      nearLandmark.action();
+    } else {
+      handleSceneAction(currentScene.id);
+    }
+  }, [isDrivingMode, nearLandmark, handleSceneAction, currentScene.id, playChime]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -141,13 +172,12 @@ export function App() {
         setIsSkillsOpen(false);
         setIsExperienceOpen(false);
         setIsEducationOpen(false);
-        setIsAchievementsOpen(false);
         setIsContactOpen(false);
         setIsCharacterProfileOpen(false);
         if (isDrivingMode) setIsDrivingMode(false);
       } else if (e.key === 'm' || e.key === 'M') {
         toggleSound();
-      } else if (e.key >= '1' && e.key <= '9') {
+      } else if (e.key >= '1' && e.key <= '8') {
         handleSelectScene(parseInt(e.key, 10));
       }
     };
@@ -157,7 +187,7 @@ export function App() {
   }, [isDrivingMode, toggleSound, handleSelectScene]);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-[#080811] text-white">
+    <div className={`relative w-full ${is2DView ? 'min-h-screen overflow-y-auto' : 'h-screen overflow-hidden'} bg-slate-950 text-white`}>
       {/* Intro Modal on First Load */}
       <IntroOverlay
         onEnterCinematic={() => {
@@ -172,24 +202,26 @@ export function App() {
         }}
       />
 
-      {/* Primary Top Navigation */}
-      <Navbar
-        currentSceneId={currentSceneId}
-        onSelectScene={handleSelectScene}
-        isDrivingMode={isDrivingMode}
-        onToggleDrivingMode={() => {
-          setIsDrivingMode(prev => !prev);
-          playChime(500);
-        }}
-        is2DView={is2DView}
-        onToggle2DView={() => {
-          setIs2DView(prev => !prev);
-          playChime(500);
-        }}
-        isMuted={isMuted}
-        onToggleSound={toggleSound}
-        onOpenContact={() => setIsContactOpen(true)}
-      />
+      {/* Primary Top Navigation (Only shown in 3D City view) */}
+      {!is2DView && (
+        <Navbar
+          currentSceneId={currentSceneId}
+          onSelectScene={handleSelectScene}
+          isDrivingMode={isDrivingMode}
+          onToggleDrivingMode={() => {
+            setIsDrivingMode(prev => !prev);
+            playChime(500);
+          }}
+          is2DView={is2DView}
+          onToggle2DView={() => {
+            setIs2DView(prev => !prev);
+            playChime(500);
+          }}
+          isMuted={isMuted}
+          onToggleSound={toggleSound}
+          onOpenContact={() => setIsContactOpen(true)}
+        />
+      )}
 
       {/* Main Content Area */}
       {is2DView ? (
@@ -217,10 +249,6 @@ export function App() {
               playChime(540);
               setIsSkillsOpen(true);
             }}
-            onOpenAchievementsModal={() => {
-              playChime(540);
-              setIsAchievementsOpen(true);
-            }}
             onOpenExperienceModal={() => {
               playChime(540);
               setIsExperienceOpen(true);
@@ -231,7 +259,15 @@ export function App() {
             }}
           />
 
-          {/* Drive HUD overlay (Active when Driving Mode is on) */}
+          {/* Prominent "CLICK HERE" Capsule Overlay at Every Landmark */}
+          <InteractivePromptCapsule
+            currentScene={currentScene}
+            onTriggerAction={handleCapsuleTrigger}
+            isDrivingMode={isDrivingMode}
+            nearDistrictName={nearLandmark?.name}
+          />
+
+          {/* Drive HUD overlay */}
           {isDrivingMode && (
             <DriveHUD
               vehicleState={vehicleState}
@@ -247,7 +283,7 @@ export function App() {
             />
           )}
 
-          {/* Cinematic Director Bar (Active when not in Free Drive) */}
+          {/* Cinematic Director Scrubber Bar */}
           {!isDrivingMode && (
             <SceneDirectorNav
               currentScene={currentScene}
@@ -264,7 +300,7 @@ export function App() {
         </>
       )}
 
-      {/* Modals & Dossiers */}
+      {/* Modals & Detailed Dossiers */}
       <ProjectDetailModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
@@ -283,11 +319,6 @@ export function App() {
       <EducationModal
         isOpen={isEducationOpen}
         onClose={() => setIsEducationOpen(false)}
-      />
-
-      <AchievementsModal
-        isOpen={isAchievementsOpen}
-        onClose={() => setIsAchievementsOpen(false)}
       />
 
       <ContactModal

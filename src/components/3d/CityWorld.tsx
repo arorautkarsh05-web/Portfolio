@@ -8,7 +8,6 @@ import { CharacterAndCar } from './CharacterAndCar';
 import { ProjectLandmarks } from './ProjectLandmarks';
 import { EducationBoulevard } from './EducationBoulevard';
 import { TechTower } from './TechTower';
-import { AchievementsPlaza } from './AchievementsPlaza';
 import { ExperienceDistrict } from './ExperienceDistrict';
 import { ContactGarage } from './ContactGarage';
 import { CameraRig } from './CameraRig';
@@ -23,7 +22,6 @@ interface CityWorldProps {
   onCharacterClick: () => void;
   onOpenEducationModal: () => void;
   onOpenSkillsModal: () => void;
-  onOpenAchievementsModal: () => void;
   onOpenExperienceModal: () => void;
   onOpenContactModal: () => void;
 }
@@ -36,7 +34,6 @@ export const CityWorld: React.FC<CityWorldProps> = ({
   onCharacterClick,
   onOpenEducationModal,
   onOpenSkillsModal,
-  onOpenAchievementsModal,
   onOpenExperienceModal,
   onOpenContactModal
 }) => {
@@ -57,7 +54,7 @@ export const CityWorld: React.FC<CityWorldProps> = ({
           <RoadNetwork />
           <CitySkyline />
 
-          {/* Core Interactive Districts */}
+          {/* Core Interactive Districts (Achievements Plaza removed as requested) */}
           <CharacterAndCar
             vehicleState={vehicleState}
             onCharacterClick={onCharacterClick}
@@ -66,11 +63,10 @@ export const CityWorld: React.FC<CityWorldProps> = ({
           <ProjectLandmarks onSelectProject={onSelectProject} />
           <EducationBoulevard onOpenEducationModal={onOpenEducationModal} />
           <TechTower onOpenSkillsModal={onOpenSkillsModal} />
-          <AchievementsPlaza onOpenAchievementsModal={onOpenAchievementsModal} />
           <ExperienceDistrict onOpenExperienceModal={onOpenExperienceModal} />
           <ContactGarage onOpenContactModal={onOpenContactModal} />
 
-          {/* Dynamic Camera Control */}
+          {/* Dynamic Smooth Camera Control */}
           <CameraRig
             currentScene={currentScene}
             isDrivingMode={isDrivingMode}
@@ -81,4 +77,3 @@ export const CityWorld: React.FC<CityWorldProps> = ({
     </div>
   );
 };
-

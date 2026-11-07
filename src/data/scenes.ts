@@ -15,7 +15,7 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "character-intro",
     name: "02 // Character Reveal",
     district: "Central Grand Plaza",
-    cameraPosition: [5, 2.8, 12],
+    cameraPosition: [4.5, 2.8, 10],
     cameraTarget: [0, 1.4, 0],
     description: "Utkarsh Arora beside the bespoke luxury sports car at the heart of the city."
   },
@@ -24,8 +24,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "ignition",
     name: "03 // Supercar Ignition",
     district: "Grand Boulevard Start",
-    cameraPosition: [0, 2.2, 7],
-    cameraTarget: [0, 1.1, 0],
+    cameraPosition: [0, 2.5, 8],
+    cameraTarget: [0, 1.2, 0],
     description: "Headlights surge to life, sports car engine hums, and the world unlocks for exploration."
   },
   {
@@ -33,8 +33,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "education-boulevard",
     name: "04 // Education Boulevard",
     district: "Academic Pavilion",
-    cameraPosition: [-28, 5, -8],
-    cameraTarget: [-35, 3, -15],
+    cameraPosition: [-26, 6, -6],
+    cameraTarget: [-35, 3.5, -15],
     description: "Galgotias College of Engineering & Technology — B.Tech in Electronics & Communication."
   },
   {
@@ -42,8 +42,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "technology-tower",
     name: "05 // Technology Tower",
     district: "Skills District",
-    cameraPosition: [0, 12, -22],
-    cameraTarget: [0, 10, -45],
+    cameraPosition: [0, 14, -20],
+    cameraTarget: [0, 12, -45],
     description: "Monolithic glass skyscraper showcasing analytical, programming, and full-stack disciplines."
   },
   {
@@ -51,36 +51,26 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "projects-boulevard",
     name: "06 // Projects Boulevard",
     district: "Innovation Quad",
-    cameraPosition: [0, 18, 18],
+    cameraPosition: [0, 22, 22],
     cameraTarget: [0, 4, 0],
     description: "Four architectural landmarks: Bayora, Eurogrip Ustaad, PayPal Resolve, and WebGuard AI."
   },
   {
     id: 7,
-    slug: "achievements-plaza",
-    name: "07 // Achievements Plaza",
-    district: "Honor Terrace",
-    cameraPosition: [28, 4.5, -8],
-    cameraTarget: [35, 2.5, -15],
-    description: "Verified industry credentials from Oracle University, Cisco, Deloitte, PW Skills, and Jio."
-  },
-  {
-    id: 8,
     slug: "experience-district",
-    name: "08 // Experience District",
+    name: "07 // Experience District",
     district: "Career Skybridge",
-    cameraPosition: [-22, 6, 28],
-    cameraTarget: [-30, 3, 35],
+    cameraPosition: [-20, 6.5, 26],
+    cameraTarget: [-30, 3.5, 35],
     description: "Professional internship timeline: Auspify Technologies, HashBit Innovations, and DataX Web Solutions."
   },
   {
-    id: 9,
+    id: 8,
     slug: "contact-garage",
-    name: "09 // Contact Garage",
+    name: "08 // Contact Garage",
     district: "Executive Terminal",
-    cameraPosition: [22, 4.2, 28],
-    cameraTarget: [30, 2.2, 35],
+    cameraPosition: [20, 5, 26],
+    cameraTarget: [30, 2.5, 35],
     description: "High-tech terminal showroom: connect directly with Utkarsh via Email, LinkedIn, and GitHub."
   }
 ];
-

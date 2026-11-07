@@ -16,7 +16,6 @@ import { personalProfile } from '../../data/profile';
 import { skillsData } from '../../data/skills';
 import { featuredProjects } from '../../data/projects';
 import { internshipExperiences } from '../../data/experience';
-import { certificationsData } from '../../data/achievements';
 
 interface Full2DPortfolioProps {
   onReturnTo3D: () => void;
@@ -37,7 +36,7 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
   );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-400 selection:text-black">
+    <div className="w-full min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-400 selection:text-black overflow-y-auto">
       {/* Top Banner Returning to 3D */}
       <div className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-white/15 px-4 py-3 flex items-center justify-between shadow-xl">
         <div className="flex items-center space-x-2">
@@ -441,61 +440,11 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
         </section>
 
         {/* ========================================================
-            ACHIEVEMENTS PLAZA
-            ======================================================== */}
-        <section className="space-y-4">
-          <div className="flex items-center space-x-2 text-xs font-mono font-bold uppercase tracking-wider text-amber-400">
-            <span>District 07</span>
-            <span className="text-slate-600">•</span>
-            <span>Achievements Plaza</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Verified Certifications
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {certificationsData.map(cert => (
-              <div
-                key={cert.id}
-                className="p-5 rounded-2xl bg-slate-900/85 border border-slate-700/60 shadow-lg hover:border-amber-400/50 transition"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    {cert.badgeCategory}
-                  </span>
-                  <div className="flex items-center space-x-1 text-emerald-400 text-xs font-semibold">
-                    <ShieldCheck size={14} />
-                    <span>Verified</span>
-                  </div>
-                </div>
-
-                <h3 className="font-bold text-base text-white mb-1">{cert.title}</h3>
-                <div className="text-xs font-semibold text-sky-400 mb-2">{cert.issuer}</div>
-                {cert.credentialNote && (
-                  <p className="text-xs text-slate-300 mb-3">{cert.credentialNote}</p>
-                )}
-
-                <div className="flex flex-wrap gap-1.5">
-                  {cert.skillsCovered.map((s, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 rounded text-[10px] font-medium bg-black/40 border border-white/10 text-slate-300"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ========================================================
             CONTACT GARAGE
             ======================================================== */}
-        <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-t from-white/[0.05] to-transparent border border-white/10 text-center space-y-6">
+        <section className="p-8 sm:p-12 rounded-3xl bg-slate-900/90 border border-slate-700/70 text-center space-y-6 shadow-2xl">
           <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-3 py-1 rounded-lg border border-sky-500/20">
-            <span>District 09 // Contact Garage</span>
+            <span>District 08 // Contact Garage</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">

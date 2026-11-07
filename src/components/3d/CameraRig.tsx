@@ -22,25 +22,26 @@ export const CameraRig: React.FC<CameraRigProps> = ({
     const camera = state.camera;
 
     if (isDrivingMode) {
-      // Third-person vehicle chase camera
+      // Elevated Open-World Chase Camera
       const carPos = new THREE.Vector3(...vehicleState.position);
       const rotY = vehicleState.rotationY;
 
-      // Distance pulls back slightly as speed increases
-      const chaseDistance = 7.5 + Math.abs(vehicleState.speed) * 0.15;
-      const chaseHeight = 2.8 + Math.abs(vehicleState.speed) * 0.05;
+      // Elevated distance so the road and skyline ahead are completely visible
+      const chaseDistance = 11.0 + Math.min(Math.abs(vehicleState.speed) * 0.15, 3.5);
+      const chaseHeight = 4.2 + Math.min(Math.abs(vehicleState.speed) * 0.08, 1.5);
 
       const targetCamX = carPos.x - Math.sin(rotY) * chaseDistance;
       const targetCamZ = carPos.z - Math.cos(rotY) * chaseDistance;
       const targetCamY = carPos.y + chaseHeight;
 
+      // Look well ahead of the vehicle
       const targetLookAt = new THREE.Vector3(
-        carPos.x + Math.sin(rotY) * 3,
-        carPos.y + 1.2,
-        carPos.z + Math.cos(rotY) * 3
+        carPos.x + Math.sin(rotY) * 6.5,
+        carPos.y + 1.8,
+        carPos.z + Math.cos(rotY) * 6.5
       );
 
-      // Smooth lerp
+      // Smooth camera dampening
       currentPos.current.lerp(new THREE.Vector3(targetCamX, targetCamY, targetCamZ), delta * 4.5);
       currentTarget.current.lerp(targetLookAt, delta * 5.0);
 
@@ -61,4 +62,3 @@ export const CameraRig: React.FC<CameraRigProps> = ({
 
   return null;
 };
-

@@ -67,35 +67,35 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
     <group name="CharacterAndCarSystem">
       {/* ========================================================
           LUXURY SPORTS CAR (Dubai-Inspired Pearlescent Gold Supercar)
-          Vibrant, gleaming, and crystal-clear visibility
+          Sleek aerodynamic wide-body stance with low-slung GT profile
           ======================================================== */}
       <group ref={carGroupRef} position={vehicleState.position}>
-        {/* Main Monocoque Chassis - Gleaming Sunburst Gold Metallic */}
-        <mesh position={[0, 0.42, 0]} castShadow receiveShadow>
-          <boxGeometry args={[2.2, 0.58, 4.8]} />
+        {/* Main Low-Slung Chassis - Pearlescent Sunburst Gold */}
+        <mesh position={[0, 0.32, 0]} castShadow receiveShadow>
+          <boxGeometry args={[2.2, 0.34, 4.6]} />
           <meshStandardMaterial
             color="#f59e0b"
-            metalness={0.9}
-            roughness={0.15}
+            metalness={0.92}
+            roughness={0.14}
             envMapIntensity={2.5}
           />
         </mesh>
 
-        {/* Front Sculpted Nose & Hood */}
-        <mesh position={[0, 0.35, 2.2]} rotation={[-0.14, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[2.1, 0.35, 1.2]} />
-          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.15} />
+        {/* Aggressive Front Nose & Hood */}
+        <mesh position={[0, 0.28, 2.0]} rotation={[-0.14, 0, 0]} castShadow receiveShadow>
+          <boxGeometry args={[2.1, 0.24, 1.4]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.14} />
         </mesh>
 
-        {/* Front Splitter & Accent Carbon Trim */}
-        <mesh position={[0, 0.12, 2.7]}>
-          <boxGeometry args={[2.24, 0.06, 0.45]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.6} />
+        {/* Carbon-Fiber Front Splitter */}
+        <mesh position={[0, 0.1, 2.65]}>
+          <boxGeometry args={[2.26, 0.05, 0.45]} />
+          <meshStandardMaterial color="#020617" roughness={0.4} metalness={0.6} />
         </mesh>
 
-        {/* Cockpit Tinted Solar Glass Roof */}
-        <mesh position={[0, 0.84, -0.3]} castShadow>
-          <boxGeometry args={[1.72, 0.48, 2.4]} />
+        {/* Aerodynamic Cockpit & Curved Tinted Glass Canopy */}
+        <mesh position={[0, 0.65, -0.2]} castShadow>
+          <boxGeometry args={[1.65, 0.38, 2.3]} />
           <meshStandardMaterial
             color="#0284c7"
             roughness={0.05}
@@ -103,33 +103,39 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
           />
         </mesh>
 
-        {/* Rear Fastback Engine Deck */}
-        <mesh position={[0, 0.65, -1.8]} rotation={[0.08, 0, 0]} castShadow>
-          <boxGeometry args={[2.0, 0.35, 1.6]} />
-          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.15} />
+        {/* Rear Engine Cover & Slats */}
+        <mesh position={[0, 0.48, -1.6]} rotation={[0.08, 0, 0]} castShadow>
+          <boxGeometry args={[1.9, 0.24, 1.5]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.14} />
         </mesh>
 
-        {/* Elevated GT Carbon Rear Wing */}
-        <mesh position={[0, 1.05, -2.35]} castShadow>
-          <boxGeometry args={[2.2, 0.05, 0.45]} />
-          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} />
+        {/* Rear Aerodynamic GT Wing */}
+        <mesh position={[0, 0.82, -2.25]} castShadow>
+          <boxGeometry args={[2.2, 0.04, 0.42]} />
+          <meshStandardMaterial color="#020617" metalness={0.8} roughness={0.3} />
         </mesh>
-        <mesh position={[-0.8, 0.88, -2.35]}>
-          <boxGeometry args={[0.05, 0.35, 0.15]} />
+        <mesh position={[-0.75, 0.65, -2.25]}>
+          <boxGeometry args={[0.04, 0.3, 0.15]} />
           <meshStandardMaterial color="#94a3b8" metalness={0.9} />
         </mesh>
-        <mesh position={[0.8, 0.88, -2.35]}>
-          <boxGeometry args={[0.05, 0.35, 0.15]} />
+        <mesh position={[0.75, 0.65, -2.25]}>
+          <boxGeometry args={[0.04, 0.3, 0.15]} />
           <meshStandardMaterial color="#94a3b8" metalness={0.9} />
+        </mesh>
+
+        {/* Rear Carbon Aero Diffuser */}
+        <mesh position={[0, 0.15, -2.32]}>
+          <boxGeometry args={[2.0, 0.15, 0.3]} />
+          <meshStandardMaterial color="#020617" roughness={0.5} />
         </mesh>
 
         {/* Brilliant LED Headlights */}
-        <mesh position={[-0.82, 0.46, 2.62]}>
-          <boxGeometry args={[0.38, 0.12, 0.08]} />
+        <mesh position={[-0.82, 0.36, 2.58]}>
+          <boxGeometry args={[0.36, 0.08, 0.08]} />
           <meshBasicMaterial color={vehicleState.isHeadlightsOn ? "#ffffff" : "#64748b"} />
         </mesh>
-        <mesh position={[0.82, 0.46, 2.62]}>
-          <boxGeometry args={[0.38, 0.12, 0.08]} />
+        <mesh position={[0.82, 0.36, 2.58]}>
+          <boxGeometry args={[0.36, 0.08, 0.08]} />
           <meshBasicMaterial color={vehicleState.isHeadlightsOn ? "#ffffff" : "#64748b"} />
         </mesh>
 
@@ -137,7 +143,7 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
         {vehicleState.isHeadlightsOn && (
           <>
             <spotLight
-              position={[-0.82, 0.5, 2.7]}
+              position={[-0.82, 0.45, 2.6]}
               target-position={[-0.82, 0, 22]}
               angle={0.5}
               penumbra={0.4}
@@ -147,7 +153,7 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
               castShadow
             />
             <spotLight
-              position={[0.82, 0.5, 2.7]}
+              position={[0.82, 0.45, 2.6]}
               target-position={[0.82, 0, 22]}
               angle={0.5}
               penumbra={0.4}
@@ -158,16 +164,16 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
           </>
         )}
 
-        {/* Rear Neon LED Taillight Bar */}
-        <mesh position={[0, 0.58, -2.48]}>
-          <boxGeometry args={[2.0, 0.08, 0.06]} />
+        {/* Sleek Rear Continuous Red LED Neon Taillight Bar */}
+        <mesh position={[0, 0.44, -2.36]}>
+          <boxGeometry args={[2.05, 0.06, 0.06]} />
           <meshBasicMaterial color="#ef4444" />
         </mesh>
 
-        {/* Quad Chrome Exhaust Pipes */}
-        {[-0.6, -0.4, 0.4, 0.6].map((x, i) => (
-          <mesh key={i} position={[x, 0.22, -2.46]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.08, 0.08, 0.2, 16]} />
+        {/* Quad Chrome Exhaust Tips */}
+        {[-0.55, -0.35, 0.35, 0.55].map((x, i) => (
+          <mesh key={i} position={[x, 0.18, -2.36]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.07, 0.07, 0.22, 16]} />
             <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
           </mesh>
         ))}
