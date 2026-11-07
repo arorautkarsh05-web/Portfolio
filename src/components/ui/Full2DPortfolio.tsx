@@ -37,20 +37,20 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
   );
 
   return (
-    <div className="min-h-screen bg-[#080811] text-slate-200 font-sans selection:bg-sky-500 selection:text-black">
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-400 selection:text-black">
       {/* Top Banner Returning to 3D */}
-      <div className="sticky top-0 z-40 bg-[#0a0a14]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-white/15 px-4 py-3 flex items-center justify-between shadow-xl">
         <div className="flex items-center space-x-2">
           <span className="font-extrabold text-white tracking-wider text-sm bg-gradient-to-r from-amber-400 to-sky-400 bg-clip-text text-transparent">
-            UTKARSH CITY // 2D EXECUTIVE VIEW
+            UTKARSH CITY // EXECUTIVE 2D PORTFOLIO
           </span>
         </div>
         <button
           onClick={onReturnTo3D}
-          className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-md transition"
+          className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/25 transition cursor-pointer"
         >
           <Sparkles size={14} />
-          <span>Enter 3D Cinematic City</span>
+          <span>Enter 3D Golden-Hour Metropolis</span>
         </button>
       </div>
 
@@ -58,9 +58,9 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
         {/* ========================================================
             HERO SECTION
             ======================================================== */}
-        <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+        <section className="p-8 sm:p-12 rounded-3xl bg-slate-900/90 border border-slate-700/70 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
             {/* Authentic Photograph */}
@@ -159,7 +159,7 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
             Academic Background
           </h2>
 
-          <div className="p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 flex flex-col md:flex-row justify-between gap-6">
+          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/85 border border-slate-700/60 shadow-lg flex flex-col md:flex-row justify-between gap-6">
             <div className="flex-1">
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">
                 Undergraduate Degree
@@ -247,7 +247,7 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
             {filteredSkills.map(cat => (
               <div
                 key={cat.id}
-                className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-sky-500/30 transition"
+                className="p-6 rounded-2xl bg-slate-900/85 border border-slate-700/60 shadow-lg hover:border-sky-400/50 transition"
               >
                 <h3 className="font-bold text-base text-sky-400 mb-1">
                   {cat.name}
@@ -285,7 +285,7 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
             {featuredProjects.map(project => (
               <div
                 key={project.id}
-                className="p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:border-white/25 transition flex flex-col justify-between"
+                className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-700/70 shadow-xl hover:border-amber-400/50 transition flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-2">
@@ -402,7 +402,7 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
             {internshipExperiences.map(exp => (
               <div
                 key={exp.id}
-                className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-sky-500/30 transition"
+                className="p-6 rounded-2xl bg-slate-900/85 border border-slate-700/60 shadow-lg hover:border-sky-400/50 transition"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
                   <h3 className="font-bold text-base text-white">{exp.role}</h3>
@@ -457,7 +457,7 @@ export const Full2DPortfolio: React.FC<Full2DPortfolioProps> = ({ onReturnTo3D }
             {certificationsData.map(cert => (
               <div
                 key={cert.id}
-                className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-amber-500/30 transition"
+                className="p-5 rounded-2xl bg-slate-900/85 border border-slate-700/60 shadow-lg hover:border-amber-400/50 transition"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">

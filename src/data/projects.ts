@@ -78,3 +78,4 @@ export const featuredProjects: ProjectLandmark[] = [
     districtCoordinates: [45, 0, 45]
   }
 ];
+

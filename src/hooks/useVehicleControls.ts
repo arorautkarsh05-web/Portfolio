@@ -134,3 +134,4 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     setVehicleState
   };
 }
+

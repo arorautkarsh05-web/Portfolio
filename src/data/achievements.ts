@@ -47,3 +47,4 @@ export const certificationsData: CertificationItem[] = [
     credentialNote: "Foundational training covering core algorithmic principles, machine learning theory, and data preparation."
   }
 ];
+

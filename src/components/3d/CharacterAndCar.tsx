@@ -59,80 +59,81 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
 
     // Underglow gentle pulse
     if (underglowRef.current) {
-      underglowRef.current.intensity = 1.8 + Math.sin(state.clock.elapsedTime * 4) * 0.4;
+      underglowRef.current.intensity = 2.2 + Math.sin(state.clock.elapsedTime * 4) * 0.5;
     }
   });
 
   return (
     <group name="CharacterAndCarSystem">
       {/* ========================================================
-          LUXURY SPORTS CAR (Aerodynamic Dubai-Inspired Supercar)
+          LUXURY SPORTS CAR (Dubai-Inspired Pearlescent Gold Supercar)
+          Vibrant, gleaming, and crystal-clear visibility
           ======================================================== */}
       <group ref={carGroupRef} position={vehicleState.position}>
-        {/* Main Monocoque Chassis (Low-slung metallic carbon body) */}
+        {/* Main Monocoque Chassis - Gleaming Sunburst Gold Metallic */}
         <mesh position={[0, 0.42, 0]} castShadow receiveShadow>
           <boxGeometry args={[2.2, 0.58, 4.8]} />
           <meshStandardMaterial
-            color="#0f172a"
-            metalness={0.92}
-            roughness={0.18}
-            envMapIntensity={2.0}
+            color="#f59e0b"
+            metalness={0.9}
+            roughness={0.15}
+            envMapIntensity={2.5}
           />
         </mesh>
 
-        {/* Front Sculpted Nose & Hood (Aggressive rake) */}
+        {/* Front Sculpted Nose & Hood */}
         <mesh position={[0, 0.35, 2.2]} rotation={[-0.14, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[2.1, 0.35, 1.2]} />
-          <meshStandardMaterial color="#0f172a" metalness={0.92} roughness={0.18} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.15} />
         </mesh>
 
-        {/* Carbon-Fiber Front Splitter */}
+        {/* Front Splitter & Accent Carbon Trim */}
         <mesh position={[0, 0.12, 2.7]}>
           <boxGeometry args={[2.24, 0.06, 0.45]} />
-          <meshStandardMaterial color="#020617" roughness={0.6} metalness={0.5} />
+          <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.6} />
         </mesh>
 
-        {/* Aerodynamic Cockpit & Curved Tinted Glass Roof */}
+        {/* Cockpit Tinted Solar Glass Roof */}
         <mesh position={[0, 0.84, -0.3]} castShadow>
           <boxGeometry args={[1.72, 0.48, 2.4]} />
           <meshStandardMaterial
-            color="#020617"
+            color="#0284c7"
             roughness={0.05}
-            metalness={0.95}
+            metalness={0.9}
           />
         </mesh>
 
-        {/* Rear Fastback Engine Deck & Aero Wing */}
+        {/* Rear Fastback Engine Deck */}
         <mesh position={[0, 0.65, -1.8]} rotation={[0.08, 0, 0]} castShadow>
           <boxGeometry args={[2.0, 0.35, 1.6]} />
-          <meshStandardMaterial color="#0f172a" metalness={0.92} roughness={0.18} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.15} />
         </mesh>
 
         {/* Elevated GT Carbon Rear Wing */}
         <mesh position={[0, 1.05, -2.35]} castShadow>
           <boxGeometry args={[2.2, 0.05, 0.45]} />
-          <meshStandardMaterial color="#020617" metalness={0.8} roughness={0.3} />
+          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} />
         </mesh>
         <mesh position={[-0.8, 0.88, -2.35]}>
           <boxGeometry args={[0.05, 0.35, 0.15]} />
-          <meshStandardMaterial color="#334155" metalness={0.9} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.9} />
         </mesh>
         <mesh position={[0.8, 0.88, -2.35]}>
           <boxGeometry args={[0.05, 0.35, 0.15]} />
-          <meshStandardMaterial color="#334155" metalness={0.9} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.9} />
         </mesh>
 
-        {/* Dual LED Headlights (Crisp Ice Blue/White) */}
+        {/* Brilliant LED Headlights */}
         <mesh position={[-0.82, 0.46, 2.62]}>
           <boxGeometry args={[0.38, 0.12, 0.08]} />
-          <meshBasicMaterial color={vehicleState.isHeadlightsOn ? "#e0f2fe" : "#334155"} />
+          <meshBasicMaterial color={vehicleState.isHeadlightsOn ? "#ffffff" : "#64748b"} />
         </mesh>
         <mesh position={[0.82, 0.46, 2.62]}>
           <boxGeometry args={[0.38, 0.12, 0.08]} />
-          <meshBasicMaterial color={vehicleState.isHeadlightsOn ? "#e0f2fe" : "#334155"} />
+          <meshBasicMaterial color={vehicleState.isHeadlightsOn ? "#ffffff" : "#64748b"} />
         </mesh>
 
-        {/* Dynamic Forward Headlight Beams */}
+        {/* Forward Headlight Volumetric Beams */}
         {vehicleState.isHeadlightsOn && (
           <>
             <spotLight
@@ -140,9 +141,9 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
               target-position={[-0.82, 0, 22]}
               angle={0.5}
               penumbra={0.4}
-              intensity={4.5}
-              distance={35}
-              color="#e0f2fe"
+              intensity={5.0}
+              distance={40}
+              color="#ffffff"
               castShadow
             />
             <spotLight
@@ -150,38 +151,38 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
               target-position={[0.82, 0, 22]}
               angle={0.5}
               penumbra={0.4}
-              intensity={4.5}
-              distance={35}
-              color="#e0f2fe"
+              intensity={5.0}
+              distance={40}
+              color="#ffffff"
             />
           </>
         )}
 
-        {/* Rear Continuous Neon LED Taillight Bar */}
+        {/* Rear Neon LED Taillight Bar */}
         <mesh position={[0, 0.58, -2.48]}>
           <boxGeometry args={[2.0, 0.08, 0.06]} />
           <meshBasicMaterial color="#ef4444" />
         </mesh>
 
-        {/* Quad Exhaust Pipes with Titanium Heat Blue Trim */}
+        {/* Quad Chrome Exhaust Pipes */}
         {[-0.6, -0.4, 0.4, 0.6].map((x, i) => (
           <mesh key={i} position={[x, 0.22, -2.46]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.08, 0.08, 0.2, 16]} />
-            <meshStandardMaterial color="#475569" metalness={0.95} roughness={0.1} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
           </mesh>
         ))}
 
-        {/* Electric-Blue Neon Underglow */}
+        {/* Cyan Neon Underglow */}
         <pointLight
           ref={underglowRef}
           position={[0, 0.1, 0]}
           color="#00d2ff"
-          intensity={2.0}
-          distance={6}
-          decay={2}
+          intensity={2.5}
+          distance={8}
+          decay={1.8}
         />
 
-        {/* Four Wheels (Rims, Calipers, Tires) */}
+        {/* 4 Wheels (Gleaming Chrome Rims, Red Calipers, Black Tires) */}
         {/* Front Left */}
         <group
           position={[-1.15, 0.35, 1.5]}
@@ -189,12 +190,11 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
         >
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.38, 0.38, 0.32, 24]} />
-            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+            <meshStandardMaterial color="#1e293b" roughness={0.7} />
           </mesh>
-          {/* Bronze/Gold Alloy Rim */}
           <mesh rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.26, 0.26, 0.33, 12]} />
-            <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
           </mesh>
         </group>
 
@@ -205,11 +205,11 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
         >
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.38, 0.38, 0.32, 24]} />
-            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+            <meshStandardMaterial color="#1e293b" roughness={0.7} />
           </mesh>
           <mesh rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.26, 0.26, 0.33, 12]} />
-            <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
           </mesh>
         </group>
 
@@ -220,11 +220,11 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
         >
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.4, 0.4, 0.38, 24]} />
-            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+            <meshStandardMaterial color="#1e293b" roughness={0.7} />
           </mesh>
           <mesh rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.27, 0.27, 0.39, 12]} />
-            <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
           </mesh>
         </group>
 
@@ -235,19 +235,18 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
         >
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.4, 0.4, 0.38, 24]} />
-            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+            <meshStandardMaterial color="#1e293b" roughness={0.7} />
           </mesh>
           <mesh rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.27, 0.27, 0.39, 12]} />
-            <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
           </mesh>
         </group>
       </group>
 
       {/* ========================================================
           PERSONAL CHARACTER: UTKARSH ARORA
-          Beside the sports car at Central Plaza
-          Charcoal-grey suit, white shirt, black eyeglasses, natural posture
+          Clear contrast, tailored charcoal suit, white shirt, spectacles
           ======================================================== */}
       {!isDrivingMode && (
         <group
@@ -255,134 +254,124 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
           rotation={[0, -Math.PI / 6, 0]}
           onClick={onCharacterClick}
         >
-          {/* Subtle Ground Interactive Aura Ring */}
+          {/* Luminous Ground Aura Circle */}
           <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.1, 1.35, 32]} />
-            <meshBasicMaterial color="#00d2ff" transparent opacity={0.6} />
+            <ringGeometry args={[1.2, 1.45, 32]} />
+            <meshBasicMaterial color="#0284c7" transparent opacity={0.8} />
           </mesh>
 
-          {/* Shoes (Polished black formal leather shoes) */}
+          {/* Polished Formal Shoes */}
           <mesh position={[-0.18, 0.08, 0.02]} castShadow>
             <boxGeometry args={[0.16, 0.12, 0.32]} />
-            <meshStandardMaterial color="#09090b" roughness={0.2} metalness={0.8} />
+            <meshStandardMaterial color="#0f172a" roughness={0.2} metalness={0.8} />
           </mesh>
           <mesh position={[0.18, 0.08, 0.02]} castShadow>
             <boxGeometry args={[0.16, 0.12, 0.32]} />
-            <meshStandardMaterial color="#09090b" roughness={0.2} metalness={0.8} />
+            <meshStandardMaterial color="#0f172a" roughness={0.2} metalness={0.8} />
           </mesh>
 
-          {/* Charcoal-Grey Formal Trousers (Left & Right Leg) */}
+          {/* Charcoal-Grey Formal Trousers */}
           <mesh position={[-0.18, 0.52, 0]} castShadow>
             <cylinderGeometry args={[0.11, 0.12, 0.78, 12]} />
-            <meshStandardMaterial color="#27272a" roughness={0.7} />
+            <meshStandardMaterial color="#334155" roughness={0.6} />
           </mesh>
           <mesh position={[0.18, 0.52, 0]} castShadow>
             <cylinderGeometry args={[0.11, 0.12, 0.78, 12]} />
-            <meshStandardMaterial color="#27272a" roughness={0.7} />
+            <meshStandardMaterial color="#334155" roughness={0.6} />
           </mesh>
 
-          {/* Torso & Tailored Charcoal-Grey Suit Jacket */}
+          {/* Charcoal-Grey Suit Jacket */}
           <mesh position={[0, 1.25, 0]} castShadow>
             <boxGeometry args={[0.54, 0.68, 0.28]} />
-            <meshStandardMaterial color="#27272a" roughness={0.7} />
+            <meshStandardMaterial color="#334155" roughness={0.6} />
           </mesh>
 
-          {/* White Crisp Formal Shirt (Chest V-opening) */}
+          {/* Crisp White Shirt */}
           <mesh position={[0, 1.34, 0.13]}>
             <boxGeometry args={[0.2, 0.38, 0.04]} />
-            <meshStandardMaterial color="#f8fafc" roughness={0.4} />
+            <meshStandardMaterial color="#ffffff" roughness={0.2} />
           </mesh>
 
-          {/* Subtle Dark Silk Tie */}
+          {/* Dark Navy Silk Tie */}
           <mesh position={[0, 1.3, 0.14]}>
             <boxGeometry args={[0.06, 0.32, 0.03]} />
-            <meshStandardMaterial color="#0f172a" roughness={0.3} />
+            <meshStandardMaterial color="#1e3a8a" roughness={0.3} />
           </mesh>
 
           {/* Lapels */}
           <mesh position={[-0.13, 1.34, 0.14]} rotation={[0, 0, -0.2]}>
             <boxGeometry args={[0.08, 0.4, 0.02]} />
-            <meshStandardMaterial color="#18181b" roughness={0.6} />
+            <meshStandardMaterial color="#1e293b" roughness={0.5} />
           </mesh>
           <mesh position={[0.13, 1.34, 0.14]} rotation={[0, 0, 0.2]}>
             <boxGeometry args={[0.08, 0.4, 0.02]} />
-            <meshStandardMaterial color="#18181b" roughness={0.6} />
+            <meshStandardMaterial color="#1e293b" roughness={0.5} />
           </mesh>
 
-          {/* Suit Arms (Left relaxed at side, Right subtly posed) */}
+          {/* Arms */}
           <mesh position={[-0.34, 1.18, 0]} rotation={[0, 0, 0.12]} castShadow>
             <cylinderGeometry args={[0.08, 0.09, 0.62, 12]} />
-            <meshStandardMaterial color="#27272a" roughness={0.7} />
+            <meshStandardMaterial color="#334155" roughness={0.6} />
           </mesh>
           <mesh position={[0.34, 1.18, 0]} rotation={[0, 0, -0.12]} castShadow>
             <cylinderGeometry args={[0.08, 0.09, 0.62, 12]} />
-            <meshStandardMaterial color="#27272a" roughness={0.7} />
+            <meshStandardMaterial color="#334155" roughness={0.6} />
           </mesh>
 
           {/* Hands */}
           <mesh position={[-0.38, 0.82, 0]}>
             <sphereGeometry args={[0.06, 12, 12]} />
-            <meshStandardMaterial color="#d4a373" roughness={0.6} />
+            <meshStandardMaterial color="#d4a373" roughness={0.5} />
           </mesh>
           <mesh position={[0.38, 0.82, 0]}>
             <sphereGeometry args={[0.06, 12, 12]} />
-            <meshStandardMaterial color="#d4a373" roughness={0.6} />
+            <meshStandardMaterial color="#d4a373" roughness={0.5} />
           </mesh>
 
           {/* Head & Neck */}
           <mesh position={[0, 1.66, 0]}>
             <cylinderGeometry args={[0.07, 0.08, 0.14, 12]} />
-            <meshStandardMaterial color="#d4a373" roughness={0.6} />
+            <meshStandardMaterial color="#d4a373" roughness={0.5} />
           </mesh>
           <mesh position={[0, 1.82, 0]} castShadow>
             <sphereGeometry args={[0.14, 16, 16]} />
-            <meshStandardMaterial color="#d4a373" roughness={0.6} />
+            <meshStandardMaterial color="#d4a373" roughness={0.5} />
           </mesh>
 
-          {/* Hair (Neat short dark haircut) */}
+          {/* Hair */}
           <mesh position={[0, 1.9, -0.02]}>
             <sphereGeometry args={[0.145, 16, 12]} />
-            <meshStandardMaterial color="#09090b" roughness={0.9} />
+            <meshStandardMaterial color="#0f172a" roughness={0.8} />
           </mesh>
 
-          {/* Black Eyeglasses (Frames & Rim) */}
+          {/* Black Eyeglasses */}
           <mesh position={[0, 1.84, 0.13]}>
             <boxGeometry args={[0.22, 0.05, 0.04]} />
-            <meshStandardMaterial color="#09090b" metalness={0.9} roughness={0.1} />
-          </mesh>
-          <mesh position={[-0.06, 1.84, 0.14]}>
-            <boxGeometry args={[0.07, 0.04, 0.01]} />
-            <meshStandardMaterial color="#00d2ff" transparent opacity={0.3} />
-          </mesh>
-          <mesh position={[0.06, 1.84, 0.14]}>
-            <boxGeometry args={[0.07, 0.04, 0.01]} />
-            <meshStandardMaterial color="#00d2ff" transparent opacity={0.3} />
+            <meshStandardMaterial color="#000000" metalness={0.9} roughness={0.1} />
           </mesh>
 
           {/* ========================================================
-              BIOMETRIC HOLOGRAM DISPLAY PEDESTAL
-              Displays authentic Utkarsh Arora reference photograph
+              LUMINOUS BIOMETRIC HOLOGRAM DISPLAY PEDESTAL
+              Prominently displays Utkarsh's authentic photograph
               ======================================================== */}
-          <group position={[1.4, 1.4, 0]}>
-            {/* Holographic Pedestal Glass Frame */}
+          <group position={[1.5, 1.5, 0]}>
+            {/* White Acrylic & Silver Frame */}
             <mesh castShadow>
               <boxGeometry args={[1.5, 1.85, 0.06]} />
               <meshStandardMaterial
-                color="#0f172a"
-                metalness={0.9}
+                color="#ffffff"
+                metalness={0.7}
                 roughness={0.1}
-                transparent
-                opacity={0.85}
               />
             </mesh>
 
-            {/* Glowing Cyber Rim Frame */}
+            {/* Glowing Cyan Frame Bezel */}
             <mesh position={[0, 0, 0.035]}>
               <ringGeometry args={[0.7, 0.76, 32]} />
-              <meshBasicMaterial color="#00d2ff" />
+              <meshBasicMaterial color="#0284c7" />
             </mesh>
 
-            {/* The Authentic Reference Photograph Applied to Plane */}
+            {/* Authentic Reference Photograph */}
             <mesh position={[0, 0.12, 0.04]}>
               <planeGeometry args={[1.25, 1.25]} />
               <meshBasicMaterial map={userPhotoTexture} />
@@ -391,19 +380,19 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
             {/* Status Plate Under Photo */}
             <mesh position={[0, -0.65, 0.04]}>
               <planeGeometry args={[1.3, 0.25]} />
-              <meshStandardMaterial color="#020617" roughness={0.5} />
+              <meshStandardMaterial color="#0f172a" roughness={0.3} />
             </mesh>
 
             {/* Floating Holographic Ring */}
             <group ref={hologramRingRef} position={[0, 0, 0.1]}>
               <mesh rotation={[Math.PI / 4, 0, 0]}>
-                <torusGeometry args={[0.9, 0.012, 8, 48]} />
-                <meshBasicMaterial color="#38bdf8" transparent opacity={0.5} />
+                <torusGeometry args={[0.92, 0.015, 8, 48]} />
+                <meshBasicMaterial color="#0284c7" />
               </mesh>
             </group>
 
-            {/* Glow Light on Hologram */}
-            <pointLight position={[0, 0, 0.4]} color="#00d2ff" intensity={1.2} distance={4} />
+            {/* Glow Light */}
+            <pointLight position={[0, 0, 0.5]} color="#bae6fd" intensity={2.0} distance={5} />
           </group>
         </group>
       )}

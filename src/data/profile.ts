@@ -25,3 +25,4 @@ export const personalProfile: PersonalInfo = {
   },
   summary: "A data analyst with hands-on internship experience in data cleaning, exploratory analysis, and visualization. Experienced with Python, Pandas, SQL, and Power BI, with full-stack development experience spanning React, Node.js, and modern APIs."
 };
+

@@ -41,7 +41,7 @@ export const CityWorld: React.FC<CityWorldProps> = ({
   onOpenContactModal
 }) => {
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0c0b16]">
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-gradient-to-b from-sky-400 via-amber-200 to-amber-100">
       <Canvas
         shadows
         camera={{ position: [0, 48, 85], fov: 45, near: 0.1, far: 300 }}
@@ -49,7 +49,7 @@ export const CityWorld: React.FC<CityWorldProps> = ({
           antialias: true,
           powerPreference: "high-performance",
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.15
+          toneMappingExposure: 1.45
         }}
       >
         <Suspense fallback={null}>
@@ -81,3 +81,4 @@ export const CityWorld: React.FC<CityWorldProps> = ({
     </div>
   );
 };
+

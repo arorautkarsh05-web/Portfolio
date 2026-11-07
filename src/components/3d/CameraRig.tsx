@@ -61,3 +61,4 @@ export const CameraRig: React.FC<CameraRigProps> = ({
 
   return null;
 };
+

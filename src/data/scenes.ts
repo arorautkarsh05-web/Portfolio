@@ -83,3 +83,4 @@ export const scenesList: SceneCheckpoint[] = [
     description: "High-tech terminal showroom: connect directly with Utkarsh via Email, LinkedIn, and GitHub."
   }
 ];
+

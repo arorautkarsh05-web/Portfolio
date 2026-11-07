@@ -39,3 +39,4 @@ export const internshipExperiences: InternshipExperience[] = [
     technologies: ["Python", "Data Analysis", "Data Cleaning", "KPI Analysis", "Excel"]
   }
 ];
+

@@ -1,13 +1,10 @@
 import React from 'react';
-import { personalProfile } from '../../data/profile';
 
 interface EducationBoulevardProps {
   onOpenEducationModal?: () => void;
 }
 
 export const EducationBoulevard: React.FC<EducationBoulevardProps> = ({ onOpenEducationModal }) => {
-  const { education } = personalProfile;
-
   return (
     <group
       name="EducationBoulevard"
@@ -20,16 +17,16 @@ export const EducationBoulevard: React.FC<EducationBoulevardProps> = ({ onOpenEd
       {/* Foundation Platform */}
       <mesh position={[0, 0.8, 0]} castShadow receiveShadow>
         <boxGeometry args={[16, 1.6, 16]} />
-        <meshStandardMaterial color="#0b1120" roughness={0.3} metalness={0.7} />
+        <meshStandardMaterial color="#e2e8f0" roughness={0.2} metalness={0.6} />
       </mesh>
 
-      {/* Main Academic Institute Tower (Modern Glass Cube & Columns) */}
+      {/* Main Academic Institute Tower (Crisp White & Azure Glass) */}
       <mesh position={[0, 9, 0]} castShadow>
         <boxGeometry args={[12, 16, 12]} />
         <meshStandardMaterial
-          color="#0f172a"
-          metalness={0.9}
-          roughness={0.15}
+          color="#f8fafc"
+          metalness={0.8}
+          roughness={0.1}
         />
       </mesh>
 
@@ -43,17 +40,16 @@ export const EducationBoulevard: React.FC<EducationBoulevardProps> = ({ onOpenEd
       <group position={[0, 20.5, 0]}>
         <mesh rotation={[0, 0, Math.PI / 4]}>
           <boxGeometry args={[2.5, 2.5, 0.4]} />
-          <meshBasicMaterial color="#38bdf8" />
+          <meshBasicMaterial color="#0284c7" />
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 4]}>
           <boxGeometry args={[1.8, 1.8, 0.45]} />
-          <meshStandardMaterial color="#0284c7" metalness={0.9} />
+          <meshStandardMaterial color="#ffffff" metalness={0.9} />
         </mesh>
       </group>
 
-      {/* Light Accent */}
-      <pointLight position={[0, 21, 0]} color="#38bdf8" intensity={2.0} distance={20} />
-      <pointLight position={[0, 3, 0]} color="#f59e0b" intensity={1.5} distance={15} />
+      <pointLight position={[0, 21, 0]} color="#0284c7" intensity={3.0} distance={25} />
+      <pointLight position={[0, 3, 0]} color="#f59e0b" intensity={2.0} distance={20} />
     </group>
   );
 };

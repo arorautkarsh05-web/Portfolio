@@ -74,3 +74,4 @@ export interface SceneCheckpoint {
   cameraTarget: [number, number, number];
   description: string;
 }
+

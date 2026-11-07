@@ -11,7 +11,6 @@ interface ProjectLandmarksProps {
 
 export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
   onSelectProject,
-  activeProjectId
 }) => {
   const bayoraRingsRef = useRef<THREE.Group>(null);
   const ustaadWheelRef = useRef<THREE.Group>(null);
@@ -47,7 +46,7 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
     <group name="ProjectLandmarks">
       {/* ========================================================
           1. BAYORA: AI SECURITY CITADEL [-45, 0, -35]
-          Triangular fortress, cryptographic rings, crimson security accents
+          Gleaming White & Crimson Security Fortress
           ======================================================== */}
       <group
         position={[-45, 0, -35]}
@@ -56,24 +55,24 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
           onSelectProject(getProject('bayora'));
         }}
       >
-        {/* Base Foundation */}
+        {/* Base Foundation (Bright Travertine Stone) */}
         <mesh position={[0, 1.5, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[14, 16, 3, 3]} />
-          <meshStandardMaterial color="#0b0f19" roughness={0.3} metalness={0.8} />
+          <meshStandardMaterial color="#e2e8f0" roughness={0.2} metalness={0.6} />
         </mesh>
 
-        {/* Central Monolith Spire */}
+        {/* Central Monolith Spire - Gleaming White & Glass */}
         <mesh position={[0, 14, 0]} castShadow>
           <cylinderGeometry args={[4, 9, 24, 3]} />
           <meshStandardMaterial
-            color="#090d16"
-            roughness={0.15}
-            metalness={0.9}
-            envMapIntensity={1.5}
+            color="#f8fafc"
+            roughness={0.1}
+            metalness={0.8}
+            envMapIntensity={2.0}
           />
         </mesh>
 
-        {/* Red Security Energy Core */}
+        {/* Vibrant Crimson Security Energy Core */}
         <mesh position={[0, 14, 0]}>
           <cylinderGeometry args={[1.5, 1.5, 25, 8]} />
           <meshBasicMaterial color="#ef4444" />
@@ -82,28 +81,27 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
         {/* Floating Ed25519 Cryptographic Proof Rings */}
         <group ref={bayoraRingsRef} position={[0, 27, 0]}>
           <mesh rotation={[Math.PI / 3, 0, 0]}>
-            <torusGeometry args={[5.2, 0.15, 16, 64]} />
+            <torusGeometry args={[5.2, 0.18, 16, 64]} />
             <meshBasicMaterial color="#ef4444" />
           </mesh>
           <mesh rotation={[-Math.PI / 4, 0, 0]}>
-            <torusGeometry args={[4.2, 0.12, 16, 64]} />
+            <torusGeometry args={[4.2, 0.15, 16, 64]} />
             <meshBasicMaterial color="#f87171" />
           </mesh>
         </group>
 
-        {/* Base Glowing Ring */}
+        {/* Radiant Red Base Ring */}
         <mesh position={[0, 3.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[11, 11.5, 32]} />
+          <ringGeometry args={[11, 11.6, 32]} />
           <meshBasicMaterial color="#ef4444" />
         </mesh>
 
-        {/* Project Beacon Light */}
-        <pointLight position={[0, 28, 0]} color="#ef4444" intensity={2.5} distance={30} />
+        <pointLight position={[0, 28, 0]} color="#ef4444" intensity={3.5} distance={35} />
       </group>
 
       {/* ========================================================
           2. EUROGRIP USTAAD NETWORK: AUTOMOTIVE HUB [45, 0, -35]
-          Dynamic sweeping wings, Fitment Passport motif, electric-cyan
+          Bright Aerodynamic White & Electric-Cyan Pavilion
           ======================================================== */}
       <group
         position={[45, 0, -35]}
@@ -115,51 +113,51 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
         {/* Tiered Circular Foundation */}
         <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[15, 16, 2.4, 32]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+          <meshStandardMaterial color="#e2e8f0" roughness={0.2} metalness={0.6} />
         </mesh>
 
-        {/* Curved Architectural Aero Wing Pavilion */}
+        {/* Curved Architectural Aero Wing Pavilion (Crisp White Metal & Cyan) */}
         <mesh position={[0, 10, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
           <boxGeometry args={[18, 16, 4]} />
           <meshStandardMaterial
-            color="#0b1120"
-            metalness={0.92}
-            roughness={0.12}
+            color="#f8fafc"
+            metalness={0.85}
+            roughness={0.1}
           />
         </mesh>
         <mesh position={[0, 10, 0]} rotation={[0, -Math.PI / 4, 0]} castShadow>
           <boxGeometry args={[18, 16, 4]} />
           <meshStandardMaterial
-            color="#0b1120"
-            metalness={0.92}
-            roughness={0.12}
+            color="#f8fafc"
+            metalness={0.85}
+            roughness={0.1}
           />
         </mesh>
 
-        {/* Holographic Fitment Passport Hexagon Center */}
+        {/* Fitment Passport Hexagon Center */}
         <group ref={ustaadWheelRef} position={[0, 22, 0]}>
           <mesh>
-            <torusGeometry args={[4.8, 0.16, 16, 6]} />
-            <meshBasicMaterial color="#00d2ff" />
+            <torusGeometry args={[4.8, 0.2, 16, 6]} />
+            <meshBasicMaterial color="#0284c7" />
           </mesh>
           <mesh rotation={[0, 0, Math.PI / 6]}>
             <cylinderGeometry args={[2.2, 2.2, 0.4, 6]} />
-            <meshStandardMaterial color="#0369a1" metalness={0.9} roughness={0.1} />
+            <meshStandardMaterial color="#38bdf8" metalness={0.9} roughness={0.1} />
           </mesh>
         </group>
 
         {/* Cyan Base Ring */}
         <mesh position={[0, 2.45, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[13.5, 14.2, 32]} />
-          <meshBasicMaterial color="#00d2ff" />
+          <ringGeometry args={[13.5, 14.3, 32]} />
+          <meshBasicMaterial color="#0284c7" />
         </mesh>
 
-        <pointLight position={[0, 23, 0]} color="#00d2ff" intensity={2.5} distance={30} />
+        <pointLight position={[0, 23, 0]} color="#38bdf8" intensity={3.5} distance={35} />
       </group>
 
       {/* ========================================================
           3. PAYPAL RESOLVE: FINTECH TOWER [-45, 0, 45]
-          Dual-column financial tower (Node.js authoritative + FastAPI prototype)
+          Dual-Column Champagne Gold & Radiant Glass Spire
           ======================================================== */}
       <group
         position={[-45, 0, 45]}
@@ -171,43 +169,43 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
         {/* Main Base */}
         <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
           <boxGeometry args={[20, 2.4, 16]} />
-          <meshStandardMaterial color="#0b1120" roughness={0.4} metalness={0.8} />
+          <meshStandardMaterial color="#e2e8f0" roughness={0.3} metalness={0.7} />
         </mesh>
 
-        {/* Column 1: Authoritative Node.js Server (Taller, primary) */}
+        {/* Column 1: Authoritative Node.js Server (White & Gold Primary) */}
         <mesh position={[-4, 15, 0]} castShadow>
           <boxGeometry args={[6, 28, 8]} />
           <meshStandardMaterial
-            color="#0f172a"
-            metalness={0.92}
+            color="#f8fafc"
+            metalness={0.85}
+            roughness={0.12}
+          />
+        </mesh>
+
+        {/* Column 2: FastAPI Prototype Microservice (Warm Champagne Glass) */}
+        <mesh position={[4, 12, 0]} castShadow>
+          <boxGeometry args={[5, 22, 7]} />
+          <meshStandardMaterial
+            color="#fed7aa"
+            metalness={0.8}
             roughness={0.15}
           />
         </mesh>
 
-        {/* Column 2: FastAPI Prototype Microservice (Reference Column) */}
-        <mesh position={[4, 12, 0]} castShadow>
-          <boxGeometry args={[5, 22, 7]} />
-          <meshStandardMaterial
-            color="#1e293b"
-            metalness={0.88}
-            roughness={0.2}
-          />
-        </mesh>
-
-        {/* Connecting FinTech Skybridge at mid-height */}
+        {/* Connecting FinTech Skybridge */}
         <mesh position={[0, 16, 0]}>
           <boxGeometry args={[10, 2.2, 5]} />
-          <meshStandardMaterial color="#020617" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
         </mesh>
 
         {/* Floating Transaction Reconciliation Beam */}
         <group ref={paypalBeaconsRef} position={[0, 18, 0]}>
           <mesh>
-            <sphereGeometry args={[1.6, 24, 24]} />
+            <sphereGeometry args={[1.8, 24, 24]} />
             <meshBasicMaterial color="#f59e0b" />
           </mesh>
           <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <torusGeometry args={[3.2, 0.1, 16, 32]} />
+            <torusGeometry args={[3.2, 0.14, 16, 32]} />
             <meshBasicMaterial color="#fbbf24" />
           </mesh>
         </group>
@@ -218,12 +216,12 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
           <meshBasicMaterial color="#f59e0b" />
         </mesh>
 
-        <pointLight position={[0, 22, 0]} color="#f59e0b" intensity={2.5} distance={30} />
+        <pointLight position={[0, 22, 0]} color="#f59e0b" intensity={3.5} distance={35} />
       </group>
 
       {/* ========================================================
           4. WEBGUARD AI: SURVEILLANCE OBSERVATORY [45, 0, 45]
-          Geodesic dome, autonomous browser radar dish, royal-purple
+          Bright Geodesic Observatory Dome with Purple Radar
           ======================================================== */}
       <group
         position={[45, 0, 45]}
@@ -235,17 +233,16 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
         {/* Foundation */}
         <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[14, 15, 2.4, 32]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+          <meshStandardMaterial color="#e2e8f0" roughness={0.2} metalness={0.7} />
         </mesh>
 
-        {/* Geodesic Surveillance Dome */}
+        {/* Geodesic Surveillance Dome - Crisp White & Crystal Glass */}
         <mesh position={[0, 7.5, 0]} castShadow>
           <sphereGeometry args={[8.5, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
           <meshStandardMaterial
-            color="#090d16"
-            metalness={0.95}
+            color="#f8fafc"
+            metalness={0.9}
             roughness={0.1}
-            wireframe={false}
           />
         </mesh>
 
@@ -253,26 +250,26 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
         <group ref={webguardDishRef} position={[0, 16.5, 0]}>
           <mesh position={[0, 2, 0]}>
             <cylinderGeometry args={[0.2, 0.3, 4, 8]} />
-            <meshStandardMaterial color="#475569" metalness={0.9} />
+            <meshStandardMaterial color="#ffffff" metalness={0.9} />
           </mesh>
           {/* Radar parabolic dish */}
           <mesh position={[0, 3.8, 1.2]} rotation={[Math.PI / 4, 0, 0]}>
             <cylinderGeometry args={[3.2, 0.4, 0.6, 16]} />
-            <meshStandardMaterial color="#1e1b4b" metalness={0.8} roughness={0.2} />
+            <meshStandardMaterial color="#7c3aed" metalness={0.8} roughness={0.2} />
           </mesh>
           <mesh position={[0, 3.8, 1.6]} rotation={[Math.PI / 4, 0, 0]}>
-            <sphereGeometry args={[0.4, 12, 12]} />
-            <meshBasicMaterial color="#8b5cf6" />
+            <sphereGeometry args={[0.45, 12, 12]} />
+            <meshBasicMaterial color="#a855f7" />
           </mesh>
         </group>
 
         {/* Royal Purple Base Ring */}
         <mesh position={[0, 2.45, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[12.5, 13.2, 32]} />
+          <ringGeometry args={[12.5, 13.3, 32]} />
           <meshBasicMaterial color="#8b5cf6" />
         </mesh>
 
-        <pointLight position={[0, 22, 0]} color="#8b5cf6" intensity={2.5} distance={30} />
+        <pointLight position={[0, 22, 0]} color="#a855f7" intensity={3.5} distance={35} />
       </group>
     </group>
   );

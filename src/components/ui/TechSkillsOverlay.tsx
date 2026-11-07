@@ -34,8 +34,8 @@ export const TechSkillsOverlay: React.FC<TechSkillsOverlayProps> = ({ isOpen, on
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl bg-[#0d0f1a] border border-white/15 rounded-3xl p-6 sm:p-8 text-white shadow-2xl overflow-y-auto max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 text-white shadow-2xl overflow-y-auto max-h-[90vh]">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -144,3 +144,4 @@ export const TechSkillsOverlay: React.FC<TechSkillsOverlayProps> = ({ isOpen, on
     </div>
   );
 };
+
