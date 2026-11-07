@@ -26,19 +26,20 @@ export const CameraRig: React.FC<CameraRigProps> = ({
       const carPos = new THREE.Vector3(...vehicleState.position);
       const rotY = vehicleState.rotationY;
 
-      // Elevated distance so the road and skyline ahead are completely visible
-      const chaseDistance = 11.0 + Math.min(Math.abs(vehicleState.speed) * 0.15, 3.5);
-      const chaseHeight = 4.2 + Math.min(Math.abs(vehicleState.speed) * 0.08, 1.5);
+      // Dynamic Cinematic Supercar Chase Camera (Low-slung, high-speed immersion)
+      const speedNorm = Math.min(Math.abs(vehicleState.speed) / 18.0, 1.0);
+      const chaseDistance = 8.2 + speedNorm * 3.0;
+      const chaseHeight = 2.6 + speedNorm * 1.0;
 
       const targetCamX = carPos.x - Math.sin(rotY) * chaseDistance;
       const targetCamZ = carPos.z - Math.cos(rotY) * chaseDistance;
       const targetCamY = carPos.y + chaseHeight;
 
-      // Look well ahead of the vehicle
+      // Look forward along the vehicle trajectory
       const targetLookAt = new THREE.Vector3(
-        carPos.x + Math.sin(rotY) * 6.5,
-        carPos.y + 1.8,
-        carPos.z + Math.cos(rotY) * 6.5
+        carPos.x + Math.sin(rotY) * 8.0,
+        carPos.y + 1.25,
+        carPos.z + Math.cos(rotY) * 8.0
       );
 
       // Smooth camera dampening

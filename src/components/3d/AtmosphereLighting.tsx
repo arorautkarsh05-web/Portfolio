@@ -6,8 +6,8 @@ export const AtmosphereLighting: React.FC = () => {
       {/* Radiant Dubai Golden-Hour Atmosphere Sky */}
       <color attach="background" args={["#bae6fd"]} />
       
-      {/* Soft warm horizon haze far in the distance */}
-      <fog attach="fog" args={["#fef08a", 120, 350]} />
+      {/* Soft natural azure horizon haze far in the distance */}
+      <fog attach="fog" args={["#bae6fd", 160, 450]} />
 
       {/* Primary Radiant Golden Sun */}
       <directionalLight

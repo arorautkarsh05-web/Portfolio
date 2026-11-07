@@ -59,15 +59,25 @@ export const CitySkyline: React.FC = () => {
       { x: -75, z: 55, height: 95, type: 'stepped', color: '#bae6fd', accent: '#8b5cf6' },
       { x: -70, z: 80, height: 85, type: 'sail', color: '#93c5fd', accent: '#0ea5e9' },
 
-      // Outer Perimeter Grand Ring
+      // Outer Perimeter Grand Ring & Distant Dubai Silhouettes
       { x: 100, z: 0, height: 105, type: 'stepped', color: '#e2e8f0', accent: '#0284c7' },
       { x: -100, z: 0, height: 110, type: 'stepped', color: '#cbd5e1', accent: '#8b5cf6' },
-      { x: 0, z: -100, height: 125, type: 'tapered', color: '#bae6fd', accent: '#0ea5e9' },
+      { x: 0, z: -100, height: 135, type: 'tapered', color: '#bae6fd', accent: '#0ea5e9' },
       { x: 0, z: 100, height: 95, type: 'sail', color: '#e2e8f0', accent: '#d97706' },
       { x: 100, z: 100, height: 90, type: 'tower', color: '#93c5fd', accent: '#0284c7' },
       { x: -100, z: 100, height: 95, type: 'tower', color: '#e2e8f0', accent: '#8b5cf6' },
-      { x: 100, z: -100, height: 100, type: 'tower', color: '#cbd5e1', accent: '#d97706' },
-      { x: -100, z: -100, height: 105, type: 'tower', color: '#bae6fd', accent: '#0284c7' }
+      { x: 100, z: -100, height: 115, type: 'tower', color: '#cbd5e1', accent: '#d97706' },
+      { x: -100, z: -100, height: 120, type: 'tower', color: '#bae6fd', accent: '#0284c7' },
+
+      // Distant Horizon Towers
+      { x: -45, z: -120, height: 130, type: 'tapered', color: '#f8fafc', accent: '#38bdf8' },
+      { x: 45, z: -120, height: 125, type: 'stepped', color: '#e2e8f0', accent: '#d97706' },
+      { x: -130, z: -40, height: 100, type: 'sail', color: '#bae6fd', accent: '#0284c7' },
+      { x: 130, z: -40, height: 105, type: 'tower', color: '#cbd5e1', accent: '#f59e0b' },
+      { x: -130, z: 40, height: 95, type: 'stepped', color: '#e2e8f0', accent: '#0ea5e9' },
+      { x: 130, z: 40, height: 110, type: 'tapered', color: '#93c5fd', accent: '#8b5cf6' },
+      { x: -60, z: 120, height: 100, type: 'tower', color: '#cbd5e1', accent: '#0284c7' },
+      { x: 60, z: 120, height: 105, type: 'sail', color: '#bae6fd', accent: '#d97706' }
     ];
 
     configs.forEach(cfg => {

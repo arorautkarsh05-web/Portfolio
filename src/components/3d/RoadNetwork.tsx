@@ -43,24 +43,29 @@ export const RoadNetwork: React.FC = () => {
 
   return (
     <group name="RoadNetwork">
-      {/* Radiant Coastal Waterfront Reflection (Flat horizontal plane beneath ground) */}
-      <mesh position={[0, -0.25, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[400, 400]} />
-        <meshStandardMaterial
-          color="#0284c7"
-          roughness={0.2}
-          metalness={0.7}
-        />
-      </mesh>
-
-      {/* Main Metropolitan Ground: Crisp Modern Dubai Limestone & Granite Pavement */}
+      {/* Expansive Metropolitan Ground: Crisp Modern Dubai Limestone & Granite Pavement */}
       <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[260, 260]} />
+        <planeGeometry args={[650, 650]} />
         <meshStandardMaterial
           color="#cbd5e1"
           roughness={0.4}
           metalness={0.2}
         />
+      </mesh>
+
+      {/* Coastal Dubai Marina Waterfront (Northern Horizon Basin) */}
+      <mesh position={[0, -0.2, -180]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[650, 160]} />
+        <meshStandardMaterial
+          color="#0284c7"
+          roughness={0.15}
+          metalness={0.8}
+        />
+      </mesh>
+      {/* Marina Boardwalk Promenade */}
+      <mesh position={[0, 0.08, -100]} receiveShadow>
+        <boxGeometry args={[650, 0.25, 6]} />
+        <meshStandardMaterial color="#d97706" roughness={0.5} metalness={0.4} />
       </mesh>
 
       {/* Central Grand Plaza Roundabout - Marble & Gold Rings */}
