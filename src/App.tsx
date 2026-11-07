@@ -304,6 +304,7 @@ export function App() {
       <ProjectDetailModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
+        onSelectProject={setSelectedProject}
       />
 
       <TechSkillsOverlay

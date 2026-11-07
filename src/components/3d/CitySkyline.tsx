@@ -14,47 +14,66 @@ export const CitySkyline: React.FC = () => {
   const buildings = useMemo<BuildingSpec[]>(() => {
     const list: BuildingSpec[] = [];
 
-    // Dubai Luxury Glass Towers (Reflective Silvers, Azure Glass, Champagne Gold, White Frameworks)
+    // Dense Dubai Luxury Glass Towers (Reflective Silvers, Azure Glass, Champagne Gold, White Frameworks)
     const configs: Array<{ x: number; z: number; height: number; type: BuildingSpec['type']; color: string; accent: string }> = [
+      // Mid-Ground Skyline directly behind Grand Boulevard (North Vista)
+      { x: -18, z: -55, height: 75, type: 'stepped', color: '#e2e8f0', accent: '#0284c7' },
+      { x: 18, z: -55, height: 80, type: 'sail', color: '#bae6fd', accent: '#d97706' },
+      { x: -28, z: -60, height: 65, type: 'tapered', color: '#93c5fd', accent: '#3b82f6' },
+      { x: 28, z: -60, height: 70, type: 'tower', color: '#cbd5e1', accent: '#0ea5e9' },
+      { x: 0, z: -70, height: 110, type: 'tapered', color: '#f8fafc', accent: '#0284c7' }, // Central Burj Pinnacle
+
       // North-East Quadrant
-      { x: 30, z: -75, height: 60, type: 'sail', color: '#93c5fd', accent: '#0284c7' },
-      { x: 50, z: -70, height: 80, type: 'stepped', color: '#e2e8f0', accent: '#d97706' },
-      { x: 75, z: -55, height: 65, type: 'tapered', color: '#bae6fd', accent: '#3b82f6' },
-      { x: 70, z: -80, height: 90, type: 'tower', color: '#cbd5e1', accent: '#0ea5e9' },
+      { x: 35, z: -75, height: 65, type: 'sail', color: '#93c5fd', accent: '#0284c7' },
+      { x: 55, z: -70, height: 85, type: 'stepped', color: '#e2e8f0', accent: '#d97706' },
+      { x: 75, z: -55, height: 70, type: 'tapered', color: '#bae6fd', accent: '#3b82f6' },
+      { x: 70, z: -80, height: 95, type: 'tower', color: '#cbd5e1', accent: '#0ea5e9' },
+      { x: 85, z: -65, height: 60, type: 'stepped', color: '#f8fafc', accent: '#f59e0b' },
 
       // North-West Quadrant
-      { x: -30, z: -75, height: 70, type: 'tapered', color: '#e2e8f0', accent: '#8b5cf6' },
-      { x: -55, z: -70, height: 85, type: 'tower', color: '#bae6fd', accent: '#0284c7' },
-      { x: -75, z: -55, height: 55, type: 'sail', color: '#fef08a', accent: '#d97706' },
-      { x: -70, z: -80, height: 95, type: 'stepped', color: '#cbd5e1', accent: '#3b82f6' },
+      { x: -35, z: -75, height: 75, type: 'tapered', color: '#e2e8f0', accent: '#8b5cf6' },
+      { x: -55, z: -70, height: 90, type: 'tower', color: '#bae6fd', accent: '#0284c7' },
+      { x: -75, z: -55, height: 60, type: 'sail', color: '#fef08a', accent: '#d97706' },
+      { x: -70, z: -80, height: 100, type: 'stepped', color: '#cbd5e1', accent: '#3b82f6' },
+      { x: -85, z: -65, height: 70, type: 'tower', color: '#f8fafc', accent: '#0284c7' },
+
+      // East Flank
+      { x: 75, z: -25, height: 70, type: 'tower', color: '#e2e8f0', accent: '#0284c7' },
+      { x: 80, z: 0, height: 85, type: 'stepped', color: '#bae6fd', accent: '#d97706' },
+      { x: 75, z: 25, height: 65, type: 'sail', color: '#cbd5e1', accent: '#8b5cf6' },
+
+      // West Flank
+      { x: -75, z: -25, height: 75, type: 'sail', color: '#bae6fd', accent: '#0ea5e9' },
+      { x: -80, z: 0, height: 90, type: 'stepped', color: '#e2e8f0', accent: '#0284c7' },
+      { x: -75, z: 25, height: 70, type: 'tower', color: '#cbd5e1', accent: '#d97706' },
 
       // South-East Quadrant
-      { x: 30, z: 75, height: 55, type: 'stepped', color: '#bae6fd', accent: '#d97706' },
-      { x: 55, z: 70, height: 75, type: 'sail', color: '#e2e8f0', accent: '#0ea5e9' },
-      { x: 75, z: 55, height: 65, type: 'tower', color: '#93c5fd', accent: '#8b5cf6' },
-      { x: 70, z: 80, height: 88, type: 'tapered', color: '#cbd5e1', accent: '#0284c7' },
+      { x: 35, z: 75, height: 60, type: 'stepped', color: '#bae6fd', accent: '#d97706' },
+      { x: 55, z: 70, height: 80, type: 'sail', color: '#e2e8f0', accent: '#0ea5e9' },
+      { x: 75, z: 55, height: 70, type: 'tower', color: '#93c5fd', accent: '#8b5cf6' },
+      { x: 70, z: 80, height: 90, type: 'tapered', color: '#cbd5e1', accent: '#0284c7' },
 
       // South-West Quadrant
-      { x: -30, z: 75, height: 62, type: 'tower', color: '#cbd5e1', accent: '#0284c7' },
-      { x: -55, z: 70, height: 72, type: 'tapered', color: '#e2e8f0', accent: '#d97706' },
-      { x: -75, z: 55, height: 92, type: 'stepped', color: '#bae6fd', accent: '#8b5cf6' },
-      { x: -70, z: 80, height: 82, type: 'sail', color: '#93c5fd', accent: '#0ea5e9' },
+      { x: -35, z: 75, height: 65, type: 'tower', color: '#cbd5e1', accent: '#0284c7' },
+      { x: -55, z: 70, height: 78, type: 'tapered', color: '#e2e8f0', accent: '#d97706' },
+      { x: -75, z: 55, height: 95, type: 'stepped', color: '#bae6fd', accent: '#8b5cf6' },
+      { x: -70, z: 80, height: 85, type: 'sail', color: '#93c5fd', accent: '#0ea5e9' },
 
-      // Outer Perimeter Skyscraper Ring
-      { x: 95, z: 0, height: 100, type: 'stepped', color: '#e2e8f0', accent: '#0284c7' },
-      { x: -95, z: 0, height: 105, type: 'stepped', color: '#cbd5e1', accent: '#8b5cf6' },
-      { x: 0, z: -95, height: 115, type: 'tapered', color: '#bae6fd', accent: '#0ea5e9' },
-      { x: 0, z: 95, height: 95, type: 'sail', color: '#e2e8f0', accent: '#d97706' },
-      { x: 95, z: 95, height: 85, type: 'tower', color: '#93c5fd', accent: '#0284c7' },
-      { x: -95, z: 95, height: 90, type: 'tower', color: '#e2e8f0', accent: '#8b5cf6' },
-      { x: 95, z: -95, height: 95, type: 'tower', color: '#cbd5e1', accent: '#d97706' },
-      { x: -95, z: -95, height: 98, type: 'tower', color: '#bae6fd', accent: '#0284c7' }
+      // Outer Perimeter Grand Ring
+      { x: 100, z: 0, height: 105, type: 'stepped', color: '#e2e8f0', accent: '#0284c7' },
+      { x: -100, z: 0, height: 110, type: 'stepped', color: '#cbd5e1', accent: '#8b5cf6' },
+      { x: 0, z: -100, height: 125, type: 'tapered', color: '#bae6fd', accent: '#0ea5e9' },
+      { x: 0, z: 100, height: 95, type: 'sail', color: '#e2e8f0', accent: '#d97706' },
+      { x: 100, z: 100, height: 90, type: 'tower', color: '#93c5fd', accent: '#0284c7' },
+      { x: -100, z: 100, height: 95, type: 'tower', color: '#e2e8f0', accent: '#8b5cf6' },
+      { x: 100, z: -100, height: 100, type: 'tower', color: '#cbd5e1', accent: '#d97706' },
+      { x: -100, z: -100, height: 105, type: 'tower', color: '#bae6fd', accent: '#0284c7' }
     ];
 
     configs.forEach(cfg => {
       list.push({
         position: [cfg.x, cfg.height / 2, cfg.z],
-        size: [11 + (cfg.height % 6), cfg.height, 11 + (cfg.height % 5)],
+        size: [12 + (cfg.height % 6), cfg.height, 12 + (cfg.height % 5)],
         glassColor: cfg.color,
         hasSpire: cfg.height > 65,
         accentStrip: cfg.accent,
@@ -81,7 +100,7 @@ export const CitySkyline: React.FC = () => {
             )}
             <meshStandardMaterial
               color={b.glassColor}
-              roughness={0.1}
+              roughness={0.12}
               metalness={0.7}
               envMapIntensity={2.0}
             />
@@ -126,11 +145,11 @@ export const CitySkyline: React.FC = () => {
       ))}
 
       {/* Modern Skybridge Connecting Two Eastern Towers */}
-      <mesh position={[50, 42, -70]} rotation={[0, 0.4, 0]}>
+      <mesh position={[55, 45, -70]} rotation={[0, 0.4, 0]}>
         <boxGeometry args={[26, 4, 3.5]} />
         <meshStandardMaterial color="#ffffff" roughness={0.2} metalness={0.7} />
       </mesh>
-      <mesh position={[50, 42, -70]} rotation={[0, 0.4, 0]}>
+      <mesh position={[55, 45, -70]} rotation={[0, 0.4, 0]}>
         <boxGeometry args={[26.2, 0.25, 3.7]} />
         <meshBasicMaterial color="#0284c7" />
       </mesh>

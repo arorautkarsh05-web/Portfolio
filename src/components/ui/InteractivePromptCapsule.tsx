@@ -81,3 +81,4 @@ export const InteractivePromptCapsule: React.FC<InteractivePromptCapsuleProps> =
     </div>
   );
 };
+

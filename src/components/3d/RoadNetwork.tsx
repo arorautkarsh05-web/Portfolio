@@ -43,13 +43,13 @@ export const RoadNetwork: React.FC = () => {
 
   return (
     <group name="RoadNetwork">
-      {/* Radiant Coastal Waterfront Reflection (Dubai Marina Azure Water) */}
-      <mesh position={[0, -0.3, 0]} receiveShadow>
-        <planeGeometry args={[360, 360]} />
+      {/* Radiant Coastal Waterfront Reflection (Flat horizontal plane beneath ground) */}
+      <mesh position={[0, -0.25, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[400, 400]} />
         <meshStandardMaterial
           color="#0284c7"
-          roughness={0.1}
-          metalness={0.8}
+          roughness={0.2}
+          metalness={0.7}
         />
       </mesh>
 
