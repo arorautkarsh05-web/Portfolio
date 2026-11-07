@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { cityCircuitWaypoints } from '../data/waypoints';
+import { circuitWaypoints, CircuitWaypoint } from '../data/waypoints';
 
 export interface VehicleState {
   position: [number, number, number];
@@ -12,20 +12,24 @@ export interface VehicleState {
   targetSpeed: number;
   currentWaypointIndex: number;
   targetModuleName: string;
+  activeStop: CircuitWaypoint | null;
+  isStoppedAtModule: boolean;
 }
 
 export function useVehicleControls(initialPos: [number, number, number] = [0, 0.45, 8]) {
   const [vehicleState, setVehicleState] = useState<VehicleState>({
     position: initialPos,
     rotationY: -Math.PI / 2, // Facing west toward first boulevard
-    speed: 12.0, // Initial cruise speed
+    speed: 12.0,
     steering: 0,
     isHeadlightsOn: true,
     isEngineStarted: true,
     isBraked: false,
     targetSpeed: 14.0,
     currentWaypointIndex: 1,
-    targetModuleName: cityCircuitWaypoints[1].moduleName || cityCircuitWaypoints[1].name
+    targetModuleName: circuitWaypoints[1].name,
+    activeStop: null,
+    isStoppedAtModule: false
   });
 
   const stateRef = useRef<VehicleState>(vehicleState);
@@ -36,15 +40,19 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
   const waypointIdxRef = useRef<number>(1);
   const isBrakedRef = useRef<boolean>(false);
   const targetSpeedRef = useRef<number>(14.0);
+  const isStoppedAtModuleRef = useRef<boolean>(false);
+  const lastPromptedWaypointId = useRef<string | null>(null);
 
   // Speed Up: increases cruising velocity
   const speedUp = useCallback(() => {
     isBrakedRef.current = false;
+    isStoppedAtModuleRef.current = false;
     const newSpeed = Math.min(targetSpeedRef.current + 3.5, 24.0);
     targetSpeedRef.current = newSpeed;
     setVehicleState(prev => ({
       ...prev,
       isBraked: false,
+      isStoppedAtModule: false,
       targetSpeed: newSpeed
     }));
   }, []);
@@ -68,11 +76,21 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     }));
   }, []);
 
-  const setBrake = useCallback((braked: boolean) => {
-    isBrakedRef.current = braked;
+  // Resume driving to next waypoint / module
+  const resumeDrive = useCallback(() => {
+    isBrakedRef.current = false;
+    isStoppedAtModuleRef.current = false;
+    // Advance to next waypoint
+    waypointIdxRef.current = (waypointIdxRef.current + 1) % circuitWaypoints.length;
+    const nextWp = circuitWaypoints[waypointIdxRef.current];
+
     setVehicleState(prev => ({
       ...prev,
-      isBraked: braked
+      isBraked: false,
+      isStoppedAtModule: false,
+      activeStop: null,
+      currentWaypointIndex: waypointIdxRef.current,
+      targetModuleName: nextWp.moduleTitle || nextWp.name
     }));
   }, []);
 
@@ -90,8 +108,11 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     currentSteering.current = 0;
     waypointIdxRef.current = 1;
     isBrakedRef.current = false;
+    isStoppedAtModuleRef.current = false;
+    lastPromptedWaypointId.current = null;
     targetSpeedRef.current = 14.0;
 
+    const startWp = circuitWaypoints[1];
     setVehicleState({
       position: pos,
       rotationY: rotY,
@@ -102,7 +123,9 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
       isBraked: false,
       targetSpeed: 14.0,
       currentWaypointIndex: 1,
-      targetModuleName: cityCircuitWaypoints[1].moduleName || cityCircuitWaypoints[1].name
+      targetModuleName: startWp.moduleTitle || startWp.name,
+      activeStop: null,
+      isStoppedAtModule: false
     });
   }, []);
 
@@ -129,7 +152,7 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
   const updatePhysics = useCallback((delta: number) => {
     let { position, rotationY, isHeadlightsOn, isEngineStarted } = stateRef.current;
 
-    const waypoints = cityCircuitWaypoints;
+    const waypoints = circuitWaypoints;
     const currentWaypoint = waypoints[waypointIdxRef.current];
 
     // Calculate vector to target waypoint
@@ -137,8 +160,16 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     const dz = currentWaypoint.position[2] - position[2];
     const distToWaypoint = Math.hypot(dx, dz);
 
-    // If within radius, transition smoothly to next waypoint
-    if (distToWaypoint < 6.5) {
+    let activeStop = stateRef.current.activeStop;
+
+    // Check if reaching a designated module stop along the road
+    if (currentWaypoint.isModuleStop && distToWaypoint < 5.0 && lastPromptedWaypointId.current !== currentWaypoint.id) {
+      // Arrived at module stop on the road!
+      isStoppedAtModuleRef.current = true;
+      lastPromptedWaypointId.current = currentWaypoint.id;
+      activeStop = currentWaypoint;
+    } else if (!currentWaypoint.isModuleStop && distToWaypoint < 5.0) {
+      // Transit waypoint reached, advance to next
       waypointIdxRef.current = (waypointIdxRef.current + 1) % waypoints.length;
     }
 
@@ -155,16 +186,17 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
 
     // Smooth progressive steering
-    const turnRate = 2.8;
+    const turnRate = 3.0;
     rotationY += angleDiff * Math.min(delta * turnRate, 1.0);
 
     // Front wheels steering visual angle
-    const targetSteerAngle = Math.max(Math.min(angleDiff * 1.6, 0.45), -0.45);
+    const targetSteerAngle = Math.max(Math.min(angleDiff * 1.5, 0.45), -0.45);
     currentSteering.current += (targetSteerAngle - currentSteering.current) * Math.min(delta * 6.0, 1.0);
 
     // Speed physics interpolation towards target cruise speed
-    const effectiveTargetSpeed = isBrakedRef.current ? 0 : targetSpeedRef.current;
-    const accelDecelRate = isBrakedRef.current ? 16.0 : 6.0;
+    const mustStop = isBrakedRef.current || isStoppedAtModuleRef.current;
+    const effectiveTargetSpeed = mustStop ? 0 : targetSpeedRef.current;
+    const accelDecelRate = mustStop ? 16.0 : 6.0;
 
     if (currentSpeed.current < effectiveTargetSpeed) {
       currentSpeed.current += accelDecelRate * delta;
@@ -191,7 +223,9 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
       isBraked: isBrakedRef.current,
       targetSpeed: targetSpeedRef.current,
       currentWaypointIndex: waypointIdxRef.current,
-      targetModuleName: nextTarget.moduleName || nextTarget.name
+      targetModuleName: nextTarget.moduleTitle || nextTarget.name,
+      activeStop,
+      isStoppedAtModule: isStoppedAtModuleRef.current
     };
 
     setVehicleState(nextState);
@@ -204,7 +238,7 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     speedUp,
     speedLow,
     toggleBrake,
-    setBrake,
+    resumeDrive,
     toggleLights,
     resetPosition,
     setVehicleState

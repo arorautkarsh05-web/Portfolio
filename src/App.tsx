@@ -42,10 +42,13 @@ export function App() {
     speedUp,
     speedLow,
     toggleBrake,
+    resumeDrive,
     toggleLights,
     resetPosition,
     setVehicleState
   } = useVehicleControls([0, 0.45, 8]);
+
+  const [showResumePrompt, setShowResumePrompt] = useState<boolean>(false);
 
   const currentScene = scenesList.find(s => s.id === currentSceneId) || scenesList[0];
 
@@ -132,6 +135,72 @@ export function App() {
       handleIgnition();
     }
   }, [handleIgnition, playChime]);
+
+  // Universal modal close handler (if in driving mode, prompts to move to next module)
+  const handleCloseModal = useCallback(() => {
+    setSelectedProject(null);
+    setIsSkillsOpen(false);
+    setIsExperienceOpen(false);
+    setIsEducationOpen(false);
+    setIsContactOpen(false);
+    setIsCharacterProfileOpen(false);
+    if (isDrivingMode) {
+      setShowResumePrompt(true);
+    }
+  }, [isDrivingMode]);
+
+  // When car stops at a module, user elects to explore it
+  const handleExploreActiveStop = useCallback(() => {
+    if (!vehicleState.activeStop) return;
+    playChime(620);
+    const stop = vehicleState.activeStop;
+
+    switch (stop.moduleId) {
+      case 'education':
+        setIsEducationOpen(true);
+        break;
+      case 'bayora':
+        setSelectedProject(featuredProjects[0]);
+        break;
+      case 'skills':
+        setIsSkillsOpen(true);
+        break;
+      case 'ustaad':
+        setSelectedProject(featuredProjects[1]);
+        break;
+      case 'webguard':
+        setSelectedProject(featuredProjects[3]);
+        break;
+      case 'contact':
+        setIsContactOpen(true);
+        break;
+      case 'experience':
+        setIsExperienceOpen(true);
+        break;
+      case 'paypal':
+        setSelectedProject(featuredProjects[2]);
+        break;
+      case 'profile':
+        setIsCharacterProfileOpen(true);
+        break;
+      default:
+        break;
+    }
+  }, [vehicleState.activeStop, playChime]);
+
+  // When user elects to skip current module stop and continue driving
+  const handleSkipActiveStop = useCallback(() => {
+    playChime(480);
+    setShowResumePrompt(false);
+    resumeDrive();
+  }, [resumeDrive, playChime]);
+
+  // When user clicks "Move Again / Continue Driving"
+  const handleResumeMove = useCallback(() => {
+    playChime(580);
+    setShowResumePrompt(false);
+    resumeDrive();
+  }, [resumeDrive, playChime]);
 
   // Context action from director nav or capsule
   const handleSceneAction = useCallback((sceneId: number) => {
@@ -277,6 +346,11 @@ export function App() {
             onTriggerAction={handleCapsuleTrigger}
             isDrivingMode={isDrivingMode}
             nearDistrictName={nearLandmark?.name}
+            activeStop={vehicleState.activeStop}
+            onExploreActiveStop={handleExploreActiveStop}
+            onSkipActiveStop={handleSkipActiveStop}
+            showResumePrompt={showResumePrompt}
+            onResumeMove={handleResumeMove}
           />
 
           {/* Drive HUD overlay with Speed Up, Speed Low, and Brake controls */}
@@ -321,33 +395,33 @@ export function App() {
       {/* Modals & Detailed Dossiers */}
       <ProjectDetailModal
         project={selectedProject}
-        onClose={() => setSelectedProject(null)}
+        onClose={handleCloseModal}
         onSelectProject={setSelectedProject}
       />
 
       <TechSkillsOverlay
         isOpen={isSkillsOpen}
-        onClose={() => setIsSkillsOpen(false)}
+        onClose={handleCloseModal}
       />
 
       <ExperienceDistrictView
         isOpen={isExperienceOpen}
-        onClose={() => setIsExperienceOpen(false)}
+        onClose={handleCloseModal}
       />
 
       <EducationModal
         isOpen={isEducationOpen}
-        onClose={() => setIsEducationOpen(false)}
+        onClose={handleCloseModal}
       />
 
       <ContactModal
         isOpen={isContactOpen}
-        onClose={() => setIsContactOpen(false)}
+        onClose={handleCloseModal}
       />
 
       <CharacterProfileModal
         isOpen={isCharacterProfileOpen}
-        onClose={() => setIsCharacterProfileOpen(false)}
+        onClose={handleCloseModal}
         onStartIgnition={() => {
           handleIgnition();
           setIsDrivingMode(true);

@@ -106,6 +106,46 @@ export const RoadNetwork: React.FC = () => {
         />
       </mesh>
 
+      {/* North Avenue Cross-Boulevard (Connecting Bayora, Tech Tower & Ustaad) */}
+      <mesh position={[0, 0.012, -35]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[110, 14]} />
+        <meshStandardMaterial color="#334155" roughness={0.4} metalness={0.3} />
+      </mesh>
+
+      {/* South Avenue Cross-Boulevard (Connecting PayPal, Experience, Garage & WebGuard) */}
+      <mesh position={[0, 0.012, 35]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[110, 14]} />
+        <meshStandardMaterial color="#334155" roughness={0.4} metalness={0.3} />
+      </mesh>
+
+      {/* West Avenue Boulevard (Connecting Education, Bayora & PayPal) */}
+      <mesh position={[-35, 0.012, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[14, 94]} />
+        <meshStandardMaterial color="#334155" roughness={0.4} metalness={0.3} />
+      </mesh>
+
+      {/* East Avenue Boulevard (Connecting Ustaad & WebGuard) */}
+      <mesh position={[35, 0.012, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[14, 94]} />
+        <meshStandardMaterial color="#334155" roughness={0.4} metalness={0.3} />
+      </mesh>
+
+      {/* Avenue Yellow Centerlines */}
+      {[-30, -15, 0, 15, 30].map((x, i) => (
+        <React.Fragment key={`ave-dash-${i}`}>
+          {/* North Ave Dash */}
+          <mesh position={[x, 0.025, -35]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[6, 0.35]} />
+            <meshBasicMaterial color="#fbbf24" />
+          </mesh>
+          {/* South Ave Dash */}
+          <mesh position={[x, 0.025, 35]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[6, 0.35]} />
+            <meshBasicMaterial color="#fbbf24" />
+          </mesh>
+        </React.Fragment>
+      ))}
+
       {/* District Ring Roads */}
       <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <ringGeometry args={[52, 66, 64]} />

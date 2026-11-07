@@ -1,137 +1,150 @@
-export interface CityWaypoint {
+export interface CircuitWaypoint {
   id: string;
   name: string;
   position: [number, number, number];
-  moduleName?: string;
+  isModuleStop?: boolean;
+  moduleId?: 'profile' | 'education' | 'bayora' | 'skills' | 'ustaad' | 'webguard' | 'contact' | 'experience' | 'paypal';
+  moduleTitle?: string;
   description?: string;
 }
 
-export const cityCircuitWaypoints: CityWaypoint[] = [
+export const circuitWaypoints: CircuitWaypoint[] = [
+  // 0. START: Central Grand Plaza Roundabout (facing West towards West Boulevard)
   {
     id: 'plaza-start',
     name: 'Central Grand Plaza',
     position: [0, 0.45, 8],
-    moduleName: 'Utkarsh Arora // Central Plaza',
+    isModuleStop: true,
+    moduleId: 'profile',
+    moduleTitle: 'Utkarsh Arora // Central Profile',
     description: 'Starting line beside the iconic Utkarsh Arora hologram pedestal.'
   },
+
+  // 1. West Boulevard Junction
   {
-    id: 'west-boulevard-turn',
+    id: 'west-junction-1',
     name: 'West Boulevard Junction',
-    position: [-16, 0.45, 4],
-    moduleName: 'West Avenue',
-    description: 'Cruising west along the palm-lined Dubai boulevard.'
+    position: [-18, 0.45, 0],
+    description: 'Heading west along the palm-lined Dubai boulevard.'
   },
+
+  // 2. Turn onto West Avenue heading North
   {
-    id: 'education-approach',
-    name: 'Education Boulevard Approach',
-    position: [-28, 0.45, -4],
-    moduleName: 'Galgotias College ECE',
-    description: 'Approaching the academic rotunda and engineering labs.'
+    id: 'west-ave-turn',
+    name: 'West Avenue Corner',
+    position: [-35, 0.45, 0],
+    description: 'Turning north onto West Academic Avenue.'
   },
+
+  // 3. STOP 1: Education Boulevard (Car is ON the road, Education Campus is right on the side!)
   {
-    id: 'education-boulevard',
-    name: 'Education Boulevard Plaza',
+    id: 'stop-education',
+    name: 'Education Boulevard',
     position: [-35, 0.45, -15],
-    moduleName: 'Galgotias College of Engineering',
-    description: 'B.Tech in Electronics and Communication Engineering (CGPA 7.3/10).'
+    isModuleStop: true,
+    moduleId: 'education',
+    moduleTitle: 'Education Boulevard // Galgotias ECE',
+    description: 'B.Tech in Electronics & Communication Engineering (CGPA 7.3/10).'
   },
+
+  // 4. STOP 2: Bayora Security Citadel (Car is ON West Avenue, Citadel is on the left at [-45, -35])
   {
-    id: 'bayora-approach',
-    name: 'Security Citadel Corridor',
-    position: [-42, 0.45, -26],
-    moduleName: 'Bayora AI Security',
-    description: 'Approaching the red cryptographic security citadel.'
+    id: 'stop-bayora',
+    name: 'Bayora AI Security Citadel',
+    position: [-35, 0.45, -35],
+    isModuleStop: true,
+    moduleId: 'bayora',
+    moduleTitle: 'Project 01: Bayora // AI Safety Testing',
+    description: 'Adversarial AI safety infrastructure with tamper-evident audit trails.'
   },
+
+  // 5. STOP 3: Technology Tower (Car is ON North Avenue, Tower is in front at [0, -45])
   {
-    id: 'bayora-citadel',
-    name: 'Bayora Security Citadel',
-    position: [-45, 0.45, -35],
-    moduleName: 'Bayora // AI Safety Testing',
-    description: 'Adversarial AI safety infrastructure with Ed25519 proofs.'
-  },
-  {
-    id: 'north-boulevard-west',
-    name: 'North Boulevard West',
-    position: [-24, 0.45, -45],
-    moduleName: 'Technology Avenue',
-    description: 'Turning east onto the main Technology Boulevard.'
-  },
-  {
-    id: 'tech-tower',
+    id: 'stop-skills',
     name: 'Technology Tower',
-    position: [0, 0.45, -45],
-    moduleName: 'Technology Tower // 7 Skill Domains',
-    description: '65-meter crystalline glass skyscraper showcasing Python, SQL, BI, and Full-Stack.'
+    position: [0, 0.45, -35],
+    isModuleStop: true,
+    moduleId: 'skills',
+    moduleTitle: 'Technology Tower // 7 Skill Districts',
+    description: '65-meter crystalline glass skyscraper showcasing Data Analytics, Python, SQL & Full-Stack.'
   },
+
+  // 6. STOP 4: Eurogrip Ustaad Network (Car is ON North-East Avenue, Ustaad Hub is on the right at [45, -35])
   {
-    id: 'north-boulevard-east',
-    name: 'North Boulevard East',
-    position: [24, 0.45, -45],
-    moduleName: 'Mobility Corridor',
-    description: 'Cruising east towards Eurogrip Ustaad automotive landmark.'
+    id: 'stop-ustaad',
+    name: 'Eurogrip Ustaad Hub',
+    position: [35, 0.45, -35],
+    isModuleStop: true,
+    moduleId: 'ustaad',
+    moduleTitle: 'Project 02: Eurogrip Ustaad Network',
+    description: 'Intelligent mechanic empowerment, Fitment Passport QR & advocacy ecosystem.'
   },
+
+  // 7. East Avenue Midpoint (Crossing East Boulevard)
   {
-    id: 'ustaad-hub',
-    name: 'Eurogrip Ustaad Network',
-    position: [45, 0.45, -35],
-    moduleName: 'Eurogrip Ustaad Network',
-    description: 'Intelligent mechanic empowerment & brand advocacy ecosystem.'
+    id: 'east-ave-mid',
+    name: 'East Avenue Marina Corridor',
+    position: [35, 0.45, 0],
+    description: 'Cruising south along East Avenue.'
   },
+
+  // 8. STOP 5: WebGuard AI Observatory (Car is ON East Avenue, WebGuard is on the right at [45, 35])
   {
-    id: 'east-boulevard-mid',
-    name: 'East Boulevard Marina View',
-    position: [45, 0.45, 0],
-    moduleName: 'Marina Promenade Avenue',
-    description: 'Cruising south along the scenic coastal skyline.'
-  },
-  {
-    id: 'webguard-ai',
+    id: 'stop-webguard',
     name: 'WebGuard AI Observatory',
-    position: [45, 0.45, 30],
-    moduleName: 'WebGuard AI // Site Reliability',
-    description: 'Autonomous website reliability & competitive intelligence platform.'
+    position: [35, 0.45, 35],
+    isModuleStop: true,
+    moduleId: 'webguard',
+    moduleTitle: 'Project 04: WebGuard AI',
+    description: 'Autonomous website reliability, TinyFish automation & competitive intelligence.'
   },
+
+  // 9. STOP 6: The Executive Garage (Car is ON South Avenue, Showroom is on the left at [30, 35])
   {
-    id: 'garage-approach',
-    name: 'Executive Showroom Runway',
-    position: [30, 0.45, 35],
-    moduleName: 'The Executive Garage // Contact',
+    id: 'stop-garage',
+    name: 'The Executive Garage',
+    position: [20, 0.45, 35],
+    isModuleStop: true,
+    moduleId: 'contact',
+    moduleTitle: 'Contact Garage // Executive Terminal',
     description: 'High-tech terminal showroom: connect via Email, LinkedIn, GitHub & Resume.'
   },
+
+  // 10. STOP 7: Experience District (Car is ON South Avenue, Skybridge is on the right at [-30, 35])
   {
-    id: 'experience-approach',
-    name: 'South Avenue Career Spine',
-    position: [0, 0.45, 35],
-    moduleName: 'Career Skybridge Boulevard',
-    description: 'Heading west across the metropolitan south boulevard.'
-  },
-  {
-    id: 'experience-district',
+    id: 'stop-experience',
     name: 'Experience District',
-    position: [-30, 0.45, 35],
-    moduleName: 'Experience District // Internships',
-    description: 'Professional timeline: Auspify Technologies, HashBit, DataX Web Solutions.'
+    position: [-20, 0.45, 35],
+    isModuleStop: true,
+    moduleId: 'experience',
+    moduleTitle: 'Experience District // Internships',
+    description: 'Professional internships: Auspify Technologies, HashBit, DataX Web Solutions.'
   },
+
+  // 11. STOP 8: PayPal Resolve Spire (Car is ON South-West Avenue, Spire is on the left at [-45, 35])
   {
-    id: 'paypal-resolve',
+    id: 'stop-paypal',
     name: 'PayPal Resolve Spire',
-    position: [-45, 0.45, 35],
-    moduleName: 'PayPal Resolve // FinTech & AI',
-    description: 'AI payment reconciliation, dispute investigation & resolution engine.'
+    position: [-35, 0.45, 35],
+    isModuleStop: true,
+    moduleId: 'paypal',
+    moduleTitle: 'Project 03: PayPal Resolve',
+    description: 'AI payment intelligence, reconciliation & merchant resolution engine.'
   },
+
+  // 12. Turn North onto West Avenue
   {
-    id: 'return-corridor-south',
-    name: 'West Avenue Return Corridor',
-    position: [-42, 0.45, 18],
-    moduleName: 'West Metropolitan Boulevard',
-    description: 'Cruising north back towards the central metropolitan core.'
+    id: 'west-return-mid',
+    name: 'West Avenue Return Road',
+    position: [-35, 0.45, 14],
+    description: 'Heading north towards Central Boulevard.'
   },
+
+  // 13. Re-enter Central Plaza Roundabout
   {
-    id: 'return-corridor-north',
-    name: 'Central Plaza Western Gate',
-    position: [-20, 0.45, 6],
-    moduleName: 'Central Grand Plaza Gate',
-    description: 'Re-entering the marble & gold central roundabout.'
+    id: 'central-return-gate',
+    name: 'Central Plaza Western Gateway',
+    position: [-16, 0.45, 6],
+    description: 'Returning to Central Grand Plaza Roundabout.'
   }
 ];
-
