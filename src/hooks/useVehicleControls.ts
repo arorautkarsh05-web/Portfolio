@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { cityCircuitWaypoints } from '../data/waypoints';
 
 export interface VehicleState {
   position: [number, number, number];
@@ -7,115 +8,178 @@ export interface VehicleState {
   steering: number;
   isHeadlightsOn: boolean;
   isEngineStarted: boolean;
+  isBraked: boolean;
+  targetSpeed: number;
+  currentWaypointIndex: number;
+  targetModuleName: string;
 }
 
-export function useVehicleControls(initialPos: [number, number, number] = [0, 0.45, 0]) {
+export function useVehicleControls(initialPos: [number, number, number] = [0, 0.45, 8]) {
   const [vehicleState, setVehicleState] = useState<VehicleState>({
     position: initialPos,
-    rotationY: 0,
-    speed: 0,
+    rotationY: -Math.PI / 2, // Facing west toward first boulevard
+    speed: 12.0, // Initial cruise speed
     steering: 0,
     isHeadlightsOn: true,
     isEngineStarted: true,
+    isBraked: false,
+    targetSpeed: 14.0,
+    currentWaypointIndex: 1,
+    targetModuleName: cityCircuitWaypoints[1].moduleName || cityCircuitWaypoints[1].name
   });
 
-  const keysPressed = useRef<{ [key: string]: boolean }>({});
   const stateRef = useRef<VehicleState>(vehicleState);
   stateRef.current = vehicleState;
 
-  const currentSpeed = useRef<number>(0);
+  const currentSpeed = useRef<number>(12.0);
   const currentSteering = useRef<number>(0);
+  const waypointIdxRef = useRef<number>(1);
+  const isBrakedRef = useRef<boolean>(false);
+  const targetSpeedRef = useRef<number>(14.0);
 
-  const setControlKey = useCallback((key: string, pressed: boolean) => {
-    keysPressed.current[key.toLowerCase()] = pressed;
+  // Speed Up: increases cruising velocity
+  const speedUp = useCallback(() => {
+    isBrakedRef.current = false;
+    const newSpeed = Math.min(targetSpeedRef.current + 3.5, 24.0);
+    targetSpeedRef.current = newSpeed;
+    setVehicleState(prev => ({
+      ...prev,
+      isBraked: false,
+      targetSpeed: newSpeed
+    }));
   }, []);
 
+  // Speed Low: decreases cruising velocity
+  const speedLow = useCallback(() => {
+    const newSpeed = Math.max(targetSpeedRef.current - 3.5, 4.5);
+    targetSpeedRef.current = newSpeed;
+    setVehicleState(prev => ({
+      ...prev,
+      targetSpeed: newSpeed
+    }));
+  }, []);
+
+  // Brake: halts the vehicle or resumes cruise
+  const toggleBrake = useCallback(() => {
+    isBrakedRef.current = !isBrakedRef.current;
+    setVehicleState(prev => ({
+      ...prev,
+      isBraked: isBrakedRef.current
+    }));
+  }, []);
+
+  const setBrake = useCallback((braked: boolean) => {
+    isBrakedRef.current = braked;
+    setVehicleState(prev => ({
+      ...prev,
+      isBraked: braked
+    }));
+  }, []);
+
+  // Toggle headlights
+  const toggleLights = useCallback(() => {
+    setVehicleState(prev => ({
+      ...prev,
+      isHeadlightsOn: !prev.isHeadlightsOn
+    }));
+  }, []);
+
+  // Reset vehicle to circuit start
+  const resetPosition = useCallback((pos: [number, number, number] = [0, 0.45, 8], rotY = -Math.PI / 2) => {
+    currentSpeed.current = 10.0;
+    currentSteering.current = 0;
+    waypointIdxRef.current = 1;
+    isBrakedRef.current = false;
+    targetSpeedRef.current = 14.0;
+
+    setVehicleState({
+      position: pos,
+      rotationY: rotY,
+      speed: 10.0,
+      steering: 0,
+      isHeadlightsOn: true,
+      isEngineStarted: true,
+      isBraked: false,
+      targetSpeed: 14.0,
+      currentWaypointIndex: 1,
+      targetModuleName: cityCircuitWaypoints[1].moduleName || cityCircuitWaypoints[1].name
+    });
+  }, []);
+
+  // Keyboard controls for speed & brake
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
-      keysPressed.current[e.key.toLowerCase()] = true;
-    };
 
-    const handleKeyUp = (e: KeyboardEvent) => {
-      keysPressed.current[e.key.toLowerCase()] = false;
+      const key = e.key.toLowerCase();
+      if (key === 'w' || key === 'arrowup') {
+        speedUp();
+      } else if (key === 's' || key === 'arrowdown') {
+        speedLow();
+      } else if (key === ' ' || key === 'b') {
+        toggleBrake();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [speedUp, speedLow, toggleBrake]);
 
+  // Main vehicle physics & automatic road waypoint cruise loop
   const updatePhysics = useCallback((delta: number) => {
-    const keys = keysPressed.current;
-    const forward = (keys['w'] || keys['arrowup']) ? 1 : 0;
-    const backward = (keys['s'] || keys['arrowdown']) ? 1 : 0;
-    const left = (keys['a'] || keys['arrowleft']) ? 1 : 0;
-    const right = (keys['d'] || keys['arrowright']) ? 1 : 0;
-
-    const targetThrottle = forward - backward;
-    const targetSteer = left - right;
-
     let { position, rotationY, isHeadlightsOn, isEngineStarted } = stateRef.current;
 
-    // Ultra-smooth acceleration & braking dynamics
-    const maxSpeed = 22.0;
-    const maxReverse = -8.0;
-    const accelRate = 14.0;
-    const brakeRate = 18.0;
-    const coastFriction = 5.0;
+    const waypoints = cityCircuitWaypoints;
+    const currentWaypoint = waypoints[waypointIdxRef.current];
 
-    if (targetThrottle > 0) {
-      currentSpeed.current += accelRate * delta;
-      if (currentSpeed.current > maxSpeed) currentSpeed.current = maxSpeed;
-    } else if (targetThrottle < 0) {
-      if (currentSpeed.current > 0) {
-        currentSpeed.current -= brakeRate * delta;
-      } else {
-        currentSpeed.current -= (accelRate * 0.6) * delta;
-        if (currentSpeed.current < maxReverse) currentSpeed.current = maxReverse;
-      }
-    } else {
-      // Natural rolling friction / coasting
-      if (Math.abs(currentSpeed.current) < 0.1) {
-        currentSpeed.current = 0;
-      } else {
-        currentSpeed.current -= Math.sign(currentSpeed.current) * coastFriction * delta;
-      }
+    // Calculate vector to target waypoint
+    const dx = currentWaypoint.position[0] - position[0];
+    const dz = currentWaypoint.position[2] - position[2];
+    const distToWaypoint = Math.hypot(dx, dz);
+
+    // If within radius, transition smoothly to next waypoint
+    if (distToWaypoint < 6.5) {
+      waypointIdxRef.current = (waypointIdxRef.current + 1) % waypoints.length;
     }
 
-    // Smooth progressive steering with speed-dependent response
-    const maxSteerAngle = 0.52;
-    const steerDamping = 6.0;
-    const targetAngle = targetSteer * maxSteerAngle;
-    currentSteering.current += (targetAngle - currentSteering.current) * Math.min(delta * steerDamping, 1.0);
+    const nextTarget = waypoints[waypointIdxRef.current];
+    const targetDx = nextTarget.position[0] - position[0];
+    const targetDz = nextTarget.position[2] - position[2];
 
-    // Turn vehicle smoothly when moving
-    const speedRatio = currentSpeed.current / maxSpeed;
-    if (Math.abs(currentSpeed.current) > 0.05) {
-      const turnMultiplier = currentSpeed.current >= 0 ? 1.8 : -1.8;
-      rotationY += currentSteering.current * turnMultiplier * delta;
+    // Compute target rotation angle towards waypoint
+    const targetRotY = Math.atan2(targetDx, targetDz);
+
+    // Shortest angular turn interpolation
+    let angleDiff = targetRotY - rotationY;
+    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+
+    // Smooth progressive steering
+    const turnRate = 2.8;
+    rotationY += angleDiff * Math.min(delta * turnRate, 1.0);
+
+    // Front wheels steering visual angle
+    const targetSteerAngle = Math.max(Math.min(angleDiff * 1.6, 0.45), -0.45);
+    currentSteering.current += (targetSteerAngle - currentSteering.current) * Math.min(delta * 6.0, 1.0);
+
+    // Speed physics interpolation towards target cruise speed
+    const effectiveTargetSpeed = isBrakedRef.current ? 0 : targetSpeedRef.current;
+    const accelDecelRate = isBrakedRef.current ? 16.0 : 6.0;
+
+    if (currentSpeed.current < effectiveTargetSpeed) {
+      currentSpeed.current += accelDecelRate * delta;
+      if (currentSpeed.current > effectiveTargetSpeed) currentSpeed.current = effectiveTargetSpeed;
+    } else if (currentSpeed.current > effectiveTargetSpeed) {
+      currentSpeed.current -= accelDecelRate * delta;
+      if (currentSpeed.current < effectiveTargetSpeed) currentSpeed.current = effectiveTargetSpeed;
     }
 
-    // Compute delta X and Z
-    const dx = Math.sin(rotationY) * currentSpeed.current * delta;
-    const dz = Math.cos(rotationY) * currentSpeed.current * delta;
+    // Move forward along vehicle heading
+    const moveDx = Math.sin(rotationY) * currentSpeed.current * delta;
+    const moveDz = Math.cos(rotationY) * currentSpeed.current * delta;
 
-    let newX = position[0] + dx;
-    let newZ = position[2] + dz;
-
-    // Soft boundary cushioning (smoothly prevent leaving city district)
-    const boundLimit = 100;
-    if (Math.abs(newX) > boundLimit) {
-      newX = Math.sign(newX) * boundLimit;
-      currentSpeed.current *= 0.5; // gentle slow-down instead of jarring wall stop
-    }
-    if (Math.abs(newZ) > boundLimit) {
-      newZ = Math.sign(newZ) * boundLimit;
-      currentSpeed.current *= 0.5;
-    }
+    const newX = position[0] + moveDx;
+    const newZ = position[2] + moveDz;
 
     const nextState: VehicleState = {
       position: [newX, 0.45, newZ],
@@ -123,30 +187,26 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
       speed: currentSpeed.current,
       steering: currentSteering.current,
       isHeadlightsOn,
-      isEngineStarted
+      isEngineStarted,
+      isBraked: isBrakedRef.current,
+      targetSpeed: targetSpeedRef.current,
+      currentWaypointIndex: waypointIdxRef.current,
+      targetModuleName: nextTarget.moduleName || nextTarget.name
     };
 
     setVehicleState(nextState);
     return nextState;
   }, []);
 
-  const resetPosition = useCallback((pos: [number, number, number] = [0, 0.45, 0], rotY = 0) => {
-    currentSpeed.current = 0;
-    currentSteering.current = 0;
-    setVehicleState(prev => ({
-      ...prev,
-      position: pos,
-      rotationY: rotY,
-      speed: 0,
-      steering: 0
-    }));
-  }, []);
-
   return {
     vehicleState,
     updatePhysics,
+    speedUp,
+    speedLow,
+    toggleBrake,
+    setBrake,
+    toggleLights,
     resetPosition,
-    setControlKey,
     setVehicleState
   };
 }

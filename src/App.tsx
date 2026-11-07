@@ -35,8 +35,17 @@ export function App() {
   // Audio system
   const { isMuted, toggleSound, playIgnition, playChime, updateEngineSpeed } = useAudio();
 
-  // Vehicle Controls & Physics
-  const { vehicleState, updatePhysics, resetPosition, setControlKey, setVehicleState } = useVehicleControls([0, 0.45, 0]);
+  // Vehicle Controls & Autonomous Physics
+  const {
+    vehicleState,
+    updatePhysics,
+    speedUp,
+    speedLow,
+    toggleBrake,
+    toggleLights,
+    resetPosition,
+    setVehicleState
+  } = useVehicleControls([0, 0.45, 8]);
 
   const currentScene = scenesList.find(s => s.id === currentSceneId) || scenesList[0];
 
@@ -48,8 +57,8 @@ export function App() {
     const landmarks: Array<{ name: string; pos: [number, number]; action: () => void }> = [
       { name: "Bayora Citadel", pos: [-45, -35], action: () => setSelectedProject(featuredProjects[0]) },
       { name: "Eurogrip Ustaad Hub", pos: [45, -35], action: () => setSelectedProject(featuredProjects[1]) },
-      { name: "PayPal Resolve Spire", pos: [-45, 45], action: () => setSelectedProject(featuredProjects[2]) },
-      { name: "WebGuard AI Dome", pos: [45, 45], action: () => setSelectedProject(featuredProjects[3]) },
+      { name: "PayPal Resolve Spire", pos: [-45, 35], action: () => setSelectedProject(featuredProjects[2]) },
+      { name: "WebGuard AI Observatory", pos: [45, 35], action: () => setSelectedProject(featuredProjects[3]) },
       { name: "Technology Tower", pos: [0, -45], action: () => setIsSkillsOpen(true) },
       { name: "Education Boulevard", pos: [-35, -15], action: () => setIsEducationOpen(true) },
       { name: "Experience District", pos: [-30, 35], action: () => setIsExperienceOpen(true) },
@@ -59,7 +68,7 @@ export function App() {
 
     for (const lm of landmarks) {
       const dist = Math.hypot(x - lm.pos[0], z - lm.pos[1]);
-      if (dist < 18) {
+      if (dist < 20) {
         return lm;
       }
     }
@@ -99,15 +108,18 @@ export function App() {
     return () => clearInterval(timer);
   }, [isAutoPlay, isDrivingMode, is2DView, playChime]);
 
-  // Ignition trigger
+  // Ignition trigger: activates headlights, starts engine and engages autonomous road cruise
   const handleIgnition = useCallback(() => {
     playIgnition();
     setVehicleState(prev => ({
       ...prev,
       isHeadlightsOn: true,
-      isEngineStarted: true
+      isEngineStarted: true,
+      isBraked: false,
+      speed: Math.max(prev.speed, 10.0)
     }));
     setCurrentSceneId(3);
+    setIsDrivingMode(true);
   }, [playIgnition, setVehicleState]);
 
   // Scene selection
@@ -267,19 +279,25 @@ export function App() {
             nearDistrictName={nearLandmark?.name}
           />
 
-          {/* Drive HUD overlay */}
+          {/* Drive HUD overlay with Speed Up, Speed Low, and Brake controls */}
           {isDrivingMode && (
             <DriveHUD
               vehicleState={vehicleState}
               onExitDriving={() => setIsDrivingMode(false)}
-              onResetPosition={() => resetPosition([0, 0.45, 0], 0)}
-              onToggleLights={() => {
-                setVehicleState(prev => ({
-                  ...prev,
-                  isHeadlightsOn: !prev.isHeadlightsOn
-                }));
+              onResetPosition={() => resetPosition([0, 0.45, 8], -Math.PI / 2)}
+              onToggleLights={toggleLights}
+              onSpeedUp={() => {
+                playChime(640);
+                speedUp();
               }}
-              onVirtualControl={setControlKey}
+              onSpeedLow={() => {
+                playChime(420);
+                speedLow();
+              }}
+              onToggleBrake={() => {
+                playChime(320);
+                toggleBrake();
+              }}
             />
           )}
 
