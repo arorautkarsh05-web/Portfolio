@@ -4,7 +4,9 @@ import * as THREE from 'three';
 import { AtmosphereLighting } from './AtmosphereLighting';
 import { RoadNetwork } from './RoadNetwork';
 import { CitySkyline } from './CitySkyline';
+import { CityGateway } from './CityGateway';
 import { CharacterAndCar } from './CharacterAndCar';
+import { SupercarShowroom } from './SupercarShowroom';
 import { ProjectLandmarks } from './ProjectLandmarks';
 import { EducationBoulevard } from './EducationBoulevard';
 import { TechTower } from './TechTower';
@@ -27,6 +29,8 @@ interface CityWorldProps {
   onOpenExperienceModal: () => void;
   onOpenContactModal: () => void;
   onOpenAchievementsModal: () => void;
+  onTriggerCityReveal?: () => void;
+  onTriggerIgnition?: () => void;
   onSwitchTo2D?: () => void;
 }
 
@@ -41,6 +45,8 @@ export const CityWorld: React.FC<CityWorldProps> = ({
   onOpenExperienceModal,
   onOpenContactModal,
   onOpenAchievementsModal,
+  onTriggerCityReveal,
+  onTriggerIgnition,
   onSwitchTo2D
 }) => {
   const [hasWebGL] = useState<boolean>(() => {
@@ -89,17 +95,38 @@ export const CityWorld: React.FC<CityWorldProps> = ({
           <RoadNetwork />
           <CitySkyline />
 
-          {/* Core Interactive Districts along Both Sides of the Ellipse */}
+          {/* ========================================================
+              PHYSICAL BUILDINGS FOR EVERY PORTFOLIO MODULE (BOTH FLANKS)
+              ======================================================== */}
+          {/* Landmark 01: City Reveal Grand Entrance & Portal (Outer South-West) */}
+          <CityGateway onTriggerCityReveal={onTriggerCityReveal} />
+
+          {/* Landmark 02: Character Exhibition Pavilion (Central Grand Plaza) */}
           <CharacterAndCar
             vehicleState={vehicleState}
             onCharacterClick={onCharacterClick}
             isDrivingMode={isDrivingMode}
           />
-          <ProjectLandmarks onSelectProject={onSelectProject} />
+
+          {/* Landmark 03: Supercar Showroom (Inner East - Inside Loop) */}
+          <SupercarShowroom onTriggerIgnition={onTriggerIgnition} />
+
+          {/* Landmark 04: Education Boulevard (Outer West) */}
           <EducationBoulevard onOpenEducationModal={onOpenEducationModal} />
+
+          {/* Landmark 05: Technology Tower Skyscraper (Outer North) */}
           <TechTower onOpenSkillsModal={onOpenSkillsModal} />
+
+          {/* Landmark 06: Projects Boulevard (4 Distinct Project Buildings) */}
+          <ProjectLandmarks onSelectProject={onSelectProject} />
+
+          {/* Landmark 07: Experience District - 3 Corporate Offices (Outer South) */}
           <ExperienceDistrict onOpenExperienceModal={onOpenExperienceModal} />
+
+          {/* Landmark 08: Contact Garage Terminal (Outer South-East) */}
           <ContactGarage onOpenContactModal={onOpenContactModal} />
+
+          {/* Credentials & Trophy District (Inner South) */}
           <AchievementsPlaza onOpenAchievementsModal={onOpenAchievementsModal} />
 
           {/* Dynamic GTA-Style Smooth Follow & Cinematic Camera System */}

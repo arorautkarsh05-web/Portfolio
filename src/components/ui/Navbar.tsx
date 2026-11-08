@@ -27,31 +27,31 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenContact
 }) => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 px-4 py-2.5 sm:py-3 bg-slate-900/95 backdrop-blur-md border-b border-white/15 flex items-center justify-between text-white select-none shadow-xl min-h-[60px] sm:min-h-[64px]">
+    <header className="fixed top-0 left-0 right-0 z-40 px-4 py-2 sm:py-2.5 bg-slate-900/95 backdrop-blur-md border-b border-white/15 flex items-center justify-between text-white select-none shadow-xl h-16 max-h-16 overflow-hidden">
       {/* Brand & Identity */}
-      <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onSelectScene(1)}>
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-sky-500 to-purple-600 p-[1px] shadow-lg shadow-sky-500/20">
+      <div className="flex items-center space-x-3 cursor-pointer shrink-0" onClick={() => onSelectScene(1)}>
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-sky-500 to-purple-600 p-[1px] shadow-lg shadow-sky-500/20 shrink-0">
           <div className="w-full h-full bg-[#0d0d1a] rounded-[11px] flex items-center justify-center font-black tracking-wider text-sm text-sky-400">
             UA
           </div>
         </div>
         <div>
           <div className="flex items-center space-x-2">
-            <span className="font-extrabold tracking-wider text-base bg-gradient-to-r from-white via-slate-200 to-amber-300 bg-clip-text text-transparent">
+            <span className="font-extrabold tracking-wider text-base bg-gradient-to-r from-white via-slate-200 to-amber-300 bg-clip-text text-transparent truncate">
               UTKARSH CITY
             </span>
-            <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-md">
+            <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-md shrink-0">
               3D Interactive
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 hidden sm:block">
+          <p className="text-[11px] text-slate-400 hidden sm:block truncate">
             {personalProfile.name} • {personalProfile.title}
           </p>
         </div>
       </div>
 
       {/* Fast Travel Scene Selector (Desktop) */}
-      <nav className="hidden lg:flex items-center space-x-1 bg-black/40 p-1 rounded-xl border border-white/5">
+      <nav className={`hidden ${isDrivingMode ? '2xl:flex' : 'lg:flex'} items-center space-x-1 bg-black/40 p-1 rounded-xl border border-white/5 shrink-0`}>
         {scenesList.map(scene => (
           <button
             key={scene.id}
@@ -68,7 +68,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </nav>
 
       {/* Action Controls */}
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 shrink-0">
         {/* Drive Supercar Toggle */}
         <button
           onClick={onToggleDrivingMode}

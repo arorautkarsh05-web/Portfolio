@@ -60,7 +60,7 @@ export const DriveHUD: React.FC<DriveHUDProps> = ({
   const nearDistrict = vehicleState.nearDistrict;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-35 select-none flex flex-col justify-between p-4 pt-20 sm:pt-24">
+    <div className="fixed inset-0 pointer-events-none z-35 select-none flex flex-col justify-between p-4 pt-24 sm:pt-28">
       {/* Top Banner Notice & Actions */}
       <div className="flex flex-wrap sm:flex-nowrap justify-between items-start pointer-events-auto gap-3">
         {/* Status Card */}
@@ -162,17 +162,45 @@ export const DriveHUD: React.FC<DriveHUDProps> = ({
         </div>
       </div>
 
-      {/* Approaching Landmark Non-Intrusive Interaction Indicator */}
+      {/* Contextual Landmark Proximity Exploration Capsule */}
       {nearDistrict && (
-        <div className="self-center pointer-events-auto animate-in fade-in slide-in-from-top-3 duration-300">
+        <div className="self-center pointer-events-auto animate-in fade-in zoom-in-95 duration-200 px-4 max-w-xl w-full my-2">
           <button
             onClick={() => onInspectDistrict?.(nearDistrict)}
-            className="flex items-center space-x-3 px-5 py-2.5 rounded-full bg-slate-900/95 hover:bg-slate-800 text-white border-2 border-amber-400 shadow-2xl shadow-amber-500/30 transition hover:scale-105 active:scale-95 cursor-pointer"
+            className="w-full group flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-slate-900/98 hover:bg-slate-800/98 backdrop-blur-2xl border-2 border-amber-400 shadow-2xl shadow-amber-500/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer text-left"
+            title={`Press E or click to explore ${nearDistrict.name}`}
           >
-            <Sparkles size={16} className="text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
-            <span className="text-xs sm:text-sm font-bold tracking-wide">
-              Approaching <strong className="text-amber-300">{nearDistrict.name}</strong> — Click or Press <kbd className="px-1.5 py-0.5 rounded bg-white/20 font-mono text-xs">E</kbd> to Inspect
-            </span>
+            <div className="flex items-center space-x-3.5 min-w-0">
+              {/* Landmark Key Pill */}
+              <div className="flex flex-col items-center justify-center w-11 h-11 rounded-xl bg-amber-400 text-slate-950 font-black shadow-lg shadow-amber-400/30 group-hover:bg-amber-300 transition shrink-0">
+                <span className="text-[9px] uppercase font-mono font-bold leading-none text-slate-800">Press</span>
+                <span className="text-lg font-black leading-none mt-0.5">E</span>
+              </div>
+
+              {/* District Information */}
+              <div className="min-w-0">
+                <div className="flex items-center space-x-2 text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold mb-0.5">
+                  <Sparkles size={12} className="animate-spin text-amber-400" style={{ animationDuration: '6s' }} />
+                  <span>Approaching Landmark</span>
+                  <span className="text-slate-500">•</span>
+                  <span className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300 text-[9px]">
+                    {nearDistrict.side === 'inner' ? 'Inner Loop Flank' : nearDistrict.side === 'outer' ? 'Outer Rim Flank' : 'Central Plaza'}
+                  </span>
+                </div>
+                <h4 className="text-sm sm:text-base font-extrabold text-white tracking-wide truncate">
+                  {nearDistrict.name}
+                </h4>
+                <p className="text-[11px] text-slate-300 line-clamp-1">
+                  {nearDistrict.shortDesc}
+                </p>
+              </div>
+            </div>
+
+            {/* Action Pill */}
+            <div className="ml-3 shrink-0 flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs shadow-md group-hover:brightness-110 transition">
+              <span>{nearDistrict.actionTitle || 'EXPLORE'}</span>
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
           </button>
         </div>
       )}

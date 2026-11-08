@@ -55,6 +55,7 @@ export function App() {
     speedUp,
     speedLow,
     toggleBrake,
+    pauseDrive,
     resumeDrive,
     toggleLights,
     toggleDriveMode,
@@ -65,18 +66,51 @@ export function App() {
 
   const currentScene = scenesList.find(s => s.id === currentSceneId) || scenesList[0];
 
+  // Ignition trigger: activates headlights, starts engine and engages autonomous road cruise
+  const handleIgnition = useCallback(() => {
+    playIgnition();
+    setVehicleState(prev => ({
+      ...prev,
+      isHeadlightsOn: true,
+      isEngineStarted: true,
+      isBraked: false,
+      speed: Math.max(prev.speed, 6.67)
+    }));
+    setCurrentSceneId(3);
+    setIsDrivingMode(true);
+  }, [playIgnition, setVehicleState]);
+
+  // Scene selection
+  const handleSelectScene = useCallback((id: number) => {
+    setCurrentSceneId(id);
+    setIsDrivingMode(false);
+    playChime(480);
+
+    if (id === 3) {
+      handleIgnition();
+    }
+  }, [handleIgnition, playChime]);
+
   // Inspect any district landmark
   const handleInspectDistrict = useCallback((district: CityDistrictConfig) => {
     playChime(620);
+    // Smoothly halt autonomous cruise while inspecting landmark
+    if (isDrivingMode) {
+      pauseDrive();
+    }
     switch (district.id) {
+      case 'city-reveal':
+        handleSelectScene(1);
+        break;
+      case 'character-reveal':
+      case 'profile':
+        setIsCharacterProfileOpen(true);
+        break;
+      case 'supercar-ignition':
+        handleSelectScene(3);
+        break;
       case 'education':
         setIsEducationOpen(true);
-        break;
-      case 'experience':
-        setIsExperienceOpen(true);
-        break;
-      case 'achievements':
-        setIsAchievementsOpen(true);
         break;
       case 'skills':
         setIsSkillsOpen(true);
@@ -93,16 +127,19 @@ export function App() {
       case 'webguard':
         setSelectedProject(featuredProjects[3]);
         break;
+      case 'experience':
+        setIsExperienceOpen(true);
+        break;
       case 'contact':
         setIsContactOpen(true);
         break;
-      case 'profile':
-        setIsCharacterProfileOpen(true);
+      case 'achievements':
+        setIsAchievementsOpen(true);
         break;
       default:
         break;
     }
-  }, [playChime]);
+  }, [playChime, isDrivingMode, pauseDrive, handleSelectScene]);
 
   // Run vehicle physics loop when driving mode is active
   useEffect(() => {
@@ -136,31 +173,6 @@ export function App() {
 
     return () => clearInterval(timer);
   }, [isAutoPlay, isDrivingMode, is2DView, playChime]);
-
-  // Ignition trigger: activates headlights, starts engine and engages autonomous road cruise
-  const handleIgnition = useCallback(() => {
-    playIgnition();
-    setVehicleState(prev => ({
-      ...prev,
-      isHeadlightsOn: true,
-      isEngineStarted: true,
-      isBraked: false,
-      speed: Math.max(prev.speed, 6.67)
-    }));
-    setCurrentSceneId(3);
-    setIsDrivingMode(true);
-  }, [playIgnition, setVehicleState]);
-
-  // Scene selection
-  const handleSelectScene = useCallback((id: number) => {
-    setCurrentSceneId(id);
-    setIsDrivingMode(false);
-    playChime(480);
-
-    if (id === 3) {
-      handleIgnition();
-    }
-  }, [handleIgnition, playChime]);
 
   // Universal modal close handler: smoothly resumes driving if in driving mode
   const handleCloseModal = useCallback(() => {
@@ -317,6 +329,14 @@ export function App() {
             onOpenAchievementsModal={() => {
               playChime(540);
               setIsAchievementsOpen(true);
+            }}
+            onTriggerCityReveal={() => {
+              playChime(620);
+              handleSelectScene(1);
+            }}
+            onTriggerIgnition={() => {
+              playChime(620);
+              handleIgnition();
             }}
             onSwitchTo2D={() => setIs2DView(true)}
           />

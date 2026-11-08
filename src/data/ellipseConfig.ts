@@ -17,134 +17,193 @@ export const ELLIPSE_CONFIG = {
 export interface CityDistrictConfig {
   id: string;
   name: string;
-  side: 'left' | 'right' | 'center';
-  category: 'career' | 'education' | 'achievements' | 'technology' | 'project' | 'contact' | 'character';
+  side: 'inner' | 'outer' | 'center';
+  category: 'career' | 'education' | 'achievements' | 'technology' | 'project' | 'contact' | 'character' | 'automotive' | 'gateway';
   position: [number, number, number];
   approachParamT: number; // approximate parameter t where car passes by
   color: string;
   accentColor: string;
   shortDesc: string;
+  actionTitle: string;
 }
 
 export const CITY_DISTRICTS: CityDistrictConfig[] = [
   // ==========================================
-  // LEFT SIDE — CAREER & EDUCATION DISTRICTS
+  // LANDMARK 01: CITY REVEAL GRAND GATEWAY (Outer South-West)
   // ==========================================
   {
-    id: 'education',
-    name: 'Education Boulevard',
-    side: 'left',
-    category: 'education',
-    position: [-82, 0, -6],
-    approachParamT: Math.PI, // West apex (~3.14 rad)
-    color: '#0284c7',
-    accentColor: '#38bdf8',
-    shortDesc: 'Galgotias College of Eng. & Tech. — B.Tech ECE (CGPA 7.3/10)'
-  },
-  {
-    id: 'experience',
-    name: 'Experience District',
-    side: 'left',
-    category: 'career',
-    position: [-56, 0, 66],
-    approachParamT: 2.35, // South-West curve (~135 deg)
-    color: '#10b981',
-    accentColor: '#34d399',
-    shortDesc: 'Auspify Technologies • HashBit Innovations • DataX Web Solutions'
-  },
-  {
-    id: 'achievements',
-    name: 'Achievements Plaza',
-    side: 'left',
-    category: 'achievements',
-    position: [0, 0, 74],
-    approachParamT: Math.PI / 2, // South apex (~1.57 rad)
-    color: '#f59e0b',
-    accentColor: '#fbbf24',
-    shortDesc: 'Verified Certifications, Technical Badges & Hackathons'
-  },
-
-  // ==========================================
-  // RIGHT SIDE — TECHNOLOGY & PROJECT DISTRICTS
-  // ==========================================
-  {
-    id: 'skills',
-    name: 'Technology Tower',
-    side: 'right',
-    category: 'technology',
-    position: [0, 0, -78],
-    approachParamT: (3 * Math.PI) / 2, // North apex (~4.71 rad)
+    id: 'city-reveal',
+    name: 'Utkarsh City Gateway',
+    side: 'outer',
+    category: 'gateway',
+    position: [-64, 0, 52],
+    approachParamT: 2.45,
     color: '#38bdf8',
     accentColor: '#0284c7',
-    shortDesc: 'Python, SQL, Excel, Power BI, React, TypeScript, Node.js'
-  },
-  {
-    id: 'bayora',
-    name: 'Bayora AI Citadel',
-    side: 'right',
-    category: 'project',
-    position: [-58, 0, -66],
-    approachParamT: 3.92, // North-West curve (~225 deg)
-    color: '#ef4444',
-    accentColor: '#f87171',
-    shortDesc: 'AI Security & Cryptographic Access Platform'
-  },
-  {
-    id: 'ustaad',
-    name: 'Eurogrip Ustaad Hub',
-    side: 'right',
-    category: 'project',
-    position: [58, 0, -66],
-    approachParamT: 5.49, // North-East curve (~315 deg)
-    color: '#d97706',
-    accentColor: '#f59e0b',
-    shortDesc: 'Commercial Fleet Analytics & IoT Mechanics Hub'
-  },
-  {
-    id: 'paypal',
-    name: 'PayPal Resolve Spire',
-    side: 'right',
-    category: 'project',
-    position: [22, 0, -12],
-    approachParamT: 5.9, // Inner East
-    color: '#3b82f6',
-    accentColor: '#60a5fa',
-    shortDesc: 'Financial Reconciliation & Automated Dispute Resolution'
-  },
-  {
-    id: 'webguard',
-    name: 'WebGuard AI Observatory',
-    side: 'right',
-    category: 'project',
-    position: [82, 0, 6],
-    approachParamT: 0.1, // East apex (~0 rad)
-    color: '#06b6d4',
-    accentColor: '#22d3ee',
-    shortDesc: 'Autonomous Network Threat Detection & Security AI'
-  },
-  {
-    id: 'contact',
-    name: 'Contact Garage',
-    side: 'right',
-    category: 'contact',
-    position: [60, 0, 60],
-    approachParamT: 0.78, // South-East curve (~45 deg)
-    color: '#f43f5e',
-    accentColor: '#fb7185',
-    shortDesc: 'Executive Connect, Resume Download, LinkedIn & Email'
+    shortDesc: 'Monumental Triumphal Archway & Luxury Metropolis Portal',
+    actionTitle: 'EXPLORE UTKARSH CITY'
   },
 
-  // Central Hub
+  // ==========================================
+  // LANDMARK 02: CHARACTER EXHIBITION PAVILION (Center Plaza)
+  // ==========================================
   {
-    id: 'profile',
-    name: 'Central Grand Plaza',
+    id: 'character-reveal',
+    name: 'Character Exhibition',
     side: 'center',
     category: 'character',
     position: [0, 0, 0],
     approachParamT: 0,
     color: '#fbbf24',
     accentColor: '#ffffff',
-    shortDesc: 'Utkarsh Arora — Data Analyst & Software Engineer'
+    shortDesc: 'Utkarsh Arora — Data Analyst & Software Engineer',
+    actionTitle: 'EXPLORE PROFILE'
+  },
+
+  // ==========================================
+  // LANDMARK 03: SUPERCAR AUTOMOTIVE SHOWROOM (Inner East - Inside Loop)
+  // ==========================================
+  {
+    id: 'supercar-ignition',
+    name: 'Supercar Showroom',
+    side: 'inner',
+    category: 'automotive',
+    position: [26, 0, 18],
+    approachParamT: 0.65,
+    color: '#f59e0b',
+    accentColor: '#d97706',
+    shortDesc: 'Bespoke Sports Car Showcase, Turntable & Telemetry',
+    actionTitle: 'EXPLORE SUPERCAR'
+  },
+
+  // ==========================================
+  // LANDMARK 04: EDUCATION BOULEVARD (Outer West)
+  // ==========================================
+  {
+    id: 'education',
+    name: 'Education Boulevard',
+    side: 'outer',
+    category: 'education',
+    position: [-82, 0, -6],
+    approachParamT: Math.PI, // West apex (~3.14 rad)
+    color: '#0284c7',
+    accentColor: '#38bdf8',
+    shortDesc: 'Galgotias College of Eng. & Tech. — B.Tech ECE (CGPA 7.3/10)',
+    actionTitle: 'EXPLORE EDUCATION'
+  },
+
+  // ==========================================
+  // LANDMARK 05: TECHNOLOGY TOWER (Outer North)
+  // ==========================================
+  {
+    id: 'skills',
+    name: 'Technology Tower',
+    side: 'outer',
+    category: 'technology',
+    position: [0, 0, -78],
+    approachParamT: (3 * Math.PI) / 2, // North apex (~4.71 rad)
+    color: '#38bdf8',
+    accentColor: '#0284c7',
+    shortDesc: 'Python, SQL, Excel, Power BI, React, TypeScript, Node.js',
+    actionTitle: 'EXPLORE TECHNOLOGY'
+  },
+
+  // ==========================================
+  // LANDMARK 06: PROJECTS BOULEVARD (4 Distinct Project Buildings)
+  // ==========================================
+  {
+    id: 'bayora',
+    name: 'Bayora AI Citadel',
+    side: 'outer',
+    category: 'project',
+    position: [-58, 0, -66],
+    approachParamT: 3.92, // North-West curve (~225 deg)
+    color: '#ef4444',
+    accentColor: '#f87171',
+    shortDesc: 'AI Security & Cryptographic Access Platform',
+    actionTitle: 'EXPLORE BAYORA'
+  },
+  {
+    id: 'ustaad',
+    name: 'Eurogrip Ustaad Hub',
+    side: 'outer',
+    category: 'project',
+    position: [58, 0, -66],
+    approachParamT: 5.49, // North-East curve (~315 deg)
+    color: '#d97706',
+    accentColor: '#f59e0b',
+    shortDesc: 'Commercial Fleet Analytics & IoT Mechanics Hub',
+    actionTitle: 'EXPLORE USTAAD'
+  },
+  {
+    id: 'paypal',
+    name: 'PayPal Resolve Spire',
+    side: 'inner', // Inside Loop!
+    category: 'project',
+    position: [22, 0, -12],
+    approachParamT: 5.9,
+    color: '#3b82f6',
+    accentColor: '#60a5fa',
+    shortDesc: 'Financial Reconciliation & Automated Dispute Resolution',
+    actionTitle: 'EXPLORE PAYPAL RESOLVE'
+  },
+  {
+    id: 'webguard',
+    name: 'WebGuard AI Observatory',
+    side: 'outer',
+    category: 'project',
+    position: [82, 0, 6],
+    approachParamT: 0.1, // East apex (~0 rad)
+    color: '#06b6d4',
+    accentColor: '#22d3ee',
+    shortDesc: 'Autonomous Network Threat Detection & Security AI',
+    actionTitle: 'EXPLORE WEGUARD AI'
+  },
+
+  // ==========================================
+  // LANDMARK 07: EXPERIENCE DISTRICT (Outer South)
+  // ==========================================
+  {
+    id: 'experience',
+    name: 'Experience District',
+    side: 'outer',
+    category: 'career',
+    position: [-56, 0, 66],
+    approachParamT: 2.35, // South-West curve (~135 deg)
+    color: '#10b981',
+    accentColor: '#34d399',
+    shortDesc: 'Auspify Technologies • HashBit Innovations • DataX Web Solutions',
+    actionTitle: 'EXPLORE EXPERIENCE'
+  },
+
+  // ==========================================
+  // LANDMARK 08: CONTACT GARAGE (Outer South-East)
+  // ==========================================
+  {
+    id: 'contact',
+    name: 'Contact Garage',
+    side: 'outer',
+    category: 'contact',
+    position: [60, 0, 60],
+    approachParamT: 0.78, // South-East curve (~45 deg)
+    color: '#f43f5e',
+    accentColor: '#fb7185',
+    shortDesc: 'Executive Connect, Resume Download, LinkedIn & Email',
+    actionTitle: 'EXPLORE CONTACT'
+  },
+
+  // Credentials & Trophy District (Inner South)
+  {
+    id: 'achievements',
+    name: 'Achievements Plaza',
+    side: 'inner',
+    category: 'achievements',
+    position: [0, 0, 74],
+    approachParamT: Math.PI / 2, // South apex (~1.57 rad)
+    color: '#f59e0b',
+    accentColor: '#fbbf24',
+    shortDesc: 'Verified Certifications, Technical Badges & Hackathons',
+    actionTitle: 'EXPLORE ACHIEVEMENTS'
   }
 ];
 
@@ -197,4 +256,3 @@ export function projectPointToEllipseT(x: number, z: number): number {
   if (t < 0) t += Math.PI * 2;
   return t;
 }
-

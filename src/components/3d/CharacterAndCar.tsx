@@ -295,9 +295,9 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
       </group>
 
       {/* ========================================================
-          REALISTIC HUMAN CHARACTER (GLB)
-          Charcoal-grey formal suit, white shirt, black eyeglasses,
-          natural human proportions, authentic photograph hologram pedestal
+          LANDMARK 02: MODERN CHARACTER EXHIBITION PAVILION (GLB)
+          Travertine foundation, glass pavilion colonnade, cantilevered roof,
+          Charcoal-grey tailored formal suit, authentic photograph hologram
           ======================================================== */}
       {!isDrivingMode && (
         <group
@@ -307,18 +307,46 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
             onCharacterClick?.();
           }}
         >
-          {/* Holographic Glowing Pedestal */}
-          <mesh position={[0, 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <circleGeometry args={[1.4, 48]} />
-            <meshStandardMaterial color="#f8fafc" metalness={0.7} roughness={0.2} />
+          {/* Exhibition Pavilion Foundation Platform */}
+          <mesh position={[0, 0.15, 0]} castShadow receiveShadow>
+            <cylinderGeometry args={[3.2, 3.5, 0.3, 32]} />
+            <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.6} />
           </mesh>
-          <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <mesh position={[0, 0.31, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[3.0, 3.2, 32]} />
+            <meshBasicMaterial color="#d97706" />
+          </mesh>
+
+          {/* Modern Cantilevered Glass Exhibition Canopy */}
+          <mesh position={[0, 4.2, 0]} castShadow>
+            <cylinderGeometry args={[3.8, 3.6, 0.25, 32]} />
+            <meshStandardMaterial color="#09090b" roughness={0.2} metalness={0.9} />
+          </mesh>
+          <mesh position={[0, 4.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[3.4, 3.8, 32]} />
+            <meshBasicMaterial color="#0284c7" />
+          </mesh>
+
+          {/* Minimalist Slim Chrome Supporting Pillars */}
+          {[-1.8, 1.8].map((x, i) => (
+            <mesh key={`char-pillar-${i}`} position={[x, 2.1, -1.8]} castShadow>
+              <cylinderGeometry args={[0.07, 0.07, 3.9, 16]} />
+              <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
+            </mesh>
+          ))}
+
+          {/* Holographic Glowing Pedestal */}
+          <mesh position={[0, 0.32, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <circleGeometry args={[1.4, 48]} />
+            <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
+          </mesh>
+          <mesh position={[0, 0.33, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <ringGeometry args={[1.3, 1.4, 48]} />
             <meshBasicMaterial color="#0284c7" />
           </mesh>
 
           {/* Rotating Holographic Technology Ring */}
-          <group ref={hologramRingRef} position={[0, 0.06, 0]}>
+          <group ref={hologramRingRef} position={[0, 0.35, 0]}>
             <mesh rotation={[-Math.PI / 2, 0, 0]}>
               <ringGeometry args={[1.5, 1.55, 48]} />
               <meshBasicMaterial color="#d97706" />
@@ -329,7 +357,7 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
           <primitive
             object={charScene}
             scale={[1.0, 1.0, 1.0]}
-            position={[0, 0, 0]}
+            position={[0, 0.28, 0]}
             rotation={[0, -Math.PI / 6, 0]} // Angled towards viewer & sports car
           />
 

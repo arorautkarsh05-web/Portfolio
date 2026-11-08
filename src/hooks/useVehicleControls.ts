@@ -158,6 +158,17 @@ export function useVehicleControls(initialPos?: [number, number, number]) {
     }));
   }, []);
 
+  // Pause driving smoothly (e.g. when opening a district exploration modal)
+  const pauseDrive = useCallback(() => {
+    isBrakedRef.current = true;
+    isHandbrakeRef.current = true;
+    setVehicleState(prev => ({
+      ...prev,
+      isBraked: true,
+      isHandbrake: true
+    }));
+  }, []);
+
   // Resume driving smoothly
   const resumeDrive = useCallback(() => {
     isBrakedRef.current = false;
@@ -428,6 +439,7 @@ export function useVehicleControls(initialPos?: [number, number, number]) {
     speedUp,
     speedLow,
     toggleBrake,
+    pauseDrive,
     resumeDrive,
     toggleLights,
     toggleDriveMode,
