@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ArrowRight, Play, CheckCircle2, ChevronRight, X } from 'lucide-react';
+import { Sparkles, ArrowRight, Play, CheckCircle2, ChevronRight } from 'lucide-react';
 import { SceneCheckpoint } from '../../types';
 import { CircuitWaypoint } from '../../data/waypoints';
 

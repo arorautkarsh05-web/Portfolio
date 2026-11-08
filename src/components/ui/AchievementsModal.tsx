@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Award, CheckCircle, ShieldCheck, ExternalLink } from 'lucide-react';
+import { X, ShieldCheck } from 'lucide-react';
 import { certificationsData } from '../../data/achievements';
 
 interface AchievementsModalProps {

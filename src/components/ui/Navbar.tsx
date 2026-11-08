@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Car, Film, FileText, Compass, ExternalLink, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Car, Film, FileText, ExternalLink } from 'lucide-react';
 import { personalProfile } from '../../data/profile';
 import { scenesList } from '../../data/scenes';
 

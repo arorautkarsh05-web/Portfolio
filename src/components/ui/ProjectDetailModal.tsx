@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { X, ExternalLink, Shield, CheckCircle, Cpu, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { X, ExternalLink, Shield, CheckCircle, Cpu, ChevronLeft, ChevronRight } from 'lucide-react';
 import { GithubIcon } from './BrandIcons';
 import { featuredProjects } from '../../data/projects';
 import { ProjectLandmark } from '../../types';
@@ -15,13 +15,11 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
   onClose,
   onSelectProject
 }) => {
-  if (!project) return null;
-
-  const currentIndex = featuredProjects.findIndex(p => p.id === project.id);
-  const activeIndex = currentIndex !== -1 ? currentIndex : 0;
-  const currentProject = featuredProjects[activeIndex];
-
   const touchStartX = useRef<number>(0);
+
+  const currentIndex = project ? featuredProjects.findIndex(p => p.id === project.id) : 0;
+  const activeIndex = currentIndex !== -1 ? currentIndex : 0;
+  const currentProject = featuredProjects[activeIndex] || featuredProjects[0];
 
   const handlePrev = useCallback(() => {
     const prevIdx = (activeIndex - 1 + featuredProjects.length) % featuredProjects.length;
@@ -35,6 +33,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
 
   // Keyboard navigation (ArrowLeft & ArrowRight to swipe)
   useEffect(() => {
+    if (!project) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
         handlePrev();
@@ -44,7 +43,9 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handlePrev, handleNext]);
+  }, [project, handlePrev, handleNext]);
+
+  if (!project) return null;
 
   // Touch Swipe Handlers for mobile & tablet
   const handleTouchStart = (e: React.TouchEvent) => {

@@ -18,7 +18,7 @@
 
 ---
 
-## 🗺️ The 9 Cinematic City Scenes
+## 🗺️ The 8 Cinematic City Scenes
 
 | Scene # | Checkpoint Name | District | Description |
 |---|---|---|---|
@@ -28,9 +28,8 @@
 | **04** | **Education Boulevard** | Academic Pavilion | Galgotias College ECE academic spire (Expected 2028, CGPA 7.3/10). |
 | **05** | **Technology Tower** | Skills District | 60-meter monolithic spire showcasing 7 analytical & full-stack skill tiers. |
 | **06** | **Projects Boulevard** | Innovation Quad | 4 distinct architectural landmarks: Bayora, Ustaad, PayPal Resolve, WebGuard AI. |
-| **07** | **Achievements Plaza** | Honor Terrace | Verified steles for Oracle University, Cisco, Deloitte, PW Skills, and Jio. |
-| **08** | **Experience District** | Career Skybridge | Internship timeline for Auspify, HashBit, and DataX with verification flags. |
-| **09** | **Contact Garage** | Executive Terminal | High-tech showroom with direct email copy, LinkedIn, GitHub, and Resume. |
+| **07** | **Experience District** | Career Skybridge | Internship timeline for Auspify, HashBit, and DataX with verification flags. |
+| **08** | **Contact Garage** | Executive Terminal | High-tech showroom with direct email copy, LinkedIn, GitHub, and Resume. |
 
 ---
 
@@ -74,7 +73,7 @@ Internship records are rendered with complete data integrity:
 - **S / Arrow Down:** Reverse / Brake sports car
 - **A / Arrow Left:** Steer left
 - **D / Arrow Right:** Steer right
-- **1 – 9:** Fast-travel instantly to any of the 9 city checkpoints
+- **1 – 8:** Fast-travel instantly to any of the 8 city checkpoints
 - **M:** Mute / Unmute procedural ambient audio & engine synth
 - **Escape:** Close any open dossier or exit Free Drive mode
 - **Toggle 2D View:** Instant switch to responsive accessible 2D layout

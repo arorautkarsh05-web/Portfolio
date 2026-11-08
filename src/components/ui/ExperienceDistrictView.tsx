@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Calendar, AlertTriangle, Building2, CheckCircle2, ChevronRight, Briefcase } from 'lucide-react';
+import { X, Calendar, AlertTriangle, Building2, ChevronRight } from 'lucide-react';
 import { internshipExperiences } from '../../data/experience';
 
 interface ExperienceDistrictViewProps {
@@ -49,7 +49,7 @@ export const ExperienceDistrictView: React.FC<ExperienceDistrictViewProps> = ({ 
 
         {/* Timeline List */}
         <div className="space-y-6 relative before:absolute before:inset-0 before:left-4 before:w-[2px] before:bg-white/10">
-          {internshipExperiences.map((exp, idx) => (
+          {internshipExperiences.map((exp) => (
             <div key={exp.id} className="relative pl-10">
               {/* Timeline Node */}
               <div className="absolute left-2.5 -translate-x-1/2 top-1.5 w-3.5 h-3.5 rounded-full bg-sky-500 border-2 border-[#0d0f1a] shadow-md shadow-sky-500/50" />

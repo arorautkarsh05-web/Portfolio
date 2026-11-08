@@ -44,7 +44,9 @@ export function App() {
     toggleBrake,
     resumeDrive,
     toggleLights,
+    toggleDriveMode,
     resetPosition,
+    setControlKey,
     setVehicleState
   } = useVehicleControls([0, 0.45, 8]);
 
@@ -338,6 +340,7 @@ export function App() {
               playChime(540);
               setIsContactOpen(true);
             }}
+            onSwitchTo2D={() => setIs2DView(true)}
           />
 
           {/* Prominent "CLICK HERE" Capsule Overlay at Every Landmark */}
@@ -353,13 +356,17 @@ export function App() {
             onResumeMove={handleResumeMove}
           />
 
-          {/* Drive HUD overlay with Speed Up, Speed Low, and Brake controls */}
+          {/* Drive HUD overlay with Manual & Cruise controls */}
           {isDrivingMode && (
             <DriveHUD
               vehicleState={vehicleState}
               onExitDriving={() => setIsDrivingMode(false)}
               onResetPosition={() => resetPosition([0, 0.45, 8], -Math.PI / 2)}
               onToggleLights={toggleLights}
+              onToggleDriveMode={() => {
+                playChime(500);
+                toggleDriveMode();
+              }}
               onSpeedUp={() => {
                 playChime(640);
                 speedUp();
@@ -372,6 +379,7 @@ export function App() {
                 playChime(320);
                 toggleBrake();
               }}
+              onVirtualControl={setControlKey}
             />
           )}
 

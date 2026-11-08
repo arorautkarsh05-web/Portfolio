@@ -3,7 +3,6 @@ import {
   Mail,
   MapPin,
   Calendar,
-  ShieldCheck,
   AlertTriangle,
   ExternalLink,
   FileDown,

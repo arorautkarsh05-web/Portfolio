@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, GraduationCap, Calendar, Award, BookOpen, Check } from 'lucide-react';
+import { X, Calendar, BookOpen, Check } from 'lucide-react';
 import { personalProfile } from '../../data/profile';
 
 interface EducationModalProps {
