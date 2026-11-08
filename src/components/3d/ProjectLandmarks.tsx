@@ -46,12 +46,12 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
   return (
     <group name="ProjectLandmarks">
       {/* ========================================================
-          1. BAYORA: AI SECURITY CITADEL [-45, 0, -35]
+          1. BAYORA: AI SECURITY CITADEL [-38, 0, -38]
           Triangular cybersecurity fortress with black titanium blast-shields,
           glowing red cryptographic hash chains & Ed25519 proof rings
           ======================================================== */}
       <group
-        position={[-45, 0, -35]}
+        position={[-38, 0, -38]}
         onClick={(e) => {
           e.stopPropagation();
           onSelectProject(getProject('bayora'));
@@ -132,12 +132,12 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
       </group>
 
       {/* ========================================================
-          2. EUROGRIP USTAAD NETWORK [45, 0, -35]
+          2. EUROGRIP USTAAD NETWORK [40, 0, -36]
           Dynamic mobility pavilion with gold & carbon tire-tread kinetic rings,
           elevated vehicle dyno platform, and illuminated Ustaad branding
           ======================================================== */}
       <group
-        position={[45, 0, -35]}
+        position={[40, 0, -36]}
         onClick={(e) => {
           e.stopPropagation();
           onSelectProject(getProject('ustaad'));
@@ -209,12 +209,12 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
       </group>
 
       {/* ========================================================
-          3. PAYPAL RESOLVE [-45, 0, 35]
+          3. PAYPAL RESOLVE [-48, 0, 24]
           Twin curved crystalline glass towers with an illuminated
           skybridge & golden transaction light streams
           ======================================================== */}
       <group
-        position={[-45, 0, 35]}
+        position={[-48, 0, 24]}
         onClick={(e) => {
           e.stopPropagation();
           onSelectProject(getProject('paypal-resolve'));
@@ -300,12 +300,12 @@ export const ProjectLandmarks: React.FC<ProjectLandmarksProps> = ({
       </group>
 
       {/* ========================================================
-          4. WEBGUARD AI [45, 0, 35]
+          4. WEBGUARD AI [52, 0, 18]
           Cylindrical observatory tower with sweeping radar telemetry dish,
           pulsing green network health rings & WebGuard title beacon
           ======================================================== */}
       <group
-        position={[45, 0, 35]}
+        position={[52, 0, 18]}
         onClick={(e) => {
           e.stopPropagation();
           onSelectProject(getProject('webguard-ai'));

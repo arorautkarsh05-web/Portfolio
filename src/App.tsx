@@ -71,14 +71,14 @@ export function App() {
     const [x, , z] = vehicleState.position;
 
     const landmarks: Array<{ name: string; pos: [number, number]; action: () => void }> = [
-      { name: "Bayora Citadel", pos: [-45, -35], action: () => setSelectedProject(featuredProjects[0]) },
-      { name: "Eurogrip Ustaad Hub", pos: [45, -35], action: () => setSelectedProject(featuredProjects[1]) },
-      { name: "PayPal Resolve Spire", pos: [-45, 35], action: () => setSelectedProject(featuredProjects[2]) },
-      { name: "WebGuard AI Observatory", pos: [45, 35], action: () => setSelectedProject(featuredProjects[3]) },
-      { name: "Technology Tower", pos: [0, -45], action: () => setIsSkillsOpen(true) },
-      { name: "Education Boulevard", pos: [-35, -15], action: () => setIsEducationOpen(true) },
-      { name: "Experience District", pos: [-30, 35], action: () => setIsExperienceOpen(true) },
-      { name: "Contact Garage", pos: [30, 35], action: () => setIsContactOpen(true) },
+      { name: "Bayora Citadel", pos: [-38, -38], action: () => setSelectedProject(featuredProjects[0]) },
+      { name: "Eurogrip Ustaad Hub", pos: [40, -36], action: () => setSelectedProject(featuredProjects[1]) },
+      { name: "PayPal Resolve Spire", pos: [-48, 24], action: () => setSelectedProject(featuredProjects[2]) },
+      { name: "WebGuard AI Observatory", pos: [52, 18], action: () => setSelectedProject(featuredProjects[3]) },
+      { name: "Technology Tower", pos: [0, -48], action: () => setIsSkillsOpen(true) },
+      { name: "Education Boulevard", pos: [-48, -14], action: () => setIsEducationOpen(true) },
+      { name: "Experience District", pos: [-24, 42], action: () => setIsExperienceOpen(true) },
+      { name: "Contact Garage", pos: [28, 42], action: () => setIsContactOpen(true) },
       { name: "Central Grand Plaza", pos: [0, 0], action: () => setIsCharacterProfileOpen(true) }
     ];
 

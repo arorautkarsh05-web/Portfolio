@@ -10,7 +10,7 @@ export const ExperienceDistrict: React.FC<ExperienceDistrictProps> = ({ onOpenEx
   return (
     <group
       name="ExperienceDistrict"
-      position={[-30, 0, 35]}
+      position={[-24, 0, 42]}
       onClick={(e) => {
         e.stopPropagation();
         onOpenExperienceModal?.();

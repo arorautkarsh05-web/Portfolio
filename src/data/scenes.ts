@@ -33,8 +33,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "education-boulevard",
     name: "04 // Education Boulevard",
     district: "Academic Pavilion",
-    cameraPosition: [-26, 6, -6],
-    cameraTarget: [-35, 3.5, -15],
+    cameraPosition: [-36, 6, -6],
+    cameraTarget: [-48, 3.5, -14],
     description: "Galgotias College of Engineering & Technology — B.Tech in Electronics & Communication."
   },
   {
@@ -42,8 +42,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "technology-tower",
     name: "05 // Technology Tower",
     district: "Skills District",
-    cameraPosition: [0, 14, -20],
-    cameraTarget: [0, 12, -45],
+    cameraPosition: [0, 14, -22],
+    cameraTarget: [0, 12, -48],
     description: "Monolithic glass skyscraper showcasing analytical, programming, and full-stack disciplines."
   },
   {
@@ -60,8 +60,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "experience-district",
     name: "07 // Experience District",
     district: "Career Skybridge",
-    cameraPosition: [-20, 6.5, 26],
-    cameraTarget: [-30, 3.5, 35],
+    cameraPosition: [-16, 6.5, 30],
+    cameraTarget: [-24, 3.5, 42],
     description: "Professional internship timeline: Auspify Technologies, HashBit Innovations, and DataX Web Solutions."
   },
   {
@@ -69,8 +69,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "contact-garage",
     name: "08 // Contact Garage",
     district: "Executive Terminal",
-    cameraPosition: [20, 5, 26],
-    cameraTarget: [30, 2.5, 35],
+    cameraPosition: [18, 5, 30],
+    cameraTarget: [28, 2.5, 42],
     description: "High-tech terminal showroom: connect directly with Utkarsh via Email, LinkedIn, and GitHub."
   }
 ];

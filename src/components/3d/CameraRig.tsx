@@ -11,6 +11,11 @@ interface CameraRigProps {
   vehicleState: VehicleState;
 }
 
+// Static reusable vectors to eliminate per-frame GC allocations and stutter
+const _tempCarPos = new THREE.Vector3();
+const _tempCamTarget = new THREE.Vector3();
+const _tempLookTarget = new THREE.Vector3();
+
 export const CameraRig: React.FC<CameraRigProps> = ({
   currentScene,
   isDrivingMode,
@@ -55,34 +60,37 @@ export const CameraRig: React.FC<CameraRigProps> = ({
     const camera = state.camera as THREE.PerspectiveCamera;
 
     if (isDrivingMode) {
-      // Elevated Open-World Chase Camera
-      const carPos = new THREE.Vector3(...vehicleState.position);
+      // Dynamic Cinematic Supercar Chase Camera (Lag-free zero allocation)
+      _tempCarPos.set(...vehicleState.position);
       const rotY = vehicleState.rotationY;
 
-      // Dynamic Cinematic Supercar Chase Camera (Low-slung, high-speed immersion)
-      const speedNorm = Math.min(Math.abs(vehicleState.speed) / 18.0, 1.0);
-      const chaseDistance = 8.2 + speedNorm * 3.0;
-      const chaseHeight = 2.6 + speedNorm * 1.0;
+      const speedNorm = Math.min(Math.abs(vehicleState.speed) / 22.0, 1.0);
+      const chaseDistance = 8.5 + speedNorm * 3.5;
+      const chaseHeight = 2.8 + speedNorm * 1.2;
 
-      const targetCamX = carPos.x - Math.sin(rotY) * chaseDistance;
-      const targetCamZ = carPos.z - Math.cos(rotY) * chaseDistance;
-      const targetCamY = carPos.y + chaseHeight;
+      const targetCamX = _tempCarPos.x - Math.sin(rotY) * chaseDistance;
+      const targetCamZ = _tempCarPos.z - Math.cos(rotY) * chaseDistance;
+      const targetCamY = _tempCarPos.y + chaseHeight;
+
+      _tempCamTarget.set(targetCamX, targetCamY, targetCamZ);
 
       // Look forward along vehicle trajectory
-      const targetLookAt = new THREE.Vector3(
-        carPos.x + Math.sin(rotY) * 8.0,
-        carPos.y + 1.25,
-        carPos.z + Math.cos(rotY) * 8.0
+      _tempLookTarget.set(
+        _tempCarPos.x + Math.sin(rotY) * 9.0,
+        _tempCarPos.y + 1.25,
+        _tempCarPos.z + Math.cos(rotY) * 9.0
       );
 
       // Smooth camera dampening
-      currentPos.current.lerp(new THREE.Vector3(targetCamX, targetCamY, targetCamZ), delta * 4.5);
-      currentTarget.current.lerp(targetLookAt, delta * 5.0);
+      currentPos.current.lerp(_tempCamTarget, Math.min(delta * 5.5, 1.0));
+      currentTarget.current.lerp(_tempLookTarget, Math.min(delta * 6.5, 1.0));
 
       // Dynamic Speed FOV expansion (45 to 54 deg)
       const targetFov = 45 + speedNorm * 9.0;
-      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, delta * 3.0);
-      camera.updateProjectionMatrix();
+      if (Math.abs(camera.fov - targetFov) > 0.08) {
+        camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, delta * 3.0);
+        camera.updateProjectionMatrix();
+      }
 
       camera.position.copy(currentPos.current);
       camera.lookAt(currentTarget.current);

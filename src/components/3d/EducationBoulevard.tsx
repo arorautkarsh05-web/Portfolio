@@ -23,7 +23,7 @@ export const EducationBoulevard: React.FC<EducationBoulevardProps> = ({ onOpenEd
   return (
     <group
       name="EducationBoulevard"
-      position={[-35, 0, -15]}
+      position={[-48, 0, -14]}
       onClick={(e) => {
         e.stopPropagation();
         onOpenEducationModal?.();

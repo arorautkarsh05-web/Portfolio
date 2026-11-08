@@ -65,7 +65,7 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     isBraked: false,
     isHandbrake: false,
     driveMode: 'manual', // Manual by default with seamless cruise option
-    targetSpeed: 14.0,
+    targetSpeed: 22.0,
     currentWaypointIndex: 1,
     targetModuleName: circuitWaypoints[1].name,
     activeStop: null,
@@ -82,7 +82,7 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
   const waypointIdxRef = useRef<number>(1);
   const isBrakedRef = useRef<boolean>(false);
   const isHandbrakeRef = useRef<boolean>(false);
-  const targetSpeedRef = useRef<number>(14.0);
+  const targetSpeedRef = useRef<number>(22.0);
   const isStoppedAtModuleRef = useRef<boolean>(false);
   const lastPromptedWaypointId = useRef<string | null>(null);
   const driveModeRef = useRef<'manual' | 'cruise'>('manual');
@@ -150,10 +150,11 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     }));
   }, []);
 
-  // Resume driving to next waypoint / module
+  // Resume driving to next waypoint / module with immediate smooth acceleration
   const resumeDrive = useCallback(() => {
     isBrakedRef.current = false;
     isStoppedAtModuleRef.current = false;
+    currentSpeed.current = Math.max(currentSpeed.current, 8.5); // Instant responsive launch
     waypointIdxRef.current = (waypointIdxRef.current + 1) % circuitWaypoints.length;
     const nextWp = circuitWaypoints[waypointIdxRef.current];
 
@@ -258,7 +259,7 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
 
     if (mode === 'cruise') {
       // ==========================================
-      // AUTONOMOUS CRUISE NAVIGATION
+      // AUTONOMOUS HIGH-SPEED AERODYNAMIC CRUISE NAVIGATION
       // ==========================================
       const waypoints = circuitWaypoints;
       const currentWaypoint = waypoints[waypointIdxRef.current];
@@ -267,32 +268,50 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
       const dz = currentWaypoint.position[2] - position[2];
       const distToWaypoint = Math.hypot(dx, dz);
 
-      if (currentWaypoint.isModuleStop && distToWaypoint < 5.0 && lastPromptedWaypointId.current !== currentWaypoint.id) {
+      // Check arrival at module stop
+      if (currentWaypoint.isModuleStop && distToWaypoint < 3.2 && lastPromptedWaypointId.current !== currentWaypoint.id) {
         isStoppedAtModuleRef.current = true;
+        currentSpeed.current = 0;
         lastPromptedWaypointId.current = currentWaypoint.id;
         activeStop = currentWaypoint;
-      } else if (!currentWaypoint.isModuleStop && distToWaypoint < 5.0) {
+      } else if (!currentWaypoint.isModuleStop && distToWaypoint < 4.8) {
+        // Smoothly sequence to next waypoint along the ellipse curve
         waypointIdxRef.current = (waypointIdxRef.current + 1) % waypoints.length;
       }
 
-      const nextTarget = waypoints[waypointIdxRef.current];
-      const targetDx = nextTarget.position[0] - position[0];
-      const targetDz = nextTarget.position[2] - position[2];
+      // Lookahead targeting: look ahead along the curve for buttery tangential steering
+      const lookAheadIdx = (waypointIdxRef.current + 2) % waypoints.length;
+      const targetWaypoint = currentWaypoint.isModuleStop && distToWaypoint < 10.0
+        ? currentWaypoint
+        : waypoints[lookAheadIdx];
+
+      const targetDx = targetWaypoint.position[0] - position[0];
+      const targetDz = targetWaypoint.position[2] - position[2];
 
       const targetRotY = Math.atan2(targetDx, targetDz);
       let angleDiff = targetRotY - rotationY;
       while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
       while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
 
-      const turnRate = 3.0;
+      // Responsive, lag-free turn rate
+      const turnRate = 7.5;
       rotationY += angleDiff * Math.min(delta * turnRate, 1.0);
 
-      const targetSteerAngle = Math.max(Math.min(angleDiff * 1.5, 0.45), -0.45);
-      currentSteering.current += (targetSteerAngle - currentSteering.current) * Math.min(delta * 6.0, 1.0);
+      const targetSteerAngle = Math.max(Math.min(angleDiff * 1.8, 0.45), -0.45);
+      currentSteering.current += (targetSteerAngle - currentSteering.current) * Math.min(delta * 10.0, 1.0);
 
+      // Deceleration curve when approaching module stop vs full cruising speed
+      const isApproachingStop = currentWaypoint.isModuleStop && distToWaypoint < 14.0;
       const mustStop = isBrakedRef.current || isStoppedAtModuleRef.current;
-      const effectiveTargetSpeed = mustStop ? 0 : targetSpeedRef.current;
-      const accelDecelRate = mustStop ? 16.0 : 6.0;
+
+      let effectiveTargetSpeed = targetSpeedRef.current;
+      if (mustStop) {
+        effectiveTargetSpeed = 0;
+      } else if (isApproachingStop) {
+        effectiveTargetSpeed = Math.max(3.5, distToWaypoint * 1.7);
+      }
+
+      const accelDecelRate = mustStop ? 24.0 : 18.0;
 
       if (currentSpeed.current < effectiveTargetSpeed) {
         currentSpeed.current += accelDecelRate * delta;

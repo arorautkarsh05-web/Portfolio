@@ -18,7 +18,7 @@ export const featuredProjects: ProjectLandmark[] = [
     repository: "https://github.com/arorautkarsh05-web/Bayora",
     architectureNote: "Evaluator architecture verified from repository README; implements isolated namespaces for Red-Team, Blue-Team, Model Internal, and Append-Only Audit log.",
     accentColor: "#ef4444", // Crimson security red
-    districtCoordinates: [-45, 0, -35]
+    districtCoordinates: [-38, 0, -38]
   },
   {
     id: "ustaad",
@@ -37,7 +37,7 @@ export const featuredProjects: ProjectLandmark[] = [
     repository: "https://github.com/arorautkarsh05-web/Ustaad",
     architectureNote: "Architected by Utkarsh Arora (Lead Developer & System Architect, Team Code Slayers) with strict ACID transactions.",
     accentColor: "#00d2ff", // Electric cyan blue
-    districtCoordinates: [45, 0, -35]
+    districtCoordinates: [40, 0, -36]
   },
   {
     id: "paypal-resolve",
@@ -56,7 +56,7 @@ export const featuredProjects: ProjectLandmark[] = [
     repository: "https://github.com/arorautkarsh05-web/PayPal-Resolve",
     architectureNote: "Dual-backend architecture: Authoritative Node.js/SQLite server drives the core platform and sandbox scenarios, while the FastAPI directory serves as an independent prototype.",
     accentColor: "#f59e0b", // FinTech gold
-    districtCoordinates: [-45, 0, 45]
+    districtCoordinates: [-48, 0, 24]
   },
   {
     id: "webguard-ai",
@@ -75,7 +75,7 @@ export const featuredProjects: ProjectLandmark[] = [
     repository: "https://github.com/arorautkarsh05-web/WebGuard-AI",
     architectureNote: "Safety policy enforces non-destructive automation with strict stopping guardrails prior to payment steps or irreversible actions.",
     accentColor: "#8b5cf6", // Royal purple
-    districtCoordinates: [45, 0, 45]
+    districtCoordinates: [52, 0, 18]
   }
 ];
 
