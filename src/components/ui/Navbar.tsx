@@ -15,6 +15,17 @@ interface NavbarProps {
   onOpenContact: () => void;
 }
 
+const NAV_MODULES = [
+  { id: 1, num: '01', short: 'City', full: 'City Reveal' },
+  { id: 2, num: '02', short: 'About', full: 'Character Reveal' },
+  { id: 3, num: '03', short: 'Supercar', full: 'Supercar Ignition' },
+  { id: 4, num: '04', short: 'Education', full: 'Education Boulevard' },
+  { id: 5, num: '05', short: 'Tech', full: 'Technology Tower' },
+  { id: 6, num: '06', short: 'Projects', full: 'Projects Boulevard' },
+  { id: 7, num: '07', short: 'Experience', full: 'Experience District' },
+  { id: 8, num: '08', short: 'Contact', full: 'Contact Garage' }
+] as const;
+
 export const Navbar: React.FC<NavbarProps> = ({
   currentSceneId,
   onSelectScene,
@@ -27,9 +38,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenContact
 }) => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 px-4 py-2 sm:py-2.5 bg-slate-900/95 backdrop-blur-md border-b border-white/15 flex items-center justify-between text-white select-none shadow-xl h-16 max-h-16 overflow-hidden">
+    <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-900/95 backdrop-blur-md border-b border-white/15 flex items-center justify-between text-white select-none shadow-xl h-16 max-h-16 overflow-hidden">
       {/* Brand & Identity */}
-      <div className="flex items-center space-x-3 cursor-pointer shrink-0" onClick={() => onSelectScene(1)}>
+      <div className="flex items-center space-x-2.5 cursor-pointer shrink-0" onClick={() => onSelectScene(1)}>
         <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-sky-500 to-purple-600 p-[1px] shadow-lg shadow-sky-500/20 shrink-0">
           <div className="w-full h-full bg-[#0d0d1a] rounded-[11px] flex items-center justify-center font-black tracking-wider text-sm text-sky-400">
             UA
@@ -50,28 +61,36 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Fast Travel Scene Selector (Large Screens: 1280px+) */}
-      <nav className={`hidden ${isDrivingMode ? '2xl:flex' : 'xl:flex'} items-center space-x-1 bg-black/40 p-1 rounded-xl border border-white/5 shrink-0`}>
-        {scenesList.map(scene => (
-          <button
-            key={scene.id}
-            onClick={() => onSelectScene(scene.id)}
-            className={`px-2.5 py-1 text-xs rounded-lg transition-all duration-200 ${
-              currentSceneId === scene.id && !isDrivingMode && !is2DView
-                ? 'bg-sky-500/20 text-sky-300 font-semibold border border-sky-500/40 shadow-sm shadow-sky-500/30'
-                : 'text-slate-400 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            {scene.name.split('//')[1]?.trim() || scene.name}
-          </button>
-        ))}
+      {/* Primary City Modules Navigation Bar (Visible on lg: 1024px and up) */}
+      <nav className={`hidden ${isDrivingMode ? '2xl:flex' : 'lg:flex'} items-center space-x-1 bg-black/50 p-1 rounded-xl border border-white/10 shrink-0 shadow-inner`}>
+        {NAV_MODULES.map(m => {
+          const isActive = currentSceneId === m.id && !isDrivingMode && !is2DView;
+          return (
+            <button
+              key={m.id}
+              onClick={() => onSelectScene(m.id)}
+              className={`flex items-center space-x-1 px-2 lg:px-2.5 py-1 text-xs rounded-lg transition-all duration-200 border cursor-pointer ${
+                isActive
+                  ? 'bg-sky-500/25 text-sky-200 border-sky-400 font-bold shadow-md shadow-sky-500/25'
+                  : 'bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/10 border-white/5'
+              }`}
+              title={m.full}
+            >
+              <span className={`font-mono text-[10px] ${isActive ? 'text-amber-300 font-bold' : 'text-slate-500'}`}>
+                {m.num}
+              </span>
+              <span className="hidden 2xl:inline">{m.full}</span>
+              <span className="2xl:hidden">{m.short}</span>
+            </button>
+          );
+        })}
       </nav>
 
-      {/* Compact Scene Stepper Indicator (Medium Screens: 768px - 1279px) */}
+      {/* Compact Scene Stepper Indicator (Mobile & Tablet < 1024px) */}
       {!isDrivingMode && !is2DView && (
-        <div className="hidden md:flex xl:hidden items-center space-x-2 bg-black/40 px-3 py-1.5 rounded-xl border border-white/10 text-xs shrink-0">
+        <div className="hidden sm:flex lg:hidden items-center space-x-2 bg-black/50 px-3 py-1.5 rounded-xl border border-white/10 text-xs shrink-0">
           <button
-            onClick={() => onSelectScene(currentSceneId > 1 ? currentSceneId - 1 : scenesList.length)}
+            onClick={() => onSelectScene(currentSceneId > 1 ? currentSceneId - 1 : NAV_MODULES.length)}
             className="p-1 hover:text-amber-400 text-slate-400 transition"
             title="Previous scene"
           >
@@ -81,10 +100,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             {currentSceneId.toString().padStart(2, '0')}/08
           </span>
           <span className="text-slate-200 font-medium truncate max-w-[130px]">
-            {scenesList[currentSceneId - 1]?.name.split('//')[1]?.trim()}
+            {NAV_MODULES[currentSceneId - 1]?.full}
           </span>
           <button
-            onClick={() => onSelectScene(currentSceneId < scenesList.length ? currentSceneId + 1 : 1)}
+            onClick={() => onSelectScene(currentSceneId < NAV_MODULES.length ? currentSceneId + 1 : 1)}
             className="p-1 hover:text-amber-400 text-slate-400 transition"
             title="Next scene"
           >

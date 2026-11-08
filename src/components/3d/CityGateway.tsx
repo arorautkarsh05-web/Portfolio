@@ -77,25 +77,27 @@ export const CityGateway: React.FC<CityGatewayProps> = ({ onTriggerCityReveal })
         <meshBasicMaterial color="#d97706" />
       </mesh>
 
-      {/* Floating UTKARSH CITY 3D Marquee Signage */}
-      <Float speed={2} rotationIntensity={0.05} floatIntensity={0.15}>
-        <group position={[0, 21.5, 0]}>
-          <mesh>
-            <boxGeometry args={[14, 2.0, 0.4]} />
-            <meshStandardMaterial color="#020617" roughness={0.1} metalness={0.95} />
-          </mesh>
-          {/* Glowing Front Face */}
-          <mesh position={[0, 0, 0.22]}>
-            <planeGeometry args={[13.6, 1.7]} />
-            <meshBasicMaterial color="#0f172a" />
-          </mesh>
-          {/* Neon Lettering Border */}
-          <mesh position={[0, 0, 0.23]}>
-            <ringGeometry args={[2.5, 2.65, 32]} />
-            <meshBasicMaterial color="#fbbf24" />
-          </mesh>
-        </group>
-      </Float>
+      {/* Monumental UTKARSH CITY Architectural Gateway Marquee */}
+      <group position={[0, 20.5, 0]}>
+        <mesh castShadow>
+          <boxGeometry args={[14, 2.2, 0.5]} />
+          <meshStandardMaterial color="#020617" roughness={0.15} metalness={0.95} />
+        </mesh>
+        {/* Illuminated Sign Inset */}
+        <mesh position={[0, 0, 0.28]}>
+          <planeGeometry args={[13.4, 1.8]} />
+          <meshBasicMaterial color="#0284c7" transparent opacity={0.35} />
+        </mesh>
+        {/* Neon Gold Accent Trim */}
+        <mesh position={[0, 1.05, 0.29]}>
+          <boxGeometry args={[13.6, 0.06, 0.02]} />
+          <meshBasicMaterial color="#fbbf24" />
+        </mesh>
+        <mesh position={[0, -1.05, 0.29]}>
+          <boxGeometry args={[13.6, 0.06, 0.02]} />
+          <meshBasicMaterial color="#38bdf8" />
+        </mesh>
+      </group>
 
       {/* Central Rotating Gateway Hologram Portal */}
       <group ref={ringRef} position={[0, 9.5, 0]}>
