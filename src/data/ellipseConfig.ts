@@ -35,7 +35,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'Education Boulevard',
     side: 'left',
     category: 'education',
-    position: [-74, 0, -6],
+    position: [-82, 0, -6],
     approachParamT: Math.PI, // West apex (~3.14 rad)
     color: '#0284c7',
     accentColor: '#38bdf8',
@@ -46,7 +46,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'Experience District',
     side: 'left',
     category: 'career',
-    position: [-48, 0, 56],
+    position: [-56, 0, 66],
     approachParamT: 2.35, // South-West curve (~135 deg)
     color: '#10b981',
     accentColor: '#34d399',
@@ -57,7 +57,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'Achievements Plaza',
     side: 'left',
     category: 'achievements',
-    position: [0, 0, 58],
+    position: [0, 0, 74],
     approachParamT: Math.PI / 2, // South apex (~1.57 rad)
     color: '#f59e0b',
     accentColor: '#fbbf24',
@@ -72,7 +72,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'Technology Tower',
     side: 'right',
     category: 'technology',
-    position: [0, 0, -58],
+    position: [0, 0, -78],
     approachParamT: (3 * Math.PI) / 2, // North apex (~4.71 rad)
     color: '#38bdf8',
     accentColor: '#0284c7',
@@ -83,7 +83,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'Bayora AI Citadel',
     side: 'right',
     category: 'project',
-    position: [-46, 0, -54],
+    position: [-58, 0, -66],
     approachParamT: 3.92, // North-West curve (~225 deg)
     color: '#ef4444',
     accentColor: '#f87171',
@@ -94,7 +94,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'Eurogrip Ustaad Hub',
     side: 'right',
     category: 'project',
-    position: [46, 0, -54],
+    position: [58, 0, -66],
     approachParamT: 5.49, // North-East curve (~315 deg)
     color: '#d97706',
     accentColor: '#f59e0b',
@@ -105,7 +105,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'PayPal Resolve Spire',
     side: 'right',
     category: 'project',
-    position: [28, 0, -18],
+    position: [22, 0, -12],
     approachParamT: 5.9, // Inner East
     color: '#3b82f6',
     accentColor: '#60a5fa',
@@ -116,7 +116,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'WebGuard AI Observatory',
     side: 'right',
     category: 'project',
-    position: [74, 0, 6],
+    position: [82, 0, 6],
     approachParamT: 0.1, // East apex (~0 rad)
     color: '#06b6d4',
     accentColor: '#22d3ee',
@@ -127,7 +127,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     name: 'Contact Garage',
     side: 'right',
     category: 'contact',
-    position: [52, 0, 50],
+    position: [60, 0, 60],
     approachParamT: 0.78, // South-East curve (~45 deg)
     color: '#f43f5e',
     accentColor: '#fb7185',

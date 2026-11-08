@@ -20,9 +20,9 @@ export const CityMinimap: React.FC<CityMinimapProps> = ({
   const cx = width / 2;
   const cy = height / 2;
 
-  // Scale: World [-85, 85] X and [-70, 70] Z to SVG viewport
-  const scaleX = (width * 0.44) / 56;
-  const scaleZ = (height * 0.42) / 44;
+  // Scale: World [-95, 95] X and [-90, 90] Z comfortably into SVG viewport with safety margins
+  const scaleX = (width * 0.40) / 56;
+  const scaleZ = (height * 0.38) / 44;
 
   const worldToSvg = (x: number, z: number): [number, number] => {
     return [cx + x * scaleX, cy + z * scaleZ];

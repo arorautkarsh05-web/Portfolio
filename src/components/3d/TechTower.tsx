@@ -28,7 +28,7 @@ export const TechTower: React.FC<TechTowerProps> = ({ onOpenSkillsModal }) => {
   return (
     <group
       name="TechTower"
-      position={[0, 0, -58]}
+      position={[0, 0, -78]}
       onClick={(e) => {
         e.stopPropagation();
         onOpenSkillsModal?.();

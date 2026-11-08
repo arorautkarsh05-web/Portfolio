@@ -21,23 +21,23 @@ export const buildingColliders: BoundingBox2D[] = [
   // 1. Central Grand Plaza pedestal
   { minX: -4, maxX: 4, minZ: -4, maxZ: 4, name: 'Central Pedestal' },
   // 2. Technology Tower (North apex)
-  { minX: -18, maxX: 18, minZ: -74, maxZ: -46, name: 'Technology Tower' },
+  { minX: -24, maxX: 24, minZ: -102, maxZ: -56, name: 'Technology Tower' },
   // 3. Education Boulevard (Outer West)
-  { minX: -88, maxX: -60, minZ: -20, maxZ: 8, name: 'Education Boulevard' },
+  { minX: -95, maxX: -69, minZ: -18, maxZ: 6, name: 'Education Boulevard' },
   // 4. Experience District (Outer South-West)
-  { minX: -62, maxX: -34, minZ: 44, maxZ: 68, name: 'Experience District' },
+  { minX: -70, maxX: -42, minZ: 52, maxZ: 80, name: 'Experience District' },
   // 5. Achievements Plaza (Outer South)
-  { minX: -16, maxX: 16, minZ: 46, maxZ: 70, name: 'Achievements Plaza' },
+  { minX: -18, maxX: 18, minZ: 56, maxZ: 92, name: 'Achievements Plaza' },
   // 6. Bayora Security Citadel (Outer North-West)
-  { minX: -60, maxX: -32, minZ: -68, maxZ: -40, name: 'Bayora Citadel' },
+  { minX: -76, maxX: -40, minZ: -84, maxZ: -48, name: 'Bayora Citadel' },
   // 7. Eurogrip Ustaad Hub (Outer North-East)
-  { minX: 32, maxX: 60, minZ: -68, maxZ: -40, name: 'Eurogrip Ustaad Hub' },
+  { minX: 40, maxX: 76, minZ: -84, maxZ: -48, name: 'Eurogrip Ustaad Hub' },
   // 8. WebGuard AI Observatory (Outer East)
-  { minX: 60, maxX: 88, minZ: -8, maxZ: 20, name: 'WebGuard AI Observatory' },
+  { minX: 66, maxX: 98, minZ: -10, maxZ: 22, name: 'WebGuard AI Observatory' },
   // 9. The Executive Garage (Outer South-East)
-  { minX: 38, maxX: 66, minZ: 36, maxZ: 64, name: 'Contact Garage' },
+  { minX: 46, maxX: 74, minZ: 46, maxZ: 74, name: 'Contact Garage' },
   // 10. PayPal Resolve Spire (Inner East)
-  { minX: 18, maxX: 38, minZ: -28, maxZ: -8, name: 'PayPal Resolve Spire' }
+  { minX: 8, maxX: 36, minZ: -24, maxZ: 0, name: 'PayPal Resolve Spire' }
 ];
 
 export interface VehicleState {

@@ -23,7 +23,7 @@ export const EducationBoulevard: React.FC<EducationBoulevardProps> = ({ onOpenEd
   return (
     <group
       name="EducationBoulevard"
-      position={[-74, 0, -6]}
+      position={[-82, 0, -6]}
       rotation={[0, Math.PI / 2, 0]}
       onClick={(e) => {
         e.stopPropagation();

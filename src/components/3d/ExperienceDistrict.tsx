@@ -10,7 +10,7 @@ export const ExperienceDistrict: React.FC<ExperienceDistrictProps> = ({ onOpenEx
   return (
     <group
       name="ExperienceDistrict"
-      position={[-48, 0, 56]}
+      position={[-56, 0, 66]}
       rotation={[0, Math.PI / 4, 0]}
       onClick={(e) => {
         e.stopPropagation();

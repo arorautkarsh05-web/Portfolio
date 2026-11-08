@@ -33,8 +33,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "education-boulevard",
     name: "04 // Education Boulevard",
     district: "Academic Pavilion",
-    cameraPosition: [-56, 7.5, -6],
-    cameraTarget: [-74, 4.5, -6],
+    cameraPosition: [-64, 8, -6],
+    cameraTarget: [-82, 4.5, -6],
     description: "Galgotias College of Engineering & Technology — B.Tech in Electronics & Communication."
   },
   {
@@ -42,8 +42,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "technology-tower",
     name: "05 // Technology Tower",
     district: "Skills District",
-    cameraPosition: [0, 16, -34],
-    cameraTarget: [0, 14, -58],
+    cameraPosition: [0, 18, -52],
+    cameraTarget: [0, 16, -78],
     description: "Monolithic glass skyscraper showcasing analytical, programming, and full-stack disciplines."
   },
   {
@@ -51,8 +51,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "projects-boulevard",
     name: "06 // Projects Boulevard",
     district: "Innovation Quad",
-    cameraPosition: [0, 36, 32],
-    cameraTarget: [0, 6, -10],
+    cameraPosition: [0, 42, 35],
+    cameraTarget: [0, 8, -15],
     description: "Four architectural landmarks: Bayora, Eurogrip Ustaad, PayPal Resolve, and WebGuard AI."
   },
   {
@@ -60,8 +60,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "experience-district",
     name: "07 // Experience District",
     district: "Career Skybridge",
-    cameraPosition: [-34, 7, 44],
-    cameraTarget: [-48, 4, 56],
+    cameraPosition: [-40, 8, 52],
+    cameraTarget: [-56, 5, 66],
     description: "Professional internship timeline: Auspify Technologies, HashBit Innovations, and DataX Web Solutions."
   },
   {
@@ -69,8 +69,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "contact-garage",
     name: "08 // Contact Garage",
     district: "Executive Terminal",
-    cameraPosition: [36, 6, 38],
-    cameraTarget: [52, 3.5, 50],
+    cameraPosition: [44, 7, 46],
+    cameraTarget: [60, 4, 60],
     description: "High-tech terminal showroom: connect directly with Utkarsh via Email, LinkedIn, and GitHub."
   }
 ];
