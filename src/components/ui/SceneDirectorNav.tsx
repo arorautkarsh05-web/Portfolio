@@ -65,7 +65,7 @@ export const SceneDirectorNav: React.FC<SceneDirectorNavProps> = ({
               <Sparkles size={13} />
               <span>
                 {currentScene.id === 2 && 'View Utkarsh Profile'}
-                {currentScene.id === 3 && 'Start Engine'}
+                {currentScene.id === 3 && 'Enter Supercar Showroom'}
                 {currentScene.id === 4 && 'View Education'}
                 {currentScene.id === 5 && 'View All Skills'}
                 {currentScene.id === 6 && 'Inspect Projects'}

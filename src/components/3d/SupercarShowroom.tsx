@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import * as THREE from 'three';
+import { ExoticHypercar } from './ExoticHypercar';
 
 interface SupercarShowroomProps {
   onTriggerIgnition?: () => void;
@@ -82,20 +83,14 @@ export const SupercarShowroom: React.FC<SupercarShowroomProps> = ({ onTriggerIgn
           <meshBasicMaterial color="#38bdf8" />
         </mesh>
 
-        {/* Sculptural Supercar Silhouette Monolith on Display */}
-        <mesh position={[0, 0.65, 0]} castShadow>
-          <boxGeometry args={[1.8, 0.75, 4.2]} />
-          <meshStandardMaterial color="#d97706" metalness={0.95} roughness={0.1} />
-        </mesh>
-        <mesh position={[0, 1.1, -0.2]} castShadow>
-          <boxGeometry args={[1.5, 0.45, 2.2]} />
-          <meshStandardMaterial color="#0284c7" metalness={0.9} roughness={0.05} transparent opacity={0.5} />
-        </mesh>
-        {/* Rear Wing Spoiler */}
-        <mesh position={[0, 1.25, -1.8]}>
-          <boxGeometry args={[1.7, 0.08, 0.35]} />
-          <meshStandardMaterial color="#09090b" metalness={0.9} />
-        </mesh>
+        {/* Flagship Exotic Track Hypercar on Display (Distinct from Road GT Coupe) */}
+        <ExoticHypercar
+          color="#0284c7"
+          accentColor="#0f172a"
+          isHeadlightsOn={true}
+          position={[0, 0.14, 0]}
+          rotation={[0, Math.PI, 0]}
+        />
       </group>
 
       {/* Floating Architectural Marquee Sign */}

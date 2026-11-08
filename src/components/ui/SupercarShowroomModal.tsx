@@ -1,8 +1,9 @@
 import React, { useState, useRef, useMemo, useEffect, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, OrbitControls } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { ExoticHypercar } from '../3d/ExoticHypercar';
 import {
   RotateCcw,
   Play,
@@ -54,38 +55,6 @@ const ShowroomStage: React.FC<ShowroomStageProps> = ({
   const { camera } = useThree();
   const controlsRef = useRef<any>(null);
   const turntableRef = useRef<THREE.Group>(null);
-  const carGLTF = useGLTF('/models/sports_car.glb');
-
-  // Clone sports car model and customize luxury gold metallic paint + tinted glass
-  const carScene = useMemo(() => {
-    const clone = carGLTF.scene.clone(true);
-    clone.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-
-        if (mesh.material) {
-          const mat = (mesh.material as THREE.MeshStandardMaterial).clone();
-          const name = mesh.name.toLowerCase();
-          if (name.includes('body')) {
-            mat.color.set('#d97706'); // Sunset metallic gold
-            mat.metalness = 0.92;
-            mat.roughness = 0.12;
-            mat.envMapIntensity = 2.5;
-          } else if (name.includes('glass')) {
-            mat.color.set('#0284c7');
-            mat.transparent = true;
-            mat.opacity = 0.45;
-            mat.roughness = 0.05;
-            mat.metalness = 0.95;
-          }
-          mesh.material = mat;
-        }
-      }
-    });
-    return clone;
-  }, [carGLTF.scene]);
 
   // Smooth camera transitions when preset changes
   useEffect(() => {
@@ -195,10 +164,11 @@ const ShowroomStage: React.FC<ShowroomStageProps> = ({
             <meshBasicMaterial color="#38bdf8" transparent opacity={0.6} />
           </mesh>
 
-          {/* Centered Sports Car (Flush on Turntable Platform at Y=0.15) */}
-          <primitive
-            object={carScene}
-            scale={[1.05, 1.05, 1.05]}
+          {/* Centered Flagship Exotic Track Hypercar (Flush on Turntable Platform) */}
+          <ExoticHypercar
+            color="#0284c7"
+            accentColor="#0f172a"
+            scale={1.0}
             position={[0, 0.15, 0]}
             rotation={[0, Math.PI, 0]}
           />
@@ -335,33 +305,33 @@ export const SupercarShowroomModal: React.FC<SupercarShowroomModalProps> = ({ is
           </button>
         </div>
 
-        {/* Tab 1: Vehicle Specifications (Verified from 3D Model Only) */}
+        {/* Tab 1: Vehicle Specifications (Exotic Track Hypercar Spec) */}
         {activeTab === 'specs' && (
           <div className="bg-slate-900/95 backdrop-blur-2xl border border-white/20 p-4 rounded-2xl shadow-2xl text-xs space-y-3 animate-in fade-in duration-200">
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
-              <span className="text-slate-400 font-mono uppercase text-[10px]">Model Format</span>
-              <span className="font-mono font-bold text-sky-300">glTF 2.0 Binary (GLB)</span>
+              <span className="text-slate-400 font-mono uppercase text-[10px]">Model Architecture</span>
+              <span className="font-mono font-bold text-sky-300">Exotic Apex Track Hypercar</span>
             </div>
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
-              <span className="text-slate-400 font-mono uppercase text-[10px]">Vehicle Category</span>
-              <span className="font-semibold text-white">Grand Tourer (GT Concept)</span>
+              <span className="text-slate-400 font-mono uppercase text-[10px]">Chassis Category</span>
+              <span className="font-semibold text-white">Mid-Engine Aero Flagship</span>
             </div>
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
-              <span className="text-slate-400 font-mono uppercase text-[10px]">Exterior Finish</span>
-              <span className="font-semibold text-amber-300">Metallic Sunset Amber</span>
+              <span className="text-slate-400 font-mono uppercase text-[10px]">Exterior Livery</span>
+              <span className="font-semibold text-sky-400">Liquid Electric Cyan & Forged Carbon</span>
             </div>
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
-              <span className="text-slate-400 font-mono uppercase text-[10px]">Wheel Architecture</span>
-              <span className="font-semibold text-white">Dual 5-Spoke Staggered Alloys</span>
+              <span className="text-slate-400 font-mono uppercase text-[10px]">Aerodynamic Package</span>
+              <span className="font-semibold text-white">Gooseneck GT3 Wing + Venturi Diffuser</span>
             </div>
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
-              <span className="text-slate-400 font-mono uppercase text-[10px]">Lighting System</span>
-              <span className="font-semibold text-white">Dual Xenon Projector + Rear Lightbar</span>
+              <span className="text-slate-400 font-mono uppercase text-[10px]">Running Gear</span>
+              <span className="font-semibold text-amber-300">Staggered Forged Alloys & Ceramic Brakes</span>
             </div>
             <div>
-              <span className="text-slate-400 font-mono uppercase text-[10px] block mb-1">Cockpit Interior</span>
+              <span className="text-slate-400 font-mono uppercase text-[10px] block mb-1">Cockpit Architecture</span>
               <p className="text-[11px] text-slate-300 leading-relaxed">
-                Detailed interior with carbon-fibre steering column, red Nappa leather bucket seats, and digital driver instrumentation.
+                Streamlined jet-fighter glass canopy, Formula-style racing yoke, telemetry cluster, and dual carbon-Kevlar bucket seats.
               </p>
             </div>
           </div>

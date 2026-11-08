@@ -165,17 +165,29 @@ export const RoadNetwork: React.FC = () => {
       nz /= len;
 
       // Outer palm line (8.5m outside outer road curb)
-      list.push([xc + nx * (roadWidth / 2 + 8.5), 0, zc + nz * (roadWidth / 2 + 8.5)]);
+      const opx = xc + nx * (roadWidth / 2 + 8.5);
+      const opz = zc + nz * (roadWidth / 2 + 8.5);
+      if (Math.hypot(opx - 26, opz - 18) > 13) {
+        list.push([opx, 0, opz]);
+      }
 
-      // Inner palm line (8.5m inside inner road curb, avoiding center plaza)
+      // Inner palm line (8.5m inside inner road curb, avoiding center plaza & showroom view corridor)
       if (Math.hypot(xc, zc) > 22) {
-        list.push([xc - nx * (roadWidth / 2 + 8.5), 0, zc - nz * (roadWidth / 2 + 8.5)]);
+        const ipx = xc - nx * (roadWidth / 2 + 8.5);
+        const ipz = zc - nz * (roadWidth / 2 + 8.5);
+        if (Math.hypot(ipx - 26, ipz - 18) > 13) {
+          list.push([ipx, 0, ipz]);
+        }
       }
     }
 
-    // Plaza perimeter palm cluster
+    // Plaza perimeter palm cluster (clearing view corridor towards Supercar Showroom at [26, 18])
     for (let ang = 0; ang < Math.PI * 2; ang += Math.PI / 4) {
-      list.push([Math.cos(ang) * 18, 0, Math.sin(ang) * 18]);
+      const px = Math.cos(ang) * 18;
+      const pz = Math.sin(ang) * 18;
+      if (Math.hypot(px - 26, pz - 18) > 12) {
+        list.push([px, 0, pz]);
+      }
     }
 
     return list;

@@ -23,10 +23,10 @@ export const scenesList: SceneCheckpoint[] = [
     id: 3,
     slug: "ignition",
     name: "03 // Supercar Ignition",
-    district: "Grand Boulevard Start",
-    cameraPosition: [26, 4.2, 34],
-    cameraTarget: [26, 2.0, 18],
-    description: "Headlights surge to life, sports car engine hums, and the world unlocks for exploration."
+    district: "Supercar Automotive Showroom",
+    cameraPosition: [26, 3.4, 29],
+    cameraTarget: [26, 1.8, 18],
+    description: "Flagship twin-turbo track hypercar on revolving turntable with telemetry and carbon aerodynamics."
   },
   {
     id: 4,
