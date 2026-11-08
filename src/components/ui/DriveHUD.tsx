@@ -54,9 +54,9 @@ export const DriveHUD: React.FC<DriveHUDProps> = ({
   const isManual = vehicleState.driveMode === 'manual';
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-30 select-none flex flex-col justify-between p-4 pt-16">
-      {/* Top Banner Notice */}
-      <div className="flex justify-between items-start pointer-events-auto gap-2">
+    <div className="fixed inset-0 pointer-events-none z-35 select-none flex flex-col justify-between p-4 pt-20 sm:pt-24">
+      {/* Top Banner Notice - Cleanly positioned below Navbar with guaranteed vertical clearance */}
+      <div className="flex flex-wrap sm:flex-nowrap justify-between items-start pointer-events-auto gap-3">
         <div className="bg-slate-900/95 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/20 text-xs text-slate-200 shadow-2xl max-w-md">
           <div className="flex items-center space-x-2 font-extrabold mb-1">
             <Gauge size={15} className="text-amber-400" />
@@ -84,7 +84,7 @@ export const DriveHUD: React.FC<DriveHUDProps> = ({
           </p>
         </div>
 
-        <div className="flex space-x-2 pointer-events-auto">
+        <div className="flex items-center space-x-2 pointer-events-auto">
           {/* Drive Mode Toggle (Manual vs Cruise) */}
           <button
             onClick={onToggleDriveMode}

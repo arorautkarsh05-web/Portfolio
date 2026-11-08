@@ -27,7 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenContact
 }) => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 px-4 py-3 bg-slate-900/95 backdrop-blur-md border-b border-white/15 flex items-center justify-between text-white select-none shadow-xl">
+    <header className="fixed top-0 left-0 right-0 z-40 px-4 py-2.5 sm:py-3 bg-slate-900/95 backdrop-blur-md border-b border-white/15 flex items-center justify-between text-white select-none shadow-xl min-h-[60px] sm:min-h-[64px]">
       {/* Brand & Identity */}
       <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onSelectScene(1)}>
         <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-sky-500 to-purple-600 p-[1px] shadow-lg shadow-sky-500/20">

@@ -53,3 +53,4 @@ This document certifies and attributes all 3D models, textures, audio, and visua
 - **Three.js & @react-three/fiber & @react-three/drei:** MIT License
 - **GSAP (GreenSock):** Standard Web License (Free for non-commercial web applications)
 - **Tailwind CSS & Lucide React:** MIT License
+

@@ -29,7 +29,7 @@ export const InteractivePromptCapsule: React.FC<InteractivePromptCapsuleProps> =
   // 1. CAR IS STOPPED BESIDE A MODULE: Prompt user if they want to explore it
   if (isDrivingMode && activeStop) {
     return (
-      <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 pointer-events-auto max-w-lg w-full px-4 animate-in fade-in slide-in-from-top-4 duration-300">
+      <div className="fixed top-28 sm:top-32 left-1/2 -translate-x-1/2 z-50 pointer-events-auto max-w-lg w-full px-4 animate-in fade-in slide-in-from-top-4 duration-300">
         <div className="bg-slate-900/98 backdrop-blur-2xl border-2 border-amber-400 p-4 rounded-3xl shadow-2xl shadow-amber-500/20 text-center">
           <div className="flex items-center justify-center space-x-2 text-amber-400 font-extrabold text-xs uppercase tracking-wider mb-1">
             <Sparkles size={15} className="animate-spin" style={{ animationDuration: '6s' }} />
@@ -70,7 +70,7 @@ export const InteractivePromptCapsule: React.FC<InteractivePromptCapsuleProps> =
   // 2. USER JUST EXITED A MODULE: Show "Move Again" button to resume cruising!
   if (isDrivingMode && showResumePrompt) {
     return (
-      <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 pointer-events-auto animate-bounce">
+      <div className="fixed top-28 sm:top-32 left-1/2 -translate-x-1/2 z-50 pointer-events-auto animate-bounce">
         <button
           onClick={onResumeMove}
           className="flex items-center space-x-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 text-slate-950 font-black text-sm shadow-2xl shadow-emerald-500/40 border-2 border-white hover:scale-105 active:scale-95 transition-all cursor-pointer"
@@ -86,7 +86,7 @@ export const InteractivePromptCapsule: React.FC<InteractivePromptCapsuleProps> =
   // 3. Driving Mode Nearby Landmark Proximity Capsule
   if (isDrivingMode && nearDistrictName) {
     return (
-      <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 pointer-events-auto animate-bounce">
+      <div className="fixed top-28 sm:top-32 left-1/2 -translate-x-1/2 z-50 pointer-events-auto animate-bounce">
         <button
           onClick={onTriggerAction}
           className="flex items-center space-x-2.5 px-6 py-3 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-2xl shadow-amber-500/40 border-2 border-white hover:scale-105 active:scale-95 transition-all cursor-pointer"

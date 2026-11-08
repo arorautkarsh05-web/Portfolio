@@ -68,7 +68,7 @@ getFiles('src');
 
 let missingRelCount = 0;
 let secretPatternCount = 0;
-const secretRegex = /(api[_-]?key|secret[_-]?token|private[_-]?key)\s*[:=]\s*['\"][a-zA-Z0-9_\-]{16,}['\"]/i;
+const secretRegex = /(api[_-]?key|secret[_-]?token|private[_-]?key)\s*[:=]\s*['"][a-zA-Z0-9_-]{16,}['"]/i;
 
 for (const f of srcFiles) {
   const content = fs.readFileSync(f, 'utf8');
@@ -91,3 +91,4 @@ console.log('\n=============================================');
 console.log(`TOTAL TESTS: ${passed + failed} | PASSED: ${passed} | FAILED: ${failed}`);
 console.log('=============================================');
 if (failed > 0) process.exit(1);
+
