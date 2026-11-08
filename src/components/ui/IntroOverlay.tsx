@@ -84,7 +84,7 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({
               className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/30 transition flex items-center justify-center space-x-2 group cursor-pointer"
             >
               <Sparkles size={18} />
-              <span>Enter Golden-Hour Tour (Scene 01)</span>
+              <span>Enter Golden-Hour Tour (Auto-Guided Tour)</span>
               <ArrowRight size={18} className="group-hover:translate-x-1.5 transition" />
             </button>
 

@@ -326,3 +326,4 @@ export const ExoticHypercar: React.FC<ExoticHypercarProps> = ({
     </group>
   );
 };
+

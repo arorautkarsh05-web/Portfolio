@@ -143,7 +143,7 @@ export function App() {
     }
   }, [playChime, isDrivingMode, pauseDrive, handleSelectScene]);
 
-  // Run vehicle physics loop when driving mode is active
+  // Run vehicle physics loop continuously so the sports car cruises along the elliptical track
   useEffect(() => {
     let animationFrameId: number;
     let lastTime = performance.now();
@@ -152,8 +152,9 @@ export function App() {
       const delta = Math.min((time - lastTime) / 1000, 0.08);
       lastTime = time;
 
+      // Continuously update autonomous cruise along the elliptical boulevard so the city is always alive
+      const nextState = updatePhysics(delta);
       if (isDrivingMode) {
-        const nextState = updatePhysics(delta);
         updateEngineSpeed(Math.abs(nextState.speed) / 12.0);
       }
 
@@ -171,7 +172,7 @@ export function App() {
     const timer = setInterval(() => {
       setCurrentSceneId(prev => (prev % scenesList.length) + 1);
       playChime(520);
-    }, 7500);
+    }, 6500);
 
     return () => clearInterval(timer);
   }, [isAutoPlay, isDrivingMode, is2DView, playChime]);
@@ -286,13 +287,19 @@ export function App() {
       {/* Intro Modal on First Load */}
       <IntroOverlay
         onEnterCinematic={() => {
-          handleSelectScene(1);
+          setIsDrivingMode(false);
+          setIsAutoPlay(true);
+          setCurrentSceneId(1);
+          handleIgnition();
+          playChime(620);
         }}
         onEnterDrive={() => {
+          setIsAutoPlay(false);
           setIsDrivingMode(true);
           handleIgnition();
         }}
         onSkipTo2D={() => {
+          setIsAutoPlay(false);
           setIs2DView(true);
         }}
       />
