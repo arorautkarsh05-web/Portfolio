@@ -10,17 +10,24 @@ interface CharacterAndCarProps {
   isDrivingMode?: boolean;
 }
 
+// Actual wheel radius calculated from GLTF tire geometry bounds (0.358m * 1.05 scale = 0.3759m)
+const WHEEL_RADIUS = 0.3759;
+
 export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
   vehicleState,
   onCharacterClick,
   isDrivingMode = false
 }) => {
   const carGroupRef = useRef<THREE.Group>(null);
-  const exhaustFlamesRef = useRef<THREE.Group>(null);
-  const flameLightsRef = useRef<THREE.PointLight>(null);
-  const flameShockwaveRef = useRef<THREE.Mesh>(null);
-  const underglowRef = useRef<THREE.PointLight>(null);
   const hologramRingRef = useRef<THREE.Group>(null);
+  const taillightMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  const brakeLightRef = useRef<THREE.PointLight>(null);
+
+  // Suspension & wheel rotation physics refs
+  const wheelSpinRef = useRef<number>(0);
+  const prevSpeedRef = useRef<number>(vehicleState.speed);
+  const bodyPitchRef = useRef<number>(0);
+  const bodyRollRef = useRef<number>(0);
 
   // Load authentic user portrait texture for hologram pedestal
   const userPhotoTexture = useTexture('/utkarsh_arora.jpeg');
@@ -120,94 +127,104 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
     return clone;
   }, [charGLTF.scene]);
 
-  // Animation frame loop
-  useFrame((state, delta) => {
-    // Car positioning & heading
-    if (carGroupRef.current) {
-      carGroupRef.current.position.set(
-        vehicleState.position[0],
-        vehicleState.position[1],
-        vehicleState.position[2]
-      );
-      carGroupRef.current.rotation.y = vehicleState.rotationY;
-    }
+  // Realistic vehicle dynamics & wheel animation frame loop
+  useFrame((_, delta) => {
+    if (!carGroupRef.current) return;
 
-    // Wheel spin & steering
-    const wheelSpin = vehicleState.speed * delta * 4.5;
+    const currentSpeed = vehicleState.speed;
+    const isBraking =
+      vehicleState.isBraked ||
+      vehicleState.isHandbrake ||
+      (currentSpeed < prevSpeedRef.current - 0.3 && currentSpeed > 0.5);
+
+    // 1. Physically Calculated Distance Wheel Roll (v * dt / radius)
+    const distanceTraveled = currentSpeed * delta;
+    const deltaWheelSpin = distanceTraveled / WHEEL_RADIUS;
+    wheelSpinRef.current += deltaWheelSpin;
+
+    // 2. Realistic Wheel Rotation & Kingpin Steering
     const wheels = wheelNodesRef.current;
     if (wheels.fl) {
-      wheels.fl.rotation.x += wheelSpin;
-      wheels.fl.rotation.y = vehicleState.steering;
+      wheels.fl.rotation.x = wheelSpinRef.current;
+      // In GLTF coordinates, local Z is the true vertical steering axis
+      wheels.fl.rotation.z = vehicleState.steering;
     }
     if (wheels.fr) {
-      wheels.fr.rotation.x += wheelSpin;
-      wheels.fr.rotation.y = vehicleState.steering;
+      wheels.fr.rotation.x = wheelSpinRef.current;
+      wheels.fr.rotation.z = vehicleState.steering;
     }
-    if (wheels.rl) wheels.rl.rotation.x += wheelSpin;
-    if (wheels.rr) wheels.rr.rotation.x += wheelSpin;
-
-    // Subtle engine idle vibration
-    if (carGroupRef.current && Math.abs(vehicleState.speed) < 0.1) {
-      carGroupRef.current.position.y = 0.45 + Math.sin(state.clock.elapsedTime * 12.0) * 0.003;
+    if (wheels.rl) {
+      wheels.rl.rotation.x = wheelSpinRef.current;
+    }
+    if (wheels.rr) {
+      wheels.rr.rotation.x = wheelSpinRef.current;
     }
 
-    // Dynamic Super-Gear Exhaust Fire Flames & Turbo Backfire Effect
-    if (exhaustFlamesRef.current) {
-      const absSpeed = Math.abs(vehicleState.speed);
-      const isMoving = absSpeed > 0.3;
-      const speedNorm = Math.min(absSpeed / 18.0, 1.0);
-      const time = state.clock.elapsedTime;
+    // 3. Subtle, Planted Suspension Physics (No flying, no float, no artificial bounce)
+    const accel = delta > 0 ? (currentSpeed - prevSpeedRef.current) / delta : 0;
+    prevSpeedRef.current = currentSpeed;
 
-      if (isMoving || !isDrivingMode) {
-        // High-velocity roaring super-gear turbo flames
-        const jitterLength = 1.2 + Math.random() * 0.9 + speedNorm * 1.8;
-        const jitterWidth = 0.85 + Math.random() * 0.4;
-        exhaustFlamesRef.current.scale.set(jitterWidth, jitterWidth, jitterLength);
-        exhaustFlamesRef.current.visible = true;
+    // Subtle front dive under heavy braking, slight rear squat under hard throttle
+    let targetPitch = 0;
+    if (accel < -1.5) {
+      targetPitch = Math.max(accel * 0.0015, -0.018); // Slight forward pitch
+    } else if (accel > 2.0) {
+      targetPitch = Math.min(accel * 0.0012, 0.012); // Subtle rear squat
+    }
 
-        if (flameShockwaveRef.current) {
-          flameShockwaveRef.current.scale.set(
-            1.0 + Math.sin(time * 25.0) * 0.3,
-            1.0 + Math.sin(time * 25.0) * 0.3,
-            1.0
-          );
-        }
+    // Subtle body roll away from corner direction
+    const speedRatio = Math.min(Math.abs(currentSpeed) / 12.0, 1.0);
+    const targetRoll = -vehicleState.steering * speedRatio * 0.015;
 
-        if (flameLightsRef.current) {
-          flameLightsRef.current.intensity = 3.5 + Math.random() * 3.0 + speedNorm * 4.5;
-        }
+    // Dampen chassis pitch & roll with realistic sports spring rates
+    bodyPitchRef.current = THREE.MathUtils.lerp(bodyPitchRef.current, targetPitch, Math.min(delta * 8.0, 1.0));
+    bodyRollRef.current = THREE.MathUtils.lerp(bodyRollRef.current, targetRoll, Math.min(delta * 8.0, 1.0));
+
+    // Grounded placement directly on road surface (Y = 0.02)
+    carGroupRef.current.position.set(
+      vehicleState.position[0],
+      vehicleState.position[1],
+      vehicleState.position[2]
+    );
+
+    // Apply smooth orientation with subtle suspension attitude
+    carGroupRef.current.rotation.set(
+      bodyPitchRef.current,
+      vehicleState.rotationY,
+      bodyRollRef.current
+    );
+
+    // 4. Realistic Dynamic Brake Lights
+    if (taillightMatRef.current) {
+      if (isBraking) {
+        taillightMatRef.current.color.set('#ff0000');
+        taillightMatRef.current.emissive.set('#ff0000');
+        taillightMatRef.current.emissiveIntensity = 3.5;
+        if (brakeLightRef.current) brakeLightRef.current.intensity = 2.0;
       } else {
-        // Idle pilot flames pulsing gently
-        const idleJitter = 0.35 + Math.sin(time * 12.0) * 0.15;
-        exhaustFlamesRef.current.scale.set(idleJitter, idleJitter, idleJitter * 1.6);
-        exhaustFlamesRef.current.visible = true;
-
-        if (flameLightsRef.current) {
-          flameLightsRef.current.intensity = 1.0 + Math.random() * 0.8;
-        }
+        taillightMatRef.current.color.set('#b91c1c');
+        taillightMatRef.current.emissive.set('#ef4444');
+        taillightMatRef.current.emissiveIntensity = 0.8;
+        if (brakeLightRef.current) brakeLightRef.current.intensity = 0.3;
       }
     }
 
-    // Holographic ring rotation
+    // 5. Holographic ring rotation at plaza pedestal
     if (hologramRingRef.current) {
       hologramRingRef.current.rotation.y += delta * 0.8;
-    }
-
-    // Neon underglow pulse
-    if (underglowRef.current) {
-      underglowRef.current.intensity = 2.8 + Math.sin(state.clock.elapsedTime * 4.0) * 0.8;
     }
   });
 
   return (
     <group name="CharacterAndCarSystem">
       {/* ========================================================
-          PHASE 3: LICENSED HIGH-PERFORMANCE SPORTS CAR (GLB)
-          Full PBR materials, detailed alloy wheels, functional headlights,
-          taillights, dynamic reflections & exhaust fire flames
+          LICENSED HIGH-PERFORMANCE SPORTS CAR (GLB)
+          Solid asphalt contact, realistic wheel spin, kingpin steering,
+          functional xenon headlights, and dynamic brake lights.
+          Zero exhaust flames, zero artificial bouncing.
           ======================================================== */}
       <group ref={carGroupRef} position={vehicleState.position}>
-        {/* GLB Sports Car Model */}
+        {/* GLB Sports Car Model - Flush Ground Alignment */}
         <primitive
           object={carScene}
           scale={[1.05, 1.05, 1.05]}
@@ -215,105 +232,70 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
           rotation={[0, Math.PI, 0]} // Model faces +Z
         />
 
-        {/* Forward Xenon Projector Spotlights */}
+        {/* Forward Xenon Projector Headlights */}
         {vehicleState.isHeadlightsOn && (
           <>
             <spotLight
               position={[-0.75, 0.65, 2.3]}
-              target-position={[-0.75, 0, 30]}
-              angle={0.55}
-              penumbra={0.4}
-              intensity={7.0}
-              distance={60}
-              color="#ffffff"
+              target-position={[-0.75, 0, 32]}
+              angle={0.52}
+              penumbra={0.35}
+              intensity={6.0}
+              distance={55}
+              color="#f8fafc"
               castShadow
             />
             <spotLight
               position={[0.75, 0.65, 2.3]}
-              target-position={[0.75, 0, 30]}
-              angle={0.55}
-              penumbra={0.4}
-              intensity={7.0}
-              distance={60}
-              color="#ffffff"
+              target-position={[0.75, 0, 32]}
+              angle={0.52}
+              penumbra={0.35}
+              intensity={6.0}
+              distance={55}
+              color="#f8fafc"
             />
           </>
         )}
 
-        {/* Rear Neon Taillight Bar & Diffuser Accent */}
+        {/* Rear Taillight / Active Brake Light Bar */}
         <mesh position={[0, 0.65, -2.25]}>
           <boxGeometry args={[1.85, 0.05, 0.06]} />
-          <meshBasicMaterial color={vehicleState.isBraked ? "#ff0000" : "#ef4444"} />
+          <meshStandardMaterial
+            ref={taillightMatRef}
+            color="#b91c1c"
+            emissive="#ef4444"
+            emissiveIntensity={0.8}
+            roughness={0.2}
+            metalness={0.5}
+          />
         </mesh>
 
-        {/* ========================================================
-            QUAD TITANIUM EXHAUST SYSTEM & SUPER-GEAR FIRE FLAMES
-            ======================================================== */}
+        {/* Subtle rear brake light glow on asphalt */}
+        <pointLight
+          ref={brakeLightRef}
+          position={[0, 0.45, -2.5]}
+          color="#ef4444"
+          intensity={0.3}
+          distance={4.5}
+        />
+
+        {/* Authentic Quad Titanium Exhaust Tips (Realistic - No Flames, No Particles) */}
         {[-0.45, -0.22, 0.22, 0.45].map((x, i) => (
           <group key={`pipe-${i}`} position={[x, 0.32, -2.35]}>
             <mesh rotation={[Math.PI / 2, 0, 0]}>
               <cylinderGeometry args={[0.075, 0.075, 0.22, 16]} />
-              <meshStandardMaterial color="#cbd5e1" metalness={0.96} roughness={0.1} />
+              <meshStandardMaterial color="#334155" metalness={0.96} roughness={0.15} />
             </mesh>
             <mesh position={[0, 0, -0.11]} rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.072, 0.012, 8, 16]} />
-              <meshBasicMaterial color="#38bdf8" />
+              <ringGeometry args={[0.055, 0.075, 16]} />
+              <meshStandardMaterial color="#0f172a" roughness={0.8} />
             </mesh>
           </group>
         ))}
-
-        {/* DYNAMIC SUPER-GEAR FIRE FLAMES GROUP */}
-        <group ref={exhaustFlamesRef} position={[0, 0.32, -2.55]}>
-          {[-0.45, -0.22, 0.22, 0.45].map((x, i) => (
-            <group key={`flame-${i}`} position={[x, 0, 0]}>
-              {/* Outer Roaring Fiery Orange Flame Cone */}
-              <mesh position={[0, 0, -0.6]} rotation={[-Math.PI / 2, 0, 0]}>
-                <coneGeometry args={[0.15, 1.25, 14]} />
-                <meshBasicMaterial color="#ff4500" transparent opacity={0.85} />
-              </mesh>
-              {/* Mid Blazing Golden Flame Core */}
-              <mesh position={[0, 0, -0.45]} rotation={[-Math.PI / 2, 0, 0]}>
-                <coneGeometry args={[0.1, 0.95, 12]} />
-                <meshBasicMaterial color="#fbbf24" transparent opacity={0.92} />
-              </mesh>
-              {/* Electric Cyan Shock Diamond Ignition Needle */}
-              <mesh position={[0, 0, -0.28]} rotation={[-Math.PI / 2, 0, 0]}>
-                <coneGeometry args={[0.06, 0.6, 10]} />
-                <meshBasicMaterial color="#00f0ff" />
-              </mesh>
-            </group>
-          ))}
-
-          {/* Shockwave Ignition Ring */}
-          <mesh ref={flameShockwaveRef} position={[0, 0, -0.3]}>
-            <ringGeometry args={[0.65, 0.72, 32]} />
-            <meshBasicMaterial color="#38bdf8" transparent opacity={0.6} side={THREE.DoubleSide} />
-          </mesh>
-
-          {/* Dynamic Flame Point-Light */}
-          <pointLight
-            ref={flameLightsRef}
-            position={[0, 0, -0.8]}
-            color="#ff5500"
-            intensity={4.0}
-            distance={14}
-            decay={1.8}
-          />
-        </group>
-
-        {/* Cyan Neon Ground Underglow */}
-        <pointLight
-          ref={underglowRef}
-          position={[0, 0.12, 0]}
-          color="#0284c7"
-          intensity={3.2}
-          distance={9}
-          decay={1.8}
-        />
       </group>
 
       {/* ========================================================
-          PHASE 2: REALISTIC HUMAN CHARACTER (GLB)
+          REALISTIC HUMAN CHARACTER (GLB)
           Charcoal-grey formal suit, white shirt, black eyeglasses,
           natural human proportions, authentic photograph hologram pedestal
           ======================================================== */}

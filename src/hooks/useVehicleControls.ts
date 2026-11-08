@@ -403,7 +403,7 @@ export function useVehicleControls(initialPos?: [number, number, number]) {
     const currentDistrict = closestDist < 16.0 ? closestDistrict : null;
 
     const nextState: VehicleState = {
-      position: [candidateX, 0.45, candidateZ],
+      position: [candidateX, 0.02, candidateZ],
       rotationY,
       speed: currentSpeed.current,
       steering: currentSteering.current,

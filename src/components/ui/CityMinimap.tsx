@@ -168,3 +168,4 @@ export const CityMinimap: React.FC<CityMinimapProps> = ({
     </div>
   );
 };
+

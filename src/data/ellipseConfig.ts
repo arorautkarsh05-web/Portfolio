@@ -149,13 +149,15 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
 ];
 
 // Helper: Calculate exact world position on the ellipse for parameter t
+// Ground contact height is 0.02 to match the asphalt road mesh surface flush with tires
 export function getEllipsePoint(t: number, offsetDistance = 0): [number, number, number] {
   const { centerX, centerZ, radiusX, radiusZ } = ELLIPSE_CONFIG;
   const x = centerX + radiusX * Math.cos(t);
   const z = centerZ + radiusZ * Math.sin(t);
+  const roadContactY = 0.02;
 
   if (offsetDistance === 0) {
-    return [x, 0.45, z];
+    return [x, roadContactY, z];
   }
 
   // Calculate outward normal in XZ plane
@@ -165,7 +167,7 @@ export function getEllipsePoint(t: number, offsetDistance = 0): [number, number,
   nx /= len;
   nz /= len;
 
-  return [x + nx * offsetDistance, 0.45, z + nz * offsetDistance];
+  return [x + nx * offsetDistance, roadContactY, z + nz * offsetDistance];
 }
 
 // Helper: Calculate forward heading angle (rotationY) for parameter t
@@ -195,3 +197,4 @@ export function projectPointToEllipseT(x: number, z: number): number {
   if (t < 0) t += Math.PI * 2;
   return t;
 }
+

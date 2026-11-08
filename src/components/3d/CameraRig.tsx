@@ -65,17 +65,17 @@ export const CameraRig: React.FC<CameraRigProps> = ({
       const speedNorm = Math.min(Math.abs(vehicleState.speed) / 14.0, 1.0);
 
       // Camera distance and elevation adjust dynamically with velocity
-      const chaseDistance = 8.5 + speedNorm * 2.5;
-      const chaseHeight = 2.8 + speedNorm * 0.8;
+      const chaseDistance = 7.5 + speedNorm * 1.5;
+      const chaseHeight = 2.2 + speedNorm * 0.4;
 
       const targetCamX = carX - Math.sin(rotY) * chaseDistance;
       const targetCamZ = carZ - Math.cos(rotY) * chaseDistance;
       const targetCamY = carY + chaseHeight;
 
-      // Lookahead target down the road
-      const lookDist = 7.5;
+      // Lookahead target down the road (smooth focus on front hood / asphalt horizon)
+      const lookDist = 6.8;
       const targetLookX = carX + Math.sin(rotY) * lookDist;
-      const targetLookY = carY + 1.25;
+      const targetLookY = carY + 0.95;
       const targetLookZ = carZ + Math.cos(rotY) * lookDist;
 
       _tempCamTarget.set(targetCamX, targetCamY, targetCamZ);
