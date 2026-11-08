@@ -32,6 +32,16 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
   // Load authentic user portrait texture for hologram pedestal
   const userPhotoTexture = useTexture('/utkarsh_arora.jpeg');
 
+  useEffect(() => {
+    if (userPhotoTexture) {
+      userPhotoTexture.colorSpace = THREE.SRGBColorSpace;
+      userPhotoTexture.minFilter = THREE.LinearFilter;
+      userPhotoTexture.magFilter = THREE.LinearFilter;
+      userPhotoTexture.generateMipmaps = true;
+      userPhotoTexture.needsUpdate = true;
+    }
+  }, [userPhotoTexture]);
+
   // Load official GLTF models
   const carGLTF = useGLTF('/models/sports_car.glb');
   const charGLTF = useGLTF('/models/character.glb');
@@ -93,9 +103,18 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
     wheelNodesRef.current = { fl, fr, rl, rr };
   }, [carScene]);
 
-  // Clone character scene and style formal charcoal suit & shoes
+  // Clone character scene, center it at origin, and style formal charcoal suit & shoes
   const charScene = useMemo(() => {
     const clone = charGLTF.scene.clone(true);
+
+    // Compute bounding box to eliminate internal GLB model offset
+    const bbox = new THREE.Box3().setFromObject(clone);
+    const center = new THREE.Vector3();
+    bbox.getCenter(center);
+    // Center at (0, 0) in XZ and place feet on ground level (y = 0)
+    clone.position.x = -center.x;
+    clone.position.z = -center.z;
+    clone.position.y = -bbox.min.y;
 
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -296,116 +315,132 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
 
       {/* ========================================================
           LANDMARK 02: MODERN CHARACTER EXHIBITION PAVILION (GLB)
-          Travertine foundation, glass pavilion colonnade, cantilevered roof,
-          Charcoal-grey tailored formal suit, authentic photograph hologram
+          Travertine foundation, executive portrait monolith display,
+          Charcoal-grey tailored formal suit, high-contrast authentic portrait
           ======================================================== */}
       {!isDrivingMode && (
         <group
-          position={[2.4, 0, 0.8]}
+          position={[2.0, 0, 0.5]}
           onClick={(e) => {
             e.stopPropagation();
             onCharacterClick?.();
           }}
         >
-          {/* Exhibition Pavilion Foundation Platform */}
-          <mesh position={[0, 0.15, 0]} castShadow receiveShadow>
-            <cylinderGeometry args={[3.2, 3.5, 0.3, 32]} />
+          {/* Exhibition Pavilion Foundation Platform (White Marble & Slate) */}
+          <mesh position={[0, 0.11, 0]} castShadow receiveShadow>
+            <cylinderGeometry args={[2.8, 3.1, 0.22, 48]} />
             <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.6} />
           </mesh>
-          <mesh position={[0, 0.31, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[3.0, 3.2, 32]} />
+          <mesh position={[0, 0.23, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <circleGeometry args={[2.65, 48]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+          </mesh>
+          <mesh position={[0, 0.235, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[2.55, 2.68, 48]} />
             <meshBasicMaterial color="#d97706" />
           </mesh>
-
-          {/* Modern Cantilevered Glass Exhibition Canopy */}
-          <mesh position={[0, 4.2, 0]} castShadow>
-            <cylinderGeometry args={[3.8, 3.6, 0.25, 32]} />
-            <meshStandardMaterial color="#09090b" roughness={0.2} metalness={0.9} />
-          </mesh>
-          <mesh position={[0, 4.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[3.4, 3.8, 32]} />
-            <meshBasicMaterial color="#0284c7" />
-          </mesh>
-
-          {/* Minimalist Slim Chrome Supporting Pillars */}
-          {[-1.8, 1.8].map((x, i) => (
-            <mesh key={`char-pillar-${i}`} position={[x, 2.1, -1.8]} castShadow>
-              <cylinderGeometry args={[0.07, 0.07, 3.9, 16]} />
-              <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.1} />
-            </mesh>
-          ))}
-
-          {/* Holographic Glowing Pedestal */}
-          <mesh position={[0, 0.32, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <circleGeometry args={[1.4, 48]} />
-            <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
-          </mesh>
-          <mesh position={[0, 0.33, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.3, 1.4, 48]} />
+          <mesh position={[0, 0.236, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[1.35, 1.42, 48]} />
             <meshBasicMaterial color="#0284c7" />
           </mesh>
 
           {/* Rotating Holographic Technology Ring */}
-          <group ref={hologramRingRef} position={[0, 0.35, 0]}>
+          <group ref={hologramRingRef} position={[0, 0.25, 0]}>
             <mesh rotation={[-Math.PI / 2, 0, 0]}>
-              <ringGeometry args={[1.5, 1.55, 48]} />
-              <meshBasicMaterial color="#d97706" />
+              <ringGeometry args={[2.0, 2.05, 48]} />
+              <meshBasicMaterial color="#38bdf8" />
             </mesh>
           </group>
 
-          {/* GLB Human Character */}
-          <primitive
-            object={charScene}
-            scale={[1.0, 1.0, 1.0]}
-            position={[0, 0.28, 0]}
-            rotation={[0, -Math.PI / 6, 0]} // Angled towards viewer & sports car
-          />
-
-          {/* Black Eyeglasses attached at eye level */}
-          <group position={[0, 1.63, 0.13]}>
-            <mesh position={[-0.05, 0, 0]}>
-              <ringGeometry args={[0.026, 0.036, 16]} />
-              <meshBasicMaterial color="#09090b" side={THREE.DoubleSide} />
-            </mesh>
-            <mesh position={[0.05, 0, 0]}>
-              <ringGeometry args={[0.026, 0.036, 16]} />
-              <meshBasicMaterial color="#09090b" side={THREE.DoubleSide} />
-            </mesh>
-            <mesh position={[0, 0, 0]}>
-              <boxGeometry args={[0.035, 0.008, 0.008]} />
-              <meshBasicMaterial color="#09090b" />
-            </mesh>
-            {/* Spectacle Temples / Arms */}
-            <mesh position={[-0.08, 0, -0.06]} rotation={[0, 0.1, 0]}>
-              <boxGeometry args={[0.006, 0.006, 0.12]} />
-              <meshBasicMaterial color="#09090b" />
-            </mesh>
-            <mesh position={[0.08, 0, -0.06]} rotation={[0, -0.1, 0]}>
-              <boxGeometry args={[0.006, 0.006, 0.12]} />
-              <meshBasicMaterial color="#09090b" />
-            </mesh>
+          {/* GLB Human Character (Standing centered on left podium wing) */}
+          <group position={[-0.95, 0.22, 0]} rotation={[0, 0.25, 0]}>
+            <primitive object={charScene} scale={[1.0, 1.0, 1.0]} />
           </group>
 
-          {/* Authentic Photograph Hologram Display (Floating above Utkarsh) */}
-          <group position={[0, 2.35, 0]}>
-            <mesh castShadow>
-              <planeGeometry args={[0.75, 0.75]} />
+          {/* ========================================================
+              EXECUTIVE PORTRAIT MONOLITH DISPLAY (UTKARSH ARORA)
+              High-contrast true sRGB photographic portrait (1204x1600 aspect ratio)
+              Solid obsidian backing plate to eliminate light bleed & washout
+              ======================================================== */}
+          <group position={[0.75, 0.22, 0]} rotation={[0, -0.15, 0]}>
+            {/* Dark Graphite Base Stand */}
+            <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
+              <boxGeometry args={[1.56, 0.2, 0.42]} />
+              <meshStandardMaterial color="#0f172a" metalness={0.9} roughness={0.2} />
+            </mesh>
+            {/* Luminous Azure Base Trim */}
+            <mesh position={[0, 0.02, 0]}>
+              <boxGeometry args={[1.6, 0.03, 0.46]} />
+              <meshBasicMaterial color="#0284c7" />
+            </mesh>
+
+            {/* Solid Obsidian Backing Plate (prevents any sky/light bleed through) */}
+            <mesh position={[0, 1.15, 0]} castShadow>
+              <boxGeometry args={[1.44, 1.94, 0.06]} />
+              <meshStandardMaterial color="#09090b" metalness={0.95} roughness={0.15} />
+            </mesh>
+
+            {/* Chamfered Metallic Gold Frame Bezel */}
+            <mesh position={[0, 1.15, -0.01]}>
+              <boxGeometry args={[1.48, 1.98, 0.04]} />
+              <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.25} />
+            </mesh>
+
+            {/* Electric Azure Border Line */}
+            <mesh position={[0, 1.15, 0.025]}>
+              <boxGeometry args={[1.39, 1.86, 0.01]} />
+              <meshBasicMaterial color="#38bdf8" />
+            </mesh>
+
+            {/* High-Resolution Authentic Photograph Face (toneMapped={false} for pure vibrant contrast) */}
+            <mesh position={[0, 1.15, 0.032]}>
+              <planeGeometry args={[1.36, 1.82]} />
               <meshBasicMaterial
                 map={userPhotoTexture}
-                side={THREE.DoubleSide}
-                transparent
-                opacity={0.96}
+                toneMapped={false}
+                side={THREE.FrontSide}
               />
             </mesh>
-            {/* Holographic Glowing Border Frame */}
-            <mesh rotation={[0, 0, Math.PI / 4]}>
-              <ringGeometry args={[0.54, 0.56, 4]} />
-              <meshBasicMaterial color="#0284c7" side={THREE.DoubleSide} />
+
+            {/* Ultra-Clear High-Gloss Glass Protective Shield */}
+            <mesh position={[0, 1.15, 0.036]}>
+              <planeGeometry args={[1.36, 1.82]} />
+              <meshPhysicalMaterial
+                roughness={0.05}
+                transmission={0.92}
+                thickness={0.05}
+                ior={1.5}
+                transparent
+                opacity={0.2}
+                color="#ffffff"
+              />
             </mesh>
+
+            {/* Floating Azure Geometric Crown Accent */}
+            <mesh position={[0, 2.22, 0.02]}>
+              <ringGeometry args={[0.07, 0.1, 6]} />
+              <meshBasicMaterial color="#38bdf8" side={THREE.DoubleSide} />
+            </mesh>
+
+            {/* Executive Identity Plaque */}
+            <group position={[0, 0.12, 0.22]} rotation={[-0.25, 0, 0]}>
+              <mesh castShadow>
+                <boxGeometry args={[1.35, 0.16, 0.04]} />
+                <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
+              </mesh>
+              <mesh position={[0, 0, 0.022]}>
+                <boxGeometry args={[1.32, 0.02, 0.005]} />
+                <meshBasicMaterial color="#fbbf24" />
+              </mesh>
+            </group>
+
+            {/* Dedicated High-Intensity Key Spotlighting on Portrait */}
+            <pointLight position={[0, 1.3, 1.2]} color="#ffffff" intensity={2.8} distance={6} />
+            <pointLight position={[0, 2.2, 0.4]} color="#38bdf8" intensity={1.5} distance={4} />
           </group>
 
-          {/* Subtle Key Lighting on Utkarsh */}
-          <pointLight position={[0, 2.5, 0.6]} color="#ffffff" intensity={2.2} distance={7} />
+          {/* Ambient Platform Illumination */}
+          <pointLight position={[0, 2.8, 0]} color="#ffffff" intensity={2.0} distance={8} />
         </group>
       )}
     </group>

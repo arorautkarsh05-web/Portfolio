@@ -15,9 +15,9 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "character-intro",
     name: "02 // Character Reveal",
     district: "Central Grand Plaza",
-    cameraPosition: [4.5, 2.8, 10],
-    cameraTarget: [0, 1.4, 0],
-    description: "Utkarsh Arora beside the bespoke luxury sports car at the heart of the city."
+    cameraPosition: [2.1, 1.8, 5.2],
+    cameraTarget: [1.9, 1.35, 0.5],
+    description: "Utkarsh Arora executive portrait monolith and 3D character avatar at Central Grand Plaza."
   },
   {
     id: 3,
