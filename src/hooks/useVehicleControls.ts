@@ -396,22 +396,30 @@ export function useVehicleControls(initialPos?: [number, number, number]) {
     }
 
     // ==========================================
-    // 3. DISTRICT PROXIMITY DETECTION
-    // Detects when the car approaches any portfolio district
+    // 3. DISTRICT PROXIMITY DETECTION ALONG ELLIPSE
+    // Accurately detects when car drives past any portfolio building on either flank
     // ==========================================
+    const carT = ellipseTRef.current;
     let closestDistrict: CityDistrictConfig | null = null;
-    let closestDist = Infinity;
+    let minAngularDiff = Infinity;
+    let closestEuclidDist = Infinity;
 
     for (const d of CITY_DISTRICTS) {
-      const dist = Math.hypot(candidateX - d.position[0], candidateZ - d.position[2]);
-      if (dist < closestDist) {
-        closestDist = dist;
+      // Shortest circular angular distance around loop [0, 2*PI)
+      let dt = Math.abs(carT - d.approachParamT);
+      dt = Math.min(dt, Math.PI * 2 - dt);
+
+      if (dt < minAngularDiff) {
+        minAngularDiff = dt;
         closestDistrict = d;
+        closestEuclidDist = Math.hypot(candidateX - d.position[0], candidateZ - d.position[2]);
       }
     }
 
-    const nearDistrict = closestDist < 28.0 ? closestDistrict : null;
-    const currentDistrict = closestDist < 16.0 ? closestDistrict : null;
+    // Car is approaching district if within 0.22 rad (~22m window along track) and within 54m Euclidean distance
+    const isNear = minAngularDiff < 0.22 && closestEuclidDist < 54.0;
+    const nearDistrict = isNear ? closestDistrict : null;
+    const currentDistrict = minAngularDiff < 0.12 ? closestDistrict : null;
 
     const nextState: VehicleState = {
       position: [candidateX, 0.02, candidateZ],

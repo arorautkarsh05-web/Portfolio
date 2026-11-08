@@ -87,23 +87,21 @@ export const ExperienceDistrict: React.FC<ExperienceDistrictProps> = ({ onOpenEx
         );
       })}
 
-      {/* Floating Architectural Marquee */}
-      <Float speed={2} rotationIntensity={0.05} floatIntensity={0.15}>
-        <group position={[0, 10.5, 9.5]}>
-          <mesh>
-            <boxGeometry args={[14, 1.6, 0.2]} />
-            <meshStandardMaterial color="#09090b" roughness={0.2} metalness={0.8} />
-          </mesh>
-          <mesh position={[0, 0, 0.11]}>
-            <planeGeometry args={[13.6, 1.3]} />
-            <meshBasicMaterial color="#0284c7" transparent opacity={0.3} />
-          </mesh>
-          <mesh position={[0, 0.75, 0.12]}>
-            <boxGeometry args={[13.6, 0.05, 0.02]} />
-            <meshBasicMaterial color="#38bdf8" />
-          </mesh>
-        </group>
-      </Float>
+      {/* Architectural Atrium Entrance Header Plaque */}
+      <group position={[0, 6.4, 4.1]}>
+        <mesh castShadow>
+          <boxGeometry args={[12, 0.9, 0.2]} />
+          <meshStandardMaterial color="#020617" roughness={0.15} metalness={0.9} />
+        </mesh>
+        <mesh position={[0, 0, 0.11]}>
+          <planeGeometry args={[11.6, 0.7]} />
+          <meshBasicMaterial color="#0284c7" transparent opacity={0.35} />
+        </mesh>
+        <mesh position={[0, 0.42, 0.12]}>
+          <boxGeometry args={[11.8, 0.04, 0.02]} />
+          <meshBasicMaterial color="#38bdf8" />
+        </mesh>
+      </group>
 
       {/* District Lighting */}
       <pointLight position={[0, 8.5, 4]} color="#38bdf8" intensity={3.5} distance={30} />

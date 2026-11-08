@@ -154,23 +154,21 @@ export const ContactGarage: React.FC<ContactGarageProps> = ({ onOpenContactModal
         </mesh>
       </group>
 
-      {/* Rooftop Illuminated Billboard Sign: "EXECUTIVE GARAGE // CONTACT" */}
-      <Float speed={2} rotationIntensity={0.05} floatIntensity={0.15}>
-        <group position={[0, 10.6, 8.5]}>
-          <mesh>
-            <boxGeometry args={[8.5, 1.4, 0.2]} />
-            <meshStandardMaterial color="#09090b" metalness={0.9} roughness={0.1} />
-          </mesh>
-          <mesh position={[0, 0, 0.12]}>
-            <planeGeometry args={[8.2, 1.1]} />
-            <meshBasicMaterial color="#0284c7" transparent opacity={0.3} />
-          </mesh>
-          <mesh position={[0, 0.68, 0.13]}>
-            <boxGeometry args={[8.4, 0.04, 0.02]} />
-            <meshBasicMaterial color="#38bdf8" />
-          </mesh>
-        </group>
-      </Float>
+      {/* Rooftop Integrated Architectural Sign: "EXECUTIVE GARAGE // CONTACT" */}
+      <group position={[0, 9.4, 10.3]}>
+        <mesh castShadow>
+          <boxGeometry args={[9.5, 0.9, 0.25]} />
+          <meshStandardMaterial color="#020617" metalness={0.9} roughness={0.15} />
+        </mesh>
+        <mesh position={[0, 0, 0.14]}>
+          <planeGeometry args={[9.2, 0.7]} />
+          <meshBasicMaterial color="#0284c7" transparent opacity={0.35} />
+        </mesh>
+        <mesh position={[0, 0.44, 0.15]}>
+          <boxGeometry args={[9.3, 0.04, 0.02]} />
+          <meshBasicMaterial color="#38bdf8" />
+        </mesh>
+      </group>
 
       {/* Interior Warm Downlight & Ambient Illumination */}
       <pointLight ref={ceilingGridRef} position={[0, 7.8, 0]} color="#ffffff" intensity={3.5} distance={25} />

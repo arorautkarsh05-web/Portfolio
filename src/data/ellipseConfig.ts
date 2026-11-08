@@ -37,7 +37,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'gateway',
     position: [-64, 0, 52],
-    approachParamT: 2.45,
+    approachParamT: 2.50,
     color: '#38bdf8',
     accentColor: '#0284c7',
     shortDesc: 'Monumental Triumphal Archway & Luxury Metropolis Portal',
@@ -53,7 +53,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'center',
     category: 'character',
     position: [0, 0, 0],
-    approachParamT: 0,
+    approachParamT: 1.35,
     color: '#fbbf24',
     accentColor: '#ffffff',
     shortDesc: 'Utkarsh Arora — Data Analyst & Software Engineer',
@@ -69,7 +69,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'inner',
     category: 'automotive',
     position: [26, 0, 18],
-    approachParamT: 0.65,
+    approachParamT: 0.98,
     color: '#f59e0b',
     accentColor: '#d97706',
     shortDesc: 'Bespoke Sports Car Showcase, Turntable & Telemetry',
@@ -85,7 +85,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'education',
     position: [-82, 0, -6],
-    approachParamT: Math.PI, // West apex (~3.14 rad)
+    approachParamT: 3.14, // West apex (~3.14 rad)
     color: '#0284c7',
     accentColor: '#38bdf8',
     shortDesc: 'Galgotias College of Eng. & Tech. — B.Tech ECE (CGPA 7.3/10)',
@@ -101,7 +101,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'technology',
     position: [0, 0, -78],
-    approachParamT: (3 * Math.PI) / 2, // North apex (~4.71 rad)
+    approachParamT: 4.71, // North apex (~4.71 rad)
     color: '#38bdf8',
     accentColor: '#0284c7',
     shortDesc: 'Python, SQL, Excel, Power BI, React, TypeScript, Node.js',
@@ -117,7 +117,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'project',
     position: [-58, 0, -66],
-    approachParamT: 3.92, // North-West curve (~225 deg)
+    approachParamT: 3.95, // North-West curve (~225 deg)
     color: '#ef4444',
     accentColor: '#f87171',
     shortDesc: 'AI Security & Cryptographic Access Platform',
@@ -129,7 +129,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'project',
     position: [58, 0, -66],
-    approachParamT: 5.49, // North-East curve (~315 deg)
+    approachParamT: 5.35, // North-East curve (~305 deg)
     color: '#d97706',
     accentColor: '#f59e0b',
     shortDesc: 'Commercial Fleet Analytics & IoT Mechanics Hub',
@@ -141,7 +141,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'inner', // Inside Loop!
     category: 'project',
     position: [22, 0, -12],
-    approachParamT: 5.9,
+    approachParamT: 5.85,
     color: '#3b82f6',
     accentColor: '#60a5fa',
     shortDesc: 'Financial Reconciliation & Automated Dispute Resolution',
@@ -153,7 +153,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'project',
     position: [82, 0, 6],
-    approachParamT: 0.1, // East apex (~0 rad)
+    approachParamT: 0.08, // East apex (~0 rad)
     color: '#06b6d4',
     accentColor: '#22d3ee',
     shortDesc: 'Autonomous Network Threat Detection & Security AI',
@@ -169,7 +169,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'career',
     position: [-56, 0, 66],
-    approachParamT: 2.35, // South-West curve (~135 deg)
+    approachParamT: 2.10, // South-West curve (~120 deg)
     color: '#10b981',
     accentColor: '#34d399',
     shortDesc: 'Auspify Technologies • HashBit Innovations • DataX Web Solutions',
@@ -185,7 +185,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'outer',
     category: 'contact',
     position: [60, 0, 60],
-    approachParamT: 0.78, // South-East curve (~45 deg)
+    approachParamT: 0.58, // South-East curve (~33 deg)
     color: '#f43f5e',
     accentColor: '#fb7185',
     shortDesc: 'Executive Connect, Resume Download, LinkedIn & Email',
@@ -199,7 +199,7 @@ export const CITY_DISTRICTS: CityDistrictConfig[] = [
     side: 'inner',
     category: 'achievements',
     position: [0, 0, 74],
-    approachParamT: Math.PI / 2, // South apex (~1.57 rad)
+    approachParamT: 1.62, // South apex (~90 deg)
     color: '#f59e0b',
     accentColor: '#fbbf24',
     shortDesc: 'Verified Certifications, Technical Badges & Hackathons',

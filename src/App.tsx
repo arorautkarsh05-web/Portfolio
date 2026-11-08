@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { scenesList } from './data/scenes';
 import { featuredProjects } from './data/projects';
 import { ProjectLandmark } from './types';
-import { CityDistrictConfig } from './data/ellipseConfig';
+import { CityDistrictConfig, CITY_DISTRICTS } from './data/ellipseConfig';
 import { useAudio } from './hooks/useAudio';
 import { useVehicleControls } from './hooks/useVehicleControls';
 import { CityWorld } from './components/3d/CityWorld';
@@ -235,8 +235,29 @@ export function App() {
         setIsContactOpen(false);
         setIsCharacterProfileOpen(false);
       } else if (e.key === 'e' || e.key === 'E') {
-        if (vehicleState.nearDistrict) {
-          handleInspectDistrict(vehicleState.nearDistrict);
+        if (isDrivingMode) {
+          if (vehicleState.nearDistrict) {
+            handleInspectDistrict(vehicleState.nearDistrict);
+          } else {
+            // Find closest district on the loop if user presses E while cruising
+            const carT = vehicleState.ellipseT;
+            let closestD = CITY_DISTRICTS[0];
+            let minDiff = Infinity;
+            for (const d of CITY_DISTRICTS) {
+              let dt = Math.abs(carT - d.approachParamT);
+              dt = Math.min(dt, Math.PI * 2 - dt);
+              if (dt < minDiff) {
+                minDiff = dt;
+                closestD = d;
+              }
+            }
+            if (minDiff < 0.35) {
+              handleInspectDistrict(closestD);
+            }
+          }
+        } else {
+          // In Director / Scene view (e.g. Education Boulevard), 'E' inspects current scene!
+          handleSceneAction(currentSceneId);
         }
       } else if (e.key === 'm' || e.key === 'M') {
         toggleSound();
@@ -247,7 +268,16 @@ export function App() {
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [vehicleState.nearDistrict, handleInspectDistrict, toggleSound, handleSelectScene]);
+  }, [
+    isDrivingMode,
+    vehicleState.nearDistrict,
+    vehicleState.ellipseT,
+    currentSceneId,
+    handleInspectDistrict,
+    handleSceneAction,
+    toggleSound,
+    handleSelectScene
+  ]);
 
   return (
     <div className={`relative w-full ${is2DView ? 'min-h-screen overflow-y-auto' : 'h-screen overflow-hidden'} bg-slate-950 text-white`}>

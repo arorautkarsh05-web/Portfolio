@@ -24,8 +24,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "ignition",
     name: "03 // Supercar Ignition",
     district: "Grand Boulevard Start",
-    cameraPosition: [0, 2.5, 8],
-    cameraTarget: [0, 1.2, 0],
+    cameraPosition: [26, 4.2, 34],
+    cameraTarget: [26, 2.0, 18],
     description: "Headlights surge to life, sports car engine hums, and the world unlocks for exploration."
   },
   {
@@ -33,8 +33,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "education-boulevard",
     name: "04 // Education Boulevard",
     district: "Academic Pavilion",
-    cameraPosition: [-64, 8, -6],
-    cameraTarget: [-82, 4.5, -6],
+    cameraPosition: [-62, 8.5, 4.0],
+    cameraTarget: [-82, 5.0, -6.0],
     description: "Galgotias College of Engineering & Technology — B.Tech in Electronics & Communication."
   },
   {

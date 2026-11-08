@@ -120,3 +120,4 @@ export const CityGateway: React.FC<CityGatewayProps> = ({ onTriggerCityReveal })
     </group>
   );
 };
+

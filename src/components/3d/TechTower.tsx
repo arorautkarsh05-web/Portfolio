@@ -199,28 +199,26 @@ export const TechTower: React.FC<TechTowerProps> = ({ onOpenSkillsModal }) => {
         distance={80}
       />
 
-      {/* Ground Plaza Architectural Signboard */}
-      <Float speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
-        <group position={[0, 6.5, 13]}>
-          <mesh>
-            <boxGeometry args={[7.5, 1.2, 0.15]} />
-            <meshStandardMaterial color="#09090b" roughness={0.2} metalness={0.8} />
-          </mesh>
-          <mesh position={[0, 0, 0.09]}>
-            <planeGeometry args={[7.3, 1.0]} />
-            <meshBasicMaterial color="#0284c7" transparent opacity={0.25} />
-          </mesh>
-          {/* Glowing Border Frame */}
-          <mesh position={[0, 0.58, 0.1]}>
-            <boxGeometry args={[7.4, 0.05, 0.02]} />
-            <meshBasicMaterial color="#38bdf8" />
-          </mesh>
-          <mesh position={[0, -0.58, 0.1]}>
-            <boxGeometry args={[7.4, 0.05, 0.02]} />
-            <meshBasicMaterial color="#d97706" />
-          </mesh>
-        </group>
-      </Float>
+      {/* Ground Plaza Architectural Institutional Sign Header on Canopy */}
+      <group position={[0, 4.6, 11]}>
+        <mesh castShadow>
+          <boxGeometry args={[8.5, 0.7, 0.2]} />
+          <meshStandardMaterial color="#020617" roughness={0.15} metalness={0.9} />
+        </mesh>
+        <mesh position={[0, 0, 0.12]}>
+          <planeGeometry args={[8.2, 0.55]} />
+          <meshBasicMaterial color="#0284c7" transparent opacity={0.35} />
+        </mesh>
+        {/* Glowing Gold Border Frame */}
+        <mesh position={[0, 0.36, 0.13]}>
+          <boxGeometry args={[8.3, 0.03, 0.02]} />
+          <meshBasicMaterial color="#38bdf8" />
+        </mesh>
+        <mesh position={[0, -0.36, 0.13]}>
+          <boxGeometry args={[8.3, 0.03, 0.02]} />
+          <meshBasicMaterial color="#d97706" />
+        </mesh>
+      </group>
 
       {/* Interactive Pedestal Beacon Light */}
       <pointLight position={[0, 5, 13]} color="#0284c7" intensity={3.5} distance={25} />
