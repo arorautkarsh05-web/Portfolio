@@ -60,8 +60,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "experience-district",
     name: "07 // Experience District",
     district: "Career Skybridge",
-    cameraPosition: [-40, 8, 52],
-    cameraTarget: [-56, 5, 66],
+    cameraPosition: [-36, 11, 86],
+    cameraTarget: [-56, 7.5, 66],
     description: "Professional internship timeline: Auspify Technologies, HashBit Innovations, and DataX Web Solutions."
   },
   {

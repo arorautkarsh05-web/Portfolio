@@ -164,18 +164,22 @@ export const RoadNetwork: React.FC = () => {
       nx /= len;
       nz /= len;
 
-      // Outer palm line (8.5m outside outer road curb)
+      // Outer palm line (8.5m outside outer road curb, avoiding Experience District front [ -56, 66 ])
       const opx = xc + nx * (roadWidth / 2 + 8.5);
       const opz = zc + nz * (roadWidth / 2 + 8.5);
-      if (Math.hypot(opx - 26, opz - 18) > 13) {
+      if (Math.hypot(opx - 26, opz - 18) > 13 && Math.hypot(opx - (-56), opz - 66) > 16) {
         list.push([opx, 0, opz]);
       }
 
-      // Inner palm line (8.5m inside inner road curb, avoiding center plaza, showroom [26, 18] & H-Building [22, -12])
+      // Inner palm line (8.5m inside inner road curb, avoiding center plaza, showroom [26, 18], H-Building [22, -12] & Experience [-56, 66])
       if (Math.hypot(xc, zc) > 22) {
         const ipx = xc - nx * (roadWidth / 2 + 8.5);
         const ipz = zc - nz * (roadWidth / 2 + 8.5);
-        if (Math.hypot(ipx - 26, ipz - 18) > 13 && Math.hypot(ipx - 22, ipz - (-12)) > 15) {
+        if (
+          Math.hypot(ipx - 26, ipz - 18) > 13 &&
+          Math.hypot(ipx - 22, ipz - (-12)) > 15 &&
+          Math.hypot(ipx - (-56), ipz - 66) > 16
+        ) {
           list.push([ipx, 0, ipz]);
         }
       }
