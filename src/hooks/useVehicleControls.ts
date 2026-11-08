@@ -416,10 +416,10 @@ export function useVehicleControls(initialPos?: [number, number, number]) {
       }
     }
 
-    // Car is approaching district if within 0.22 rad (~22m window along track) and within 54m Euclidean distance
-    const isNear = minAngularDiff < 0.22 && closestEuclidDist < 54.0;
+    // Car is approaching district if within generous 0.38 rad window along track and within 62m Euclidean distance
+    const isNear = minAngularDiff < 0.38 && closestEuclidDist < 62.0;
     const nearDistrict = isNear ? closestDistrict : null;
-    const currentDistrict = minAngularDiff < 0.12 ? closestDistrict : null;
+    const currentDistrict = minAngularDiff < 0.20 ? closestDistrict : null;
 
     const nextState: VehicleState = {
       position: [candidateX, 0.02, candidateZ],

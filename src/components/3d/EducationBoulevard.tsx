@@ -136,56 +136,84 @@ export const EducationBoulevard: React.FC<EducationBoulevardProps> = ({ onOpenEd
       ))}
 
       {/* ========================================================
-          3. ARCHITECTURAL ENTRANCE PORTICO & FACADE FRIEZE
-          Sleek glass portico, slender columns & institutional header
+          3. ARCHITECTURAL ENTRANCE COLONNADE & ROTUNDA PORTAL
+          Grand curved peristyle, marble columns & illuminated academic portal
           ======================================================== */}
-      {/* Sleek Glass Entrance Canopy */}
-      <mesh position={[0, 3.4, 3.2]} castShadow>
-        <boxGeometry args={[6.5, 0.12, 2.8]} />
-        <meshStandardMaterial color="#38bdf8" metalness={0.9} roughness={0.1} transparent opacity={0.6} />
+      {/* Curved Architectural Entry Canopy (Seamlessly Hugging Rotunda) */}
+      <mesh position={[0, 4.2, 3.8]} rotation={[0, 0, 0]} castShadow>
+        <boxGeometry args={[8.5, 0.25, 2.2]} />
+        <meshStandardMaterial color="#f8fafc" metalness={0.8} roughness={0.15} />
       </mesh>
-      {/* Canopy Gold Perimeter Trim */}
-      <mesh position={[0, 3.42, 3.2]}>
-        <boxGeometry args={[6.6, 0.04, 2.9]} />
+      {/* Canopy Gold Fascia Trim */}
+      <mesh position={[0, 4.33, 4.88]}>
+        <boxGeometry args={[8.55, 0.08, 0.1]} />
         <meshBasicMaterial color="#d97706" />
       </mesh>
+      <mesh position={[0, 4.08, 4.88]}>
+        <boxGeometry args={[8.55, 0.08, 0.1]} />
+        <meshBasicMaterial color="#38bdf8" />
+      </mesh>
 
-      {/* Slender White Architectural Columns */}
-      {[-2.8, 2.8].map((x, i) => (
-        <mesh key={`column-${i}`} position={[x, 1.7, 4.2]} castShadow>
-          <cylinderGeometry args={[0.16, 0.2, 3.4, 16]} />
-          <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
-        </mesh>
+      {/* Classical Modernist Portico Columns (White Marble & Gold Bases) */}
+      {[-3.6, -1.2, 1.2, 3.6].map((x, i) => (
+        <group key={`column-${i}`} position={[x, 0, 4.6]}>
+          {/* Base Plinth */}
+          <mesh position={[0, 0.2, 0]}>
+            <cylinderGeometry args={[0.3, 0.35, 0.4, 16]} />
+            <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
+          </mesh>
+          {/* Fluted Marble Column Shaft */}
+          <mesh position={[0, 2.2, 0]} castShadow>
+            <cylinderGeometry args={[0.22, 0.24, 3.6, 20]} />
+            <meshStandardMaterial color="#f8fafc" metalness={0.3} roughness={0.2} />
+          </mesh>
+          {/* Column Capital */}
+          <mesh position={[0, 4.05, 0]}>
+            <cylinderGeometry args={[0.32, 0.24, 0.2, 16]} />
+            <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
+          </mesh>
+        </group>
       ))}
 
-      {/* Recessed Grand Entrance Doors */}
-      <mesh position={[0, 2.0, 2.1]}>
-        <boxGeometry args={[3.6, 2.8, 0.1]} />
+      {/* Recessed Grand Crystal Entrance Doors */}
+      <mesh position={[0, 2.1, 3.2]}>
+        <boxGeometry args={[4.8, 3.8, 0.15]} />
         <meshStandardMaterial color="#0284c7" metalness={0.95} roughness={0.05} transparent opacity={0.7} />
       </mesh>
-      {/* Warm Golden Interior Lobby Light */}
-      <pointLight position={[0, 2.2, 1.5]} color="#fde047" intensity={2.5} distance={10} />
+      {/* Door Frame Gold Accent */}
+      <mesh position={[0, 2.1, 3.3]}>
+        <ringGeometry args={[1.8, 1.9, 4]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
 
-      {/* Integrated Architectural Institutional Frieze Header */}
-      <group position={[0, 4.6, 2.8]}>
-        {/* Stone Header Plaque */}
+      {/* Warm Golden Interior Lobby Light */}
+      <pointLight position={[0, 2.2, 2.5]} color="#fde047" intensity={3.0} distance={12} />
+
+      {/* Integrated Architectural University Signage Band */}
+      <group position={[0, 5.0, 4.0]}>
+        {/* Sleek Modern Backplate */}
         <mesh castShadow>
-          <boxGeometry args={[7.2, 0.9, 0.25]} />
-          <meshStandardMaterial color="#09090b" roughness={0.2} metalness={0.85} />
+          <boxGeometry args={[7.6, 0.8, 0.2]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.2} metalness={0.9} />
         </mesh>
         {/* Glowing Azure Inset Plate */}
-        <mesh position={[0, 0, 0.14]}>
-          <planeGeometry args={[7.0, 0.7]} />
-          <meshBasicMaterial color="#0284c7" transparent opacity={0.4} />
+        <mesh position={[0, 0, 0.11]}>
+          <planeGeometry args={[7.4, 0.65]} />
+          <meshStandardMaterial color="#0369a1" emissive="#0284c7" emissiveIntensity={0.6} roughness={0.1} />
         </mesh>
-        {/* Gold Border Lining */}
-        <mesh position={[0, 0.46, 0.15]}>
-          <boxGeometry args={[7.1, 0.04, 0.02]} />
+        {/* Gold Border Trim Top & Bottom */}
+        <mesh position={[0, 0.38, 0.12]}>
+          <boxGeometry args={[7.5, 0.04, 0.02]} />
           <meshBasicMaterial color="#fbbf24" />
         </mesh>
-        <mesh position={[0, -0.46, 0.15]}>
-          <boxGeometry args={[7.1, 0.04, 0.02]} />
+        <mesh position={[0, -0.38, 0.12]}>
+          <boxGeometry args={[7.5, 0.04, 0.02]} />
           <meshBasicMaterial color="#38bdf8" />
+        </mesh>
+        {/* University Emblem Accent */}
+        <mesh position={[0, 0, 0.13]}>
+          <cylinderGeometry args={[0.22, 0.22, 0.04, 8]} />
+          <meshBasicMaterial color="#fbbf24" />
         </mesh>
       </group>
 

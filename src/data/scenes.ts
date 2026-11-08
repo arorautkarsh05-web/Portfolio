@@ -33,8 +33,8 @@ export const scenesList: SceneCheckpoint[] = [
     slug: "education-boulevard",
     name: "04 // Education Boulevard",
     district: "Academic Pavilion",
-    cameraPosition: [-62, 8.5, 4.0],
-    cameraTarget: [-82, 5.0, -6.0],
+    cameraPosition: [-54, 9.5, 6.0],
+    cameraTarget: [-82, 6.0, -6.0],
     description: "Galgotias College of Engineering & Technology — B.Tech in Electronics & Communication."
   },
   {

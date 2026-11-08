@@ -19,6 +19,7 @@ const EducationModal = lazy(() => import('./components/ui/EducationModal').then(
 const AchievementsModal = lazy(() => import('./components/ui/AchievementsModal').then(m => ({ default: m.AchievementsModal })));
 const ContactModal = lazy(() => import('./components/ui/ContactModal').then(m => ({ default: m.ContactModal })));
 const CharacterProfileModal = lazy(() => import('./components/ui/CharacterProfileModal').then(m => ({ default: m.CharacterProfileModal })));
+const SupercarShowroomModal = lazy(() => import('./components/ui/SupercarShowroomModal').then(m => ({ default: m.SupercarShowroomModal })));
 const Full2DPortfolio = lazy(() => import('./components/ui/Full2DPortfolio').then(m => ({ default: m.Full2DPortfolio })));
 
 export function App() {
@@ -44,6 +45,7 @@ export function App() {
   const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isContactOpen, setIsContactOpen] = useState<boolean>(false);
   const [isCharacterProfileOpen, setIsCharacterProfileOpen] = useState<boolean>(false);
+  const [isShowroomModalOpen, setIsShowroomModalOpen] = useState<boolean>(false);
 
   // Audio system
   const { isMuted, toggleSound, playIgnition, playChime, updateEngineSpeed } = useAudio();
@@ -87,9 +89,9 @@ export function App() {
     playChime(480);
 
     if (id === 3) {
-      handleIgnition();
+      setIsShowroomModalOpen(true);
     }
-  }, [handleIgnition, playChime]);
+  }, [playChime]);
 
   // Inspect any district landmark
   const handleInspectDistrict = useCallback((district: CityDistrictConfig) => {
@@ -107,7 +109,7 @@ export function App() {
         setIsCharacterProfileOpen(true);
         break;
       case 'supercar-ignition':
-        handleSelectScene(3);
+        setIsShowroomModalOpen(true);
         break;
       case 'education':
         setIsEducationOpen(true);
@@ -183,6 +185,7 @@ export function App() {
     setIsAchievementsOpen(false);
     setIsContactOpen(false);
     setIsCharacterProfileOpen(false);
+    setIsShowroomModalOpen(false);
     if (isDrivingMode) {
       resumeDrive();
     }
@@ -199,7 +202,7 @@ export function App() {
         setIsCharacterProfileOpen(true);
         break;
       case 3:
-        handleIgnition();
+        setIsShowroomModalOpen(true);
         break;
       case 4:
         setIsEducationOpen(true);
@@ -219,7 +222,7 @@ export function App() {
       default:
         break;
     }
-  }, [handleIgnition, playChime]);
+  }, [playChime]);
 
   // Keyboard shortcuts (Escape, Mute, Number keys, E to inspect near district)
   useEffect(() => {
@@ -234,6 +237,7 @@ export function App() {
         setIsAchievementsOpen(false);
         setIsContactOpen(false);
         setIsCharacterProfileOpen(false);
+        setIsShowroomModalOpen(false);
       } else if (e.key === 'e' || e.key === 'E') {
         if (isDrivingMode) {
           if (vehicleState.nearDistrict) {
@@ -251,7 +255,7 @@ export function App() {
                 closestD = d;
               }
             }
-            if (minDiff < 0.35) {
+            if (minDiff < 0.60) {
               handleInspectDistrict(closestD);
             }
           }
@@ -366,7 +370,7 @@ export function App() {
             }}
             onTriggerIgnition={() => {
               playChime(620);
-              handleIgnition();
+              setIsShowroomModalOpen(true);
             }}
             onSwitchTo2D={() => setIs2DView(true)}
           />
@@ -446,6 +450,11 @@ export function App() {
 
         <ContactModal
           isOpen={isContactOpen}
+          onClose={handleCloseModal}
+        />
+
+        <SupercarShowroomModal
+          isOpen={isShowroomModalOpen}
           onClose={handleCloseModal}
         />
 
