@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Car, Film, FileText, ExternalLink } from 'lucide-react';
+import { Volume2, VolumeX, Car, Film, FileText, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { personalProfile } from '../../data/profile';
 import { scenesList } from '../../data/scenes';
 
@@ -50,8 +50,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Fast Travel Scene Selector (Desktop) */}
-      <nav className={`hidden ${isDrivingMode ? '2xl:flex' : 'lg:flex'} items-center space-x-1 bg-black/40 p-1 rounded-xl border border-white/5 shrink-0`}>
+      {/* Fast Travel Scene Selector (Large Screens: 1280px+) */}
+      <nav className={`hidden ${isDrivingMode ? '2xl:flex' : 'xl:flex'} items-center space-x-1 bg-black/40 p-1 rounded-xl border border-white/5 shrink-0`}>
         {scenesList.map(scene => (
           <button
             key={scene.id}
@@ -67,8 +67,34 @@ export const Navbar: React.FC<NavbarProps> = ({
         ))}
       </nav>
 
+      {/* Compact Scene Stepper Indicator (Medium Screens: 768px - 1279px) */}
+      {!isDrivingMode && !is2DView && (
+        <div className="hidden md:flex xl:hidden items-center space-x-2 bg-black/40 px-3 py-1.5 rounded-xl border border-white/10 text-xs shrink-0">
+          <button
+            onClick={() => onSelectScene(currentSceneId > 1 ? currentSceneId - 1 : scenesList.length)}
+            className="p-1 hover:text-amber-400 text-slate-400 transition"
+            title="Previous scene"
+          >
+            <ChevronLeft size={14} />
+          </button>
+          <span className="font-mono text-sky-400 font-bold">
+            {currentSceneId.toString().padStart(2, '0')}/08
+          </span>
+          <span className="text-slate-200 font-medium truncate max-w-[130px]">
+            {scenesList[currentSceneId - 1]?.name.split('//')[1]?.trim()}
+          </span>
+          <button
+            onClick={() => onSelectScene(currentSceneId < scenesList.length ? currentSceneId + 1 : 1)}
+            className="p-1 hover:text-amber-400 text-slate-400 transition"
+            title="Next scene"
+          >
+            <ChevronRight size={14} />
+          </button>
+        </div>
+      )}
+
       {/* Action Controls */}
-      <div className="flex items-center space-x-2 shrink-0">
+      <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
         {/* Drive Supercar Toggle */}
         <button
           onClick={onToggleDrivingMode}
