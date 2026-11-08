@@ -171,21 +171,21 @@ export const RoadNetwork: React.FC = () => {
         list.push([opx, 0, opz]);
       }
 
-      // Inner palm line (8.5m inside inner road curb, avoiding center plaza & showroom view corridor)
+      // Inner palm line (8.5m inside inner road curb, avoiding center plaza, showroom [26, 18] & H-Building [22, -12])
       if (Math.hypot(xc, zc) > 22) {
         const ipx = xc - nx * (roadWidth / 2 + 8.5);
         const ipz = zc - nz * (roadWidth / 2 + 8.5);
-        if (Math.hypot(ipx - 26, ipz - 18) > 13) {
+        if (Math.hypot(ipx - 26, ipz - 18) > 13 && Math.hypot(ipx - 22, ipz - (-12)) > 15) {
           list.push([ipx, 0, ipz]);
         }
       }
     }
 
-    // Plaza perimeter palm cluster (clearing view corridor towards Supercar Showroom at [26, 18])
+    // Plaza perimeter palm cluster (clearing view corridors towards Showroom [26, 18] and H-building [22, -12])
     for (let ang = 0; ang < Math.PI * 2; ang += Math.PI / 4) {
       const px = Math.cos(ang) * 18;
       const pz = Math.sin(ang) * 18;
-      if (Math.hypot(px - 26, pz - 18) > 12) {
+      if (Math.hypot(px - 26, pz - 18) > 12 && Math.hypot(px - 22, pz - (-12)) > 15) {
         list.push([px, 0, pz]);
       }
     }

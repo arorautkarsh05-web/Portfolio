@@ -50,10 +50,10 @@ export const scenesList: SceneCheckpoint[] = [
     id: 6,
     slug: "projects-boulevard",
     name: "06 // Projects Boulevard",
-    district: "Innovation Quad",
-    cameraPosition: [0, 42, 35],
-    cameraTarget: [0, 8, -15],
-    description: "Four architectural landmarks: Bayora, Eurogrip Ustaad, PayPal Resolve, and WebGuard AI."
+    district: "PayPal Resolve Skybridge Spire",
+    cameraPosition: [22, 16, 26],
+    cameraTarget: [22, 14, -12],
+    description: "Iconic H-frame twin crystalline towers connected by an illuminated transaction skybridge."
   },
   {
     id: 7,

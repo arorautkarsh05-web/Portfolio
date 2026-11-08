@@ -211,7 +211,7 @@ export function App() {
         setIsSkillsOpen(true);
         break;
       case 6:
-        setSelectedProject(featuredProjects[0]);
+        setSelectedProject(featuredProjects[2] || featuredProjects[0]);
         break;
       case 7:
         setIsExperienceOpen(true);
