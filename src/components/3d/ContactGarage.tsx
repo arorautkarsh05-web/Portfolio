@@ -27,7 +27,8 @@ export const ContactGarage: React.FC<ContactGarageProps> = ({ onOpenContactModal
   return (
     <group
       name="ContactGarage"
-      position={[28, 0, 42]}
+      position={[52, 0, 50]}
+      rotation={[0, -Math.PI / 4, 0]}
       onClick={(e) => {
         e.stopPropagation();
         onOpenContactModal?.();

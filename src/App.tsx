@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { scenesList } from './data/scenes';
 import { featuredProjects } from './data/projects';
 import { ProjectLandmark } from './types';
+import { CityDistrictConfig } from './data/ellipseConfig';
 import { useAudio } from './hooks/useAudio';
 import { useVehicleControls } from './hooks/useVehicleControls';
 import { CityWorld } from './components/3d/CityWorld';
@@ -9,20 +10,20 @@ import { Navbar } from './components/ui/Navbar';
 import { DriveHUD } from './components/ui/DriveHUD';
 import { SceneDirectorNav } from './components/ui/SceneDirectorNav';
 import { IntroOverlay } from './components/ui/IntroOverlay';
-import { InteractivePromptCapsule } from './components/ui/InteractivePromptCapsule';
 
 // Code-split modals and 2D portfolio for optimized initial bundle loading
 const ProjectDetailModal = lazy(() => import('./components/ui/ProjectDetailModal').then(m => ({ default: m.ProjectDetailModal })));
 const TechSkillsOverlay = lazy(() => import('./components/ui/TechSkillsOverlay').then(m => ({ default: m.TechSkillsOverlay })));
 const ExperienceDistrictView = lazy(() => import('./components/ui/ExperienceDistrictView').then(m => ({ default: m.ExperienceDistrictView })));
 const EducationModal = lazy(() => import('./components/ui/EducationModal').then(m => ({ default: m.EducationModal })));
+const AchievementsModal = lazy(() => import('./components/ui/AchievementsModal').then(m => ({ default: m.AchievementsModal })));
 const ContactModal = lazy(() => import('./components/ui/ContactModal').then(m => ({ default: m.ContactModal })));
 const CharacterProfileModal = lazy(() => import('./components/ui/CharacterProfileModal').then(m => ({ default: m.CharacterProfileModal })));
 const Full2DPortfolio = lazy(() => import('./components/ui/Full2DPortfolio').then(m => ({ default: m.Full2DPortfolio })));
 
 export function App() {
   const [currentSceneId, setCurrentSceneId] = useState<number>(1);
-  const [isDrivingMode, setIsDrivingMode] = useState<boolean>(false);
+  const [isDrivingMode, setIsDrivingMode] = useState<boolean>(true); // Autonomous Cruise active on launch
   // Independent 2D portfolio URL query (?view=2d or #2d) support for guaranteed accessibility
   const [is2DView, setIs2DView] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -40,6 +41,7 @@ export function App() {
   const [isSkillsOpen, setIsSkillsOpen] = useState<boolean>(false);
   const [isExperienceOpen, setIsExperienceOpen] = useState<boolean>(false);
   const [isEducationOpen, setIsEducationOpen] = useState<boolean>(false);
+  const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isContactOpen, setIsContactOpen] = useState<boolean>(false);
   const [isCharacterProfileOpen, setIsCharacterProfileOpen] = useState<boolean>(false);
 
@@ -59,37 +61,48 @@ export function App() {
     resetPosition,
     setControlKey,
     setVehicleState
-  } = useVehicleControls([0, 0.45, 8]);
-
-  const [showResumePrompt, setShowResumePrompt] = useState<boolean>(false);
+  } = useVehicleControls();
 
   const currentScene = scenesList.find(s => s.id === currentSceneId) || scenesList[0];
 
-  // Dynamic landmark proximity in driving mode
-  const nearLandmark = useMemo(() => {
-    if (!isDrivingMode) return null;
-    const [x, , z] = vehicleState.position;
-
-    const landmarks: Array<{ name: string; pos: [number, number]; action: () => void }> = [
-      { name: "Bayora Citadel", pos: [-38, -38], action: () => setSelectedProject(featuredProjects[0]) },
-      { name: "Eurogrip Ustaad Hub", pos: [40, -36], action: () => setSelectedProject(featuredProjects[1]) },
-      { name: "PayPal Resolve Spire", pos: [-48, 24], action: () => setSelectedProject(featuredProjects[2]) },
-      { name: "WebGuard AI Observatory", pos: [52, 18], action: () => setSelectedProject(featuredProjects[3]) },
-      { name: "Technology Tower", pos: [0, -48], action: () => setIsSkillsOpen(true) },
-      { name: "Education Boulevard", pos: [-48, -14], action: () => setIsEducationOpen(true) },
-      { name: "Experience District", pos: [-24, 42], action: () => setIsExperienceOpen(true) },
-      { name: "Contact Garage", pos: [28, 42], action: () => setIsContactOpen(true) },
-      { name: "Central Grand Plaza", pos: [0, 0], action: () => setIsCharacterProfileOpen(true) }
-    ];
-
-    for (const lm of landmarks) {
-      const dist = Math.hypot(x - lm.pos[0], z - lm.pos[1]);
-      if (dist < 20) {
-        return lm;
-      }
+  // Inspect any district landmark
+  const handleInspectDistrict = useCallback((district: CityDistrictConfig) => {
+    playChime(620);
+    switch (district.id) {
+      case 'education':
+        setIsEducationOpen(true);
+        break;
+      case 'experience':
+        setIsExperienceOpen(true);
+        break;
+      case 'achievements':
+        setIsAchievementsOpen(true);
+        break;
+      case 'skills':
+        setIsSkillsOpen(true);
+        break;
+      case 'bayora':
+        setSelectedProject(featuredProjects[0]);
+        break;
+      case 'ustaad':
+        setSelectedProject(featuredProjects[1]);
+        break;
+      case 'paypal':
+        setSelectedProject(featuredProjects[2]);
+        break;
+      case 'webguard':
+        setSelectedProject(featuredProjects[3]);
+        break;
+      case 'contact':
+        setIsContactOpen(true);
+        break;
+      case 'profile':
+        setIsCharacterProfileOpen(true);
+        break;
+      default:
+        break;
     }
-    return null;
-  }, [isDrivingMode, vehicleState.position]);
+  }, [playChime]);
 
   // Run vehicle physics loop when driving mode is active
   useEffect(() => {
@@ -112,7 +125,7 @@ export function App() {
     return () => cancelAnimationFrame(animationFrameId);
   }, [isDrivingMode, updatePhysics, updateEngineSpeed]);
 
-  // Auto-play timer
+  // Auto-play timer for 3D cinematic tour mode
   useEffect(() => {
     if (!isAutoPlay || isDrivingMode || is2DView) return;
 
@@ -132,7 +145,7 @@ export function App() {
       isHeadlightsOn: true,
       isEngineStarted: true,
       isBraked: false,
-      speed: Math.max(prev.speed, 10.0)
+      speed: Math.max(prev.speed, 6.67)
     }));
     setCurrentSceneId(3);
     setIsDrivingMode(true);
@@ -149,82 +162,32 @@ export function App() {
     }
   }, [handleIgnition, playChime]);
 
-  // Universal modal close handler (if in driving mode, prompts to move to next module)
+  // Universal modal close handler: smoothly resumes driving if in driving mode
   const handleCloseModal = useCallback(() => {
     setSelectedProject(null);
     setIsSkillsOpen(false);
     setIsExperienceOpen(false);
     setIsEducationOpen(false);
+    setIsAchievementsOpen(false);
     setIsContactOpen(false);
     setIsCharacterProfileOpen(false);
     if (isDrivingMode) {
-      setShowResumePrompt(true);
+      resumeDrive();
     }
-  }, [isDrivingMode]);
+  }, [isDrivingMode, resumeDrive]);
 
-  // When car stops at a module, user elects to explore it
-  const handleExploreActiveStop = useCallback(() => {
-    if (!vehicleState.activeStop) return;
-    playChime(620);
-    const stop = vehicleState.activeStop;
-
-    switch (stop.moduleId) {
-      case 'education':
-        setIsEducationOpen(true);
-        break;
-      case 'bayora':
-        setSelectedProject(featuredProjects[0]);
-        break;
-      case 'skills':
-        setIsSkillsOpen(true);
-        break;
-      case 'ustaad':
-        setSelectedProject(featuredProjects[1]);
-        break;
-      case 'webguard':
-        setSelectedProject(featuredProjects[3]);
-        break;
-      case 'contact':
-        setIsContactOpen(true);
-        break;
-      case 'experience':
-        setIsExperienceOpen(true);
-        break;
-      case 'paypal':
-        setSelectedProject(featuredProjects[2]);
-        break;
-      case 'profile':
-        setIsCharacterProfileOpen(true);
-        break;
-      default:
-        break;
-    }
-  }, [vehicleState.activeStop, playChime]);
-
-  // When user elects to skip current module stop and continue driving
-  const handleSkipActiveStop = useCallback(() => {
-    playChime(480);
-    setShowResumePrompt(false);
-    resumeDrive();
-  }, [resumeDrive, playChime]);
-
-  // When user clicks "Move Again / Continue Driving"
-  const handleResumeMove = useCallback(() => {
-    playChime(580);
-    setShowResumePrompt(false);
-    resumeDrive();
-  }, [resumeDrive, playChime]);
-
-  // Context action from director nav or capsule
+  // Handle scene direct actions
   const handleSceneAction = useCallback((sceneId: number) => {
-    playChime(600);
+    playChime(580);
     switch (sceneId) {
+      case 1:
+        setIsDrivingMode(true);
+        break;
       case 2:
         setIsCharacterProfileOpen(true);
         break;
       case 3:
         handleIgnition();
-        setIsDrivingMode(true);
         break;
       case 4:
         setIsEducationOpen(true);
@@ -246,17 +209,7 @@ export function App() {
     }
   }, [handleIgnition, playChime]);
 
-  // Trigger for the capsule button
-  const handleCapsuleTrigger = useCallback(() => {
-    if (isDrivingMode && nearLandmark) {
-      playChime(600);
-      nearLandmark.action();
-    } else {
-      handleSceneAction(currentScene.id);
-    }
-  }, [isDrivingMode, nearLandmark, handleSceneAction, currentScene.id, playChime]);
-
-  // Keyboard shortcuts
+  // Keyboard shortcuts (Escape, Mute, Number keys, E to inspect near district)
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
@@ -266,9 +219,13 @@ export function App() {
         setIsSkillsOpen(false);
         setIsExperienceOpen(false);
         setIsEducationOpen(false);
+        setIsAchievementsOpen(false);
         setIsContactOpen(false);
         setIsCharacterProfileOpen(false);
-        if (isDrivingMode) setIsDrivingMode(false);
+      } else if (e.key === 'e' || e.key === 'E') {
+        if (vehicleState.nearDistrict) {
+          handleInspectDistrict(vehicleState.nearDistrict);
+        }
       } else if (e.key === 'm' || e.key === 'M') {
         toggleSound();
       } else if (e.key >= '1' && e.key <= '8') {
@@ -278,7 +235,7 @@ export function App() {
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [isDrivingMode, toggleSound, handleSelectScene]);
+  }, [vehicleState.nearDistrict, handleInspectDistrict, toggleSound, handleSelectScene]);
 
   return (
     <div className={`relative w-full ${is2DView ? 'min-h-screen overflow-y-auto' : 'h-screen overflow-hidden'} bg-slate-950 text-white`}>
@@ -357,28 +314,19 @@ export function App() {
               playChime(540);
               setIsContactOpen(true);
             }}
+            onOpenAchievementsModal={() => {
+              playChime(540);
+              setIsAchievementsOpen(true);
+            }}
             onSwitchTo2D={() => setIs2DView(true)}
           />
 
-          {/* Prominent "CLICK HERE" Capsule Overlay at Every Landmark */}
-          <InteractivePromptCapsule
-            currentScene={currentScene}
-            onTriggerAction={handleCapsuleTrigger}
-            isDrivingMode={isDrivingMode}
-            nearDistrictName={nearLandmark?.name}
-            activeStop={vehicleState.activeStop}
-            onExploreActiveStop={handleExploreActiveStop}
-            onSkipActiveStop={handleSkipActiveStop}
-            showResumePrompt={showResumePrompt}
-            onResumeMove={handleResumeMove}
-          />
-
-          {/* Drive HUD overlay with Manual & Cruise controls */}
+          {/* Drive HUD overlay with GTA-style Controls, Minimap & District HUD */}
           {isDrivingMode && (
             <DriveHUD
               vehicleState={vehicleState}
               onExitDriving={() => setIsDrivingMode(false)}
-              onResetPosition={() => resetPosition([0, 0.45, 8], -Math.PI / 2)}
+              onResetPosition={() => resetPosition(0)}
               onToggleLights={toggleLights}
               onToggleDriveMode={() => {
                 playChime(500);
@@ -397,10 +345,11 @@ export function App() {
                 toggleBrake();
               }}
               onVirtualControl={setControlKey}
+              onInspectDistrict={handleInspectDistrict}
             />
           )}
 
-          {/* Cinematic Director Scrubber Bar */}
+          {/* Cinematic Director Scrubber Bar (when in guided tour mode) */}
           {!isDrivingMode && (
             <SceneDirectorNav
               currentScene={currentScene}
@@ -437,6 +386,11 @@ export function App() {
 
         <EducationModal
           isOpen={isEducationOpen}
+          onClose={handleCloseModal}
+        />
+
+        <AchievementsModal
+          isOpen={isAchievementsOpen}
           onClose={handleCloseModal}
         />
 

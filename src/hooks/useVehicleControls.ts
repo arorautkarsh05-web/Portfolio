@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { circuitWaypoints, CircuitWaypoint } from '../data/waypoints';
+import {
+  CITY_DISTRICTS,
+  CityDistrictConfig,
+  getEllipsePoint,
+  getEllipseHeading,
+  getEllipseSpeedMultiplier,
+  projectPointToEllipseT
+} from '../data/ellipseConfig';
 
 export interface BoundingBox2D {
   minX: number;
@@ -9,32 +16,28 @@ export interface BoundingBox2D {
   name: string;
 }
 
-// Bounding boxes for buildings & district landmarks to prevent driving through structures
+// Bounding boxes for buildings & district landmarks to prevent manual driving through structures
 export const buildingColliders: BoundingBox2D[] = [
-  // 1. Central Plaza character pedestal
-  { minX: -2.5, maxX: 2.5, minZ: -2.5, maxZ: 2.5, name: 'Central Pedestal' },
-  // 2. Technology Tower (North Boulevard)
-  { minX: -16, maxX: 16, minZ: -62, maxZ: -36, name: 'Technology Tower' },
-  // 3. Education Boulevard (Galgotias Campus)
-  { minX: -48, maxX: -22, minZ: -26, maxZ: -4, name: 'Education Boulevard' },
-  // 4. Bayora Security Citadel (North-West)
-  { minX: -58, maxX: -32, minZ: -48, maxZ: -22, name: 'Bayora Citadel' },
-  // 5. Eurogrip Ustaad Hub (North-East)
-  { minX: 32, maxX: 58, minZ: -48, maxZ: -22, name: 'Eurogrip Ustaad Hub' },
-  // 6. WebGuard AI Observatory (South-East)
-  { minX: 32, maxX: 58, minZ: 22, maxZ: 48, name: 'WebGuard AI Observatory' },
-  // 7. The Executive Garage (South-East)
-  { minX: 18, maxX: 42, minZ: 24, maxZ: 46, name: 'Contact Garage' },
-  // 8. Experience District Skybridge (South)
-  { minX: -42, maxX: -18, minZ: 26, maxZ: 44, name: 'Experience District' },
-  // 9. PayPal Resolve Spire (South-West)
-  { minX: -58, maxX: -32, minZ: 24, maxZ: 46, name: 'PayPal Resolve Spire' },
-
-  // Skyline Flank Towers
-  { minX: 68, maxX: 92, minZ: -35, maxZ: 35, name: 'East Flank Towers' },
-  { minX: -92, maxX: -68, minZ: -35, maxZ: 35, name: 'West Flank Towers' },
-  { minX: -35, maxX: 35, minZ: -95, maxZ: -70, name: 'North Perimeter Towers' },
-  { minX: -35, maxX: 35, minZ: 70, maxZ: 95, name: 'South Perimeter Towers' }
+  // 1. Central Grand Plaza pedestal
+  { minX: -4, maxX: 4, minZ: -4, maxZ: 4, name: 'Central Pedestal' },
+  // 2. Technology Tower (North apex)
+  { minX: -18, maxX: 18, minZ: -74, maxZ: -46, name: 'Technology Tower' },
+  // 3. Education Boulevard (Outer West)
+  { minX: -88, maxX: -60, minZ: -20, maxZ: 8, name: 'Education Boulevard' },
+  // 4. Experience District (Outer South-West)
+  { minX: -62, maxX: -34, minZ: 44, maxZ: 68, name: 'Experience District' },
+  // 5. Achievements Plaza (Outer South)
+  { minX: -16, maxX: 16, minZ: 46, maxZ: 70, name: 'Achievements Plaza' },
+  // 6. Bayora Security Citadel (Outer North-West)
+  { minX: -60, maxX: -32, minZ: -68, maxZ: -40, name: 'Bayora Citadel' },
+  // 7. Eurogrip Ustaad Hub (Outer North-East)
+  { minX: 32, maxX: 60, minZ: -68, maxZ: -40, name: 'Eurogrip Ustaad Hub' },
+  // 8. WebGuard AI Observatory (Outer East)
+  { minX: 60, maxX: 88, minZ: -8, maxZ: 20, name: 'WebGuard AI Observatory' },
+  // 9. The Executive Garage (Outer South-East)
+  { minX: 38, maxX: 66, minZ: 36, maxZ: 64, name: 'Contact Garage' },
+  // 10. PayPal Resolve Spire (Inner East)
+  { minX: 18, maxX: 38, minZ: -28, maxZ: -8, name: 'PayPal Resolve Spire' }
 ];
 
 export interface VehicleState {
@@ -48,28 +51,31 @@ export interface VehicleState {
   isHandbrake: boolean;
   driveMode: 'manual' | 'cruise';
   targetSpeed: number;
-  currentWaypointIndex: number;
-  targetModuleName: string;
-  activeStop: CircuitWaypoint | null;
-  isStoppedAtModule: boolean;
+  ellipseT: number;
+  currentDistrict: CityDistrictConfig | null;
+  nearDistrict: CityDistrictConfig | null;
 }
 
-export function useVehicleControls(initialPos: [number, number, number] = [0, 0.45, 8]) {
+export function useVehicleControls(initialPos?: [number, number, number]) {
+  // Start right on the aerodynamic ellipse track at t = 0 (East apex) facing +Z tangent
+  const initialT = 0;
+  const startPos = initialPos || getEllipsePoint(initialT);
+  const startRotY = getEllipseHeading(initialT);
+
   const [vehicleState, setVehicleState] = useState<VehicleState>({
-    position: initialPos,
-    rotationY: -Math.PI / 2, // Facing west toward first boulevard
-    speed: 0,
+    position: startPos,
+    rotationY: startRotY,
+    speed: 6.67, // ~24 km/h
     steering: 0,
     isHeadlightsOn: true,
     isEngineStarted: true,
     isBraked: false,
     isHandbrake: false,
-    driveMode: 'manual', // Manual by default with seamless cruise option
-    targetSpeed: 22.0,
-    currentWaypointIndex: 1,
-    targetModuleName: circuitWaypoints[1].name,
-    activeStop: null,
-    isStoppedAtModule: false
+    driveMode: 'cruise', // Autonomous continuous cruise by default
+    targetSpeed: 6.67,
+    ellipseT: initialT,
+    currentDistrict: null,
+    nearDistrict: null
   });
 
   const stateRef = useRef<VehicleState>(vehicleState);
@@ -77,15 +83,13 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     stateRef.current = vehicleState;
   }, [vehicleState]);
 
-  const currentSpeed = useRef<number>(0);
+  const currentSpeed = useRef<number>(6.67);
   const currentSteering = useRef<number>(0);
-  const waypointIdxRef = useRef<number>(1);
+  const ellipseTRef = useRef<number>(initialT);
   const isBrakedRef = useRef<boolean>(false);
   const isHandbrakeRef = useRef<boolean>(false);
-  const targetSpeedRef = useRef<number>(22.0);
-  const isStoppedAtModuleRef = useRef<boolean>(false);
-  const lastPromptedWaypointId = useRef<string | null>(null);
-  const driveModeRef = useRef<'manual' | 'cruise'>('manual');
+  const targetSpeedRef = useRef<number>(6.67);
+  const driveModeRef = useRef<'manual' | 'cruise'>('cruise');
 
   const keysPressed = useRef<{ [key: string]: boolean }>({});
 
@@ -97,41 +101,45 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
   const toggleDriveMode = useCallback(() => {
     const nextMode = driveModeRef.current === 'manual' ? 'cruise' : 'manual';
     driveModeRef.current = nextMode;
+
     if (nextMode === 'cruise') {
       isBrakedRef.current = false;
-      isStoppedAtModuleRef.current = false;
-      if (currentSpeed.current < 6.0) {
-        currentSpeed.current = 8.0;
+      isHandbrakeRef.current = false;
+      targetSpeedRef.current = 6.67;
+      if (currentSpeed.current < 3.0) {
+        currentSpeed.current = 5.0;
       }
+      // Project current position onto closest parameter T on the ellipse
+      const [curX, , curZ] = stateRef.current.position;
+      ellipseTRef.current = projectPointToEllipseT(curX, curZ);
     }
+
     setVehicleState(prev => ({
       ...prev,
       driveMode: nextMode,
       isBraked: false,
-      isStoppedAtModule: false
+      isHandbrake: false
     }));
   }, []);
 
-  // Speed Up: in cruise mode, increases cruising velocity; in manual, provides forward burst
+  // Speed Up: in cruise mode increases cruising velocity; in manual gives a forward boost
   const speedUp = useCallback(() => {
     isBrakedRef.current = false;
-    isStoppedAtModuleRef.current = false;
-    const newSpeed = Math.min(targetSpeedRef.current + 3.5, 24.0);
+    const newSpeed = Math.min(targetSpeedRef.current + 2.0, 11.0); // up to ~40 km/h
     targetSpeedRef.current = newSpeed;
     if (driveModeRef.current === 'manual') {
-      currentSpeed.current = Math.min(currentSpeed.current + 4.0, 22.0);
+      currentSpeed.current = Math.min(currentSpeed.current + 3.0, 24.0);
     }
     setVehicleState(prev => ({
       ...prev,
       isBraked: false,
-      isStoppedAtModule: false,
       targetSpeed: newSpeed
     }));
   }, []);
 
   // Speed Low: decreases cruising velocity
   const speedLow = useCallback(() => {
-    const newSpeed = Math.max(targetSpeedRef.current - 3.5, 4.5);
+    const newSpeed = Math.max(targetSpeedRef.current - 2.0, 3.5); // down to ~12 km/h
     targetSpeedRef.current = newSpeed;
     setVehicleState(prev => ({
       ...prev,
@@ -150,21 +158,15 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     }));
   }, []);
 
-  // Resume driving to next waypoint / module with immediate smooth acceleration
+  // Resume driving smoothly
   const resumeDrive = useCallback(() => {
     isBrakedRef.current = false;
-    isStoppedAtModuleRef.current = false;
-    currentSpeed.current = Math.max(currentSpeed.current, 8.5); // Instant responsive launch
-    waypointIdxRef.current = (waypointIdxRef.current + 1) % circuitWaypoints.length;
-    const nextWp = circuitWaypoints[waypointIdxRef.current];
-
+    isHandbrakeRef.current = false;
+    currentSpeed.current = Math.max(currentSpeed.current, 5.0);
     setVehicleState(prev => ({
       ...prev,
       isBraked: false,
-      isStoppedAtModule: false,
-      activeStop: null,
-      currentWaypointIndex: waypointIdxRef.current,
-      targetModuleName: nextWp.moduleTitle || nextWp.name
+      isHandbrake: false
     }));
   }, []);
 
@@ -176,33 +178,31 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     }));
   }, []);
 
-  // Reset vehicle to circuit start
-  const resetPosition = useCallback((pos: [number, number, number] = [0, 0.45, 8], rotY = -Math.PI / 2) => {
-    currentSpeed.current = 0;
+  // Reset vehicle to ellipse track start
+  const resetPosition = useCallback((paramT = 0) => {
+    ellipseTRef.current = paramT;
+    const pos = getEllipsePoint(paramT);
+    const rotY = getEllipseHeading(paramT);
+    currentSpeed.current = driveModeRef.current === 'cruise' ? 6.67 : 0;
     currentSteering.current = 0;
-    waypointIdxRef.current = 1;
     isBrakedRef.current = false;
     isHandbrakeRef.current = false;
-    isStoppedAtModuleRef.current = false;
-    lastPromptedWaypointId.current = null;
-    targetSpeedRef.current = 14.0;
+    targetSpeedRef.current = 6.67;
 
-    const startWp = circuitWaypoints[1];
     setVehicleState({
       position: pos,
       rotationY: rotY,
-      speed: 0,
+      speed: currentSpeed.current,
       steering: 0,
       isHeadlightsOn: true,
       isEngineStarted: true,
       isBraked: false,
       isHandbrake: false,
       driveMode: driveModeRef.current,
-      targetSpeed: 14.0,
-      currentWaypointIndex: 1,
-      targetModuleName: startWp.moduleTitle || startWp.name,
-      activeStop: null,
-      isStoppedAtModule: false
+      targetSpeed: 6.67,
+      ellipseT: paramT,
+      currentDistrict: null,
+      nearDistrict: null
     });
   }, []);
 
@@ -249,69 +249,23 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
     };
   }, [resetPosition, toggleBrake]);
 
-  // Main vehicle physics & collision avoidance loop
+  // Main vehicle physics & continuous elliptical navigation loop
   const updatePhysics = useCallback((delta: number) => {
     const keys = keysPressed.current;
     let { position, rotationY, isHeadlightsOn, isEngineStarted } = stateRef.current;
     const mode = driveModeRef.current;
 
-    let activeStop = stateRef.current.activeStop;
+    let candidateX = position[0];
+    let candidateZ = position[2];
 
     if (mode === 'cruise') {
       // ==========================================
-      // AUTONOMOUS HIGH-SPEED AERODYNAMIC CRUISE NAVIGATION
+      // 1. CONTINUOUS AUTONOMOUS ELLIPTICAL CRUISING
+      // Infinite seamless laps with exact tangent alignment
       // ==========================================
-      const waypoints = circuitWaypoints;
-      const currentWaypoint = waypoints[waypointIdxRef.current];
-
-      const dx = currentWaypoint.position[0] - position[0];
-      const dz = currentWaypoint.position[2] - position[2];
-      const distToWaypoint = Math.hypot(dx, dz);
-
-      // Check arrival at module stop
-      if (currentWaypoint.isModuleStop && distToWaypoint < 3.2 && lastPromptedWaypointId.current !== currentWaypoint.id) {
-        isStoppedAtModuleRef.current = true;
-        currentSpeed.current = 0;
-        lastPromptedWaypointId.current = currentWaypoint.id;
-        activeStop = currentWaypoint;
-      } else if (!currentWaypoint.isModuleStop && distToWaypoint < 4.8) {
-        // Smoothly sequence to next waypoint along the ellipse curve
-        waypointIdxRef.current = (waypointIdxRef.current + 1) % waypoints.length;
-      }
-
-      // Lookahead targeting: look ahead along the curve for buttery tangential steering
-      const lookAheadIdx = (waypointIdxRef.current + 2) % waypoints.length;
-      const targetWaypoint = currentWaypoint.isModuleStop && distToWaypoint < 10.0
-        ? currentWaypoint
-        : waypoints[lookAheadIdx];
-
-      const targetDx = targetWaypoint.position[0] - position[0];
-      const targetDz = targetWaypoint.position[2] - position[2];
-
-      const targetRotY = Math.atan2(targetDx, targetDz);
-      let angleDiff = targetRotY - rotationY;
-      while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-      while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-
-      // Responsive, lag-free turn rate
-      const turnRate = 7.5;
-      rotationY += angleDiff * Math.min(delta * turnRate, 1.0);
-
-      const targetSteerAngle = Math.max(Math.min(angleDiff * 1.8, 0.45), -0.45);
-      currentSteering.current += (targetSteerAngle - currentSteering.current) * Math.min(delta * 10.0, 1.0);
-
-      // Deceleration curve when approaching module stop vs full cruising speed
-      const isApproachingStop = currentWaypoint.isModuleStop && distToWaypoint < 14.0;
-      const mustStop = isBrakedRef.current || isStoppedAtModuleRef.current;
-
-      let effectiveTargetSpeed = targetSpeedRef.current;
-      if (mustStop) {
-        effectiveTargetSpeed = 0;
-      } else if (isApproachingStop) {
-        effectiveTargetSpeed = Math.max(3.5, distToWaypoint * 1.7);
-      }
-
-      const accelDecelRate = mustStop ? 24.0 : 18.0;
+      const mustStop = isBrakedRef.current;
+      const effectiveTargetSpeed = mustStop ? 0 : targetSpeedRef.current;
+      const accelDecelRate = mustStop ? 14.0 : 6.0;
 
       if (currentSpeed.current < effectiveTargetSpeed) {
         currentSpeed.current += accelDecelRate * delta;
@@ -320,9 +274,36 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
         currentSpeed.current -= accelDecelRate * delta;
         if (currentSpeed.current < effectiveTargetSpeed) currentSpeed.current = effectiveTargetSpeed;
       }
+
+      // Advance ellipse parameter t with arc-length compensation
+      if (currentSpeed.current > 0.01) {
+        const speedMultiplier = getEllipseSpeedMultiplier(ellipseTRef.current);
+        const dt = currentSpeed.current * speedMultiplier * delta;
+        ellipseTRef.current = (ellipseTRef.current + dt) % (Math.PI * 2);
+      }
+
+      // Exact track point & heading
+      const exactPos = getEllipsePoint(ellipseTRef.current);
+      const exactHeading = getEllipseHeading(ellipseTRef.current);
+
+      // Smooth merge if the car was transitioning from off-road manual
+      candidateX = exactPos[0];
+      candidateZ = exactPos[2];
+
+      // Smooth heading interpolation to eliminate any micro-jitter
+      let angleDiff = exactHeading - rotationY;
+      while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+      while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+
+      rotationY += angleDiff * Math.min(delta * 10.0, 1.0);
+
+      // Front wheel steering corresponds to turn angle
+      const targetSteering = Math.max(Math.min(angleDiff * 1.5, 0.45), -0.45);
+      currentSteering.current += (targetSteering - currentSteering.current) * Math.min(delta * 8.0, 1.0);
     } else {
       // ==========================================
-      // ACTUAL MANUAL DRIVING PHYSICS (W/A/S/D / Arrows / Space)
+      // 2. ACTUAL MANUAL GTA-STYLE DRIVING
+      // W/A/S/D / Arrows / Space / R
       // ==========================================
       const forward = (keys['w'] || keys['arrowup']) ? 1 : 0;
       const backward = (keys['s'] || keys['arrowdown']) ? 1 : 0;
@@ -347,16 +328,13 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
         if (currentSpeed.current > maxForwardSpeed) currentSpeed.current = maxForwardSpeed;
       } else if (targetThrottle < 0) {
         if (currentSpeed.current > 0.5) {
-          // Braking while moving forward
           currentSpeed.current -= brakeRate * delta;
           if (currentSpeed.current < 0) currentSpeed.current = 0;
         } else {
-          // Reversing
           currentSpeed.current -= (accelRate * 0.6) * delta;
           if (currentSpeed.current < maxReverseSpeed) currentSpeed.current = maxReverseSpeed;
         }
       } else {
-        // Natural rolling friction / deceleration
         if (Math.abs(currentSpeed.current) < 0.1) {
           currentSpeed.current = 0;
         } else {
@@ -364,50 +342,65 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
         }
       }
 
-      // Progressive steering with speed-dependent response
+      // Progressive steering
       const maxSteerAngle = 0.48;
       const targetSteerVal = targetSteer * maxSteerAngle;
       currentSteering.current += (targetSteerVal - currentSteering.current) * Math.min(delta * 8.0, 1.0);
 
-      // Turn vehicle when in motion
+      // Turn vehicle in motion
       if (Math.abs(currentSpeed.current) > 0.05) {
         const turnDirection = currentSpeed.current >= 0 ? 1.85 : -1.85;
         rotationY += currentSteering.current * turnDirection * delta;
       }
+
+      // Proposed manual movement
+      const moveDx = Math.sin(rotationY) * currentSpeed.current * delta;
+      const moveDz = Math.cos(rotationY) * currentSpeed.current * delta;
+
+      candidateX += moveDx;
+      candidateZ += moveDz;
+
+      // Outer boundary limit
+      const boundLimit = 110.0;
+      candidateX = Math.max(Math.min(candidateX, boundLimit), -boundLimit);
+      candidateZ = Math.max(Math.min(candidateZ, boundLimit), -boundLimit);
+
+      // Building Collision Detection & Sliding Resolution
+      if (checkCollision(candidateX, candidateZ)) {
+        if (!checkCollision(candidateX, position[2])) {
+          candidateZ = position[2];
+          currentSpeed.current *= 0.85;
+        } else if (!checkCollision(position[0], candidateZ)) {
+          candidateX = position[0];
+          currentSpeed.current *= 0.85;
+        } else {
+          candidateX = position[0];
+          candidateZ = position[2];
+          currentSpeed.current = -currentSpeed.current * 0.2;
+        }
+      }
+
+      // Update projected parameter t
+      ellipseTRef.current = projectPointToEllipseT(candidateX, candidateZ);
     }
 
-    // Proposed forward / reverse movement
-    const moveDx = Math.sin(rotationY) * currentSpeed.current * delta;
-    const moveDz = Math.cos(rotationY) * currentSpeed.current * delta;
+    // ==========================================
+    // 3. DISTRICT PROXIMITY DETECTION
+    // Detects when the car approaches any portfolio district
+    // ==========================================
+    let closestDistrict: CityDistrictConfig | null = null;
+    let closestDist = Infinity;
 
-    let candidateX = position[0] + moveDx;
-    let candidateZ = position[2] + moveDz;
-
-    // Outer Metropolitan Perimeter boundary limits (prevent leaving city world)
-    const boundLimit = 95.0;
-    candidateX = Math.max(Math.min(candidateX, boundLimit), -boundLimit);
-    candidateZ = Math.max(Math.min(candidateZ, boundLimit), -boundLimit);
-
-    // Building Collision Detection & Sliding Resolution
-    // If the full move hits a building, try X-only and Z-only sliding
-    if (checkCollision(candidateX, candidateZ)) {
-      if (!checkCollision(candidateX, position[2])) {
-        // Can slide along X axis
-        candidateZ = position[2];
-        currentSpeed.current *= 0.85;
-      } else if (!checkCollision(position[0], candidateZ)) {
-        // Can slide along Z axis
-        candidateX = position[0];
-        currentSpeed.current *= 0.85;
-      } else {
-        // Direct head-on collision: stop vehicle firmly
-        candidateX = position[0];
-        candidateZ = position[2];
-        currentSpeed.current = -currentSpeed.current * 0.2; // slight elastic rebound
+    for (const d of CITY_DISTRICTS) {
+      const dist = Math.hypot(candidateX - d.position[0], candidateZ - d.position[2]);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestDistrict = d;
       }
     }
 
-    const nextTarget = circuitWaypoints[waypointIdxRef.current];
+    const nearDistrict = closestDist < 28.0 ? closestDistrict : null;
+    const currentDistrict = closestDist < 16.0 ? closestDistrict : null;
 
     const nextState: VehicleState = {
       position: [candidateX, 0.45, candidateZ],
@@ -420,10 +413,9 @@ export function useVehicleControls(initialPos: [number, number, number] = [0, 0.
       isHandbrake: isHandbrakeRef.current,
       driveMode: driveModeRef.current,
       targetSpeed: targetSpeedRef.current,
-      currentWaypointIndex: waypointIdxRef.current,
-      targetModuleName: nextTarget.moduleTitle || nextTarget.name,
-      activeStop,
-      isStoppedAtModule: isStoppedAtModuleRef.current
+      ellipseT: ellipseTRef.current,
+      currentDistrict,
+      nearDistrict
     };
 
     setVehicleState(nextState);

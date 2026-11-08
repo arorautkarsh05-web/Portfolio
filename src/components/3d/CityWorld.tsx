@@ -10,6 +10,7 @@ import { EducationBoulevard } from './EducationBoulevard';
 import { TechTower } from './TechTower';
 import { ExperienceDistrict } from './ExperienceDistrict';
 import { ContactGarage } from './ContactGarage';
+import { AchievementsPlaza } from './AchievementsPlaza';
 import { CameraRig } from './CameraRig';
 import { WebGLErrorFallback } from '../ui/WebGLErrorFallback';
 import { SceneCheckpoint, ProjectLandmark } from '../../types';
@@ -25,6 +26,7 @@ interface CityWorldProps {
   onOpenSkillsModal: () => void;
   onOpenExperienceModal: () => void;
   onOpenContactModal: () => void;
+  onOpenAchievementsModal: () => void;
   onSwitchTo2D?: () => void;
 }
 
@@ -38,6 +40,7 @@ export const CityWorld: React.FC<CityWorldProps> = ({
   onOpenSkillsModal,
   onOpenExperienceModal,
   onOpenContactModal,
+  onOpenAchievementsModal,
   onSwitchTo2D
 }) => {
   const [hasWebGL] = useState<boolean>(() => {
@@ -73,7 +76,7 @@ export const CityWorld: React.FC<CityWorldProps> = ({
       <Canvas
         shadows={!isMobile} // Disable real-time shadow passes on mobile for 60fps performance
         dpr={dpr}
-        camera={{ position: [0, 48, 85], fov: 45, near: 0.1, far: 320 }}
+        camera={{ position: [0, 55, 95], fov: 45, near: 0.1, far: 500 }}
         gl={{
           antialias: !isMobile,
           powerPreference: isMobile ? "default" : "high-performance",
@@ -86,7 +89,7 @@ export const CityWorld: React.FC<CityWorldProps> = ({
           <RoadNetwork />
           <CitySkyline />
 
-          {/* Core Interactive Districts */}
+          {/* Core Interactive Districts along Both Sides of the Ellipse */}
           <CharacterAndCar
             vehicleState={vehicleState}
             onCharacterClick={onCharacterClick}
@@ -97,8 +100,9 @@ export const CityWorld: React.FC<CityWorldProps> = ({
           <TechTower onOpenSkillsModal={onOpenSkillsModal} />
           <ExperienceDistrict onOpenExperienceModal={onOpenExperienceModal} />
           <ContactGarage onOpenContactModal={onOpenContactModal} />
+          <AchievementsPlaza onOpenAchievementsModal={onOpenAchievementsModal} />
 
-          {/* Dynamic Smooth Camera Control with GSAP transitions */}
+          {/* Dynamic GTA-Style Smooth Follow & Cinematic Camera System */}
           <CameraRig
             currentScene={currentScene}
             isDrivingMode={isDrivingMode}

@@ -20,7 +20,7 @@ export const AchievementsPlaza: React.FC<AchievementsPlazaProps> = ({ onOpenAchi
   return (
     <group
       name="AchievementsPlaza"
-      position={[35, 0, -15]}
+      position={[0, 0, 58]}
       onClick={(e) => {
         e.stopPropagation();
         onOpenAchievementsModal?.();
