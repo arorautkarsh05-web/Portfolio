@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, Suspense, lazy } from 'react';
 import { scenesList } from './data/scenes';
 import { featuredProjects } from './data/projects';
 import { ProjectLandmark } from './types';
@@ -8,20 +8,31 @@ import { CityWorld } from './components/3d/CityWorld';
 import { Navbar } from './components/ui/Navbar';
 import { DriveHUD } from './components/ui/DriveHUD';
 import { SceneDirectorNav } from './components/ui/SceneDirectorNav';
-import { ProjectDetailModal } from './components/ui/ProjectDetailModal';
-import { TechSkillsOverlay } from './components/ui/TechSkillsOverlay';
-import { ExperienceDistrictView } from './components/ui/ExperienceDistrictView';
-import { EducationModal } from './components/ui/EducationModal';
-import { ContactModal } from './components/ui/ContactModal';
-import { CharacterProfileModal } from './components/ui/CharacterProfileModal';
-import { Full2DPortfolio } from './components/ui/Full2DPortfolio';
 import { IntroOverlay } from './components/ui/IntroOverlay';
 import { InteractivePromptCapsule } from './components/ui/InteractivePromptCapsule';
+
+// Code-split modals and 2D portfolio for optimized initial bundle loading
+const ProjectDetailModal = lazy(() => import('./components/ui/ProjectDetailModal').then(m => ({ default: m.ProjectDetailModal })));
+const TechSkillsOverlay = lazy(() => import('./components/ui/TechSkillsOverlay').then(m => ({ default: m.TechSkillsOverlay })));
+const ExperienceDistrictView = lazy(() => import('./components/ui/ExperienceDistrictView').then(m => ({ default: m.ExperienceDistrictView })));
+const EducationModal = lazy(() => import('./components/ui/EducationModal').then(m => ({ default: m.EducationModal })));
+const ContactModal = lazy(() => import('./components/ui/ContactModal').then(m => ({ default: m.ContactModal })));
+const CharacterProfileModal = lazy(() => import('./components/ui/CharacterProfileModal').then(m => ({ default: m.CharacterProfileModal })));
+const Full2DPortfolio = lazy(() => import('./components/ui/Full2DPortfolio').then(m => ({ default: m.Full2DPortfolio })));
 
 export function App() {
   const [currentSceneId, setCurrentSceneId] = useState<number>(1);
   const [isDrivingMode, setIsDrivingMode] = useState<boolean>(false);
-  const [is2DView, setIs2DView] = useState<boolean>(false);
+  // Independent 2D portfolio URL query (?view=2d or #2d) support for guaranteed accessibility
+  const [is2DView, setIs2DView] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === '2d' || window.location.hash === '#2d' || window.location.hash === '#portfolio') {
+        return true;
+      }
+    }
+    return false;
+  });
   const [isAutoPlay, setIsAutoPlay] = useState<boolean>(false);
 
   // Modals
@@ -308,7 +319,13 @@ export function App() {
 
       {/* Main Content Area */}
       {is2DView ? (
-        <Full2DPortfolio onReturnTo3D={() => setIs2DView(false)} />
+        <Suspense fallback={
+          <div className="min-h-screen bg-slate-950 flex items-center justify-center text-sky-400 font-mono text-sm">
+            Loading Utkarsh Arora 2D Portfolio...
+          </div>
+        }>
+          <Full2DPortfolio onReturnTo3D={() => setIs2DView(false)} />
+        </Suspense>
       ) : (
         <>
           {/* 3D WebGL Canvas Metropolis */}
@@ -400,41 +417,43 @@ export function App() {
         </>
       )}
 
-      {/* Modals & Detailed Dossiers */}
-      <ProjectDetailModal
-        project={selectedProject}
-        onClose={handleCloseModal}
-        onSelectProject={setSelectedProject}
-      />
+      {/* Modals & Detailed Dossiers (Lazy Loaded) */}
+      <Suspense fallback={null}>
+        <ProjectDetailModal
+          project={selectedProject}
+          onClose={handleCloseModal}
+          onSelectProject={setSelectedProject}
+        />
 
-      <TechSkillsOverlay
-        isOpen={isSkillsOpen}
-        onClose={handleCloseModal}
-      />
+        <TechSkillsOverlay
+          isOpen={isSkillsOpen}
+          onClose={handleCloseModal}
+        />
 
-      <ExperienceDistrictView
-        isOpen={isExperienceOpen}
-        onClose={handleCloseModal}
-      />
+        <ExperienceDistrictView
+          isOpen={isExperienceOpen}
+          onClose={handleCloseModal}
+        />
 
-      <EducationModal
-        isOpen={isEducationOpen}
-        onClose={handleCloseModal}
-      />
+        <EducationModal
+          isOpen={isEducationOpen}
+          onClose={handleCloseModal}
+        />
 
-      <ContactModal
-        isOpen={isContactOpen}
-        onClose={handleCloseModal}
-      />
+        <ContactModal
+          isOpen={isContactOpen}
+          onClose={handleCloseModal}
+        />
 
-      <CharacterProfileModal
-        isOpen={isCharacterProfileOpen}
-        onClose={handleCloseModal}
-        onStartIgnition={() => {
-          handleIgnition();
-          setIsDrivingMode(true);
-        }}
-      />
+        <CharacterProfileModal
+          isOpen={isCharacterProfileOpen}
+          onClose={handleCloseModal}
+          onStartIgnition={() => {
+            handleIgnition();
+            setIsDrivingMode(true);
+          }}
+        />
+      </Suspense>
     </div>
   );
 }

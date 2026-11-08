@@ -87,6 +87,28 @@ for (const f of srcFiles) {
 assert(missingRelCount === 0, 'All target=_blank links include rel=noopener noreferrer');
 assert(secretPatternCount === 0, 'No exposed API keys or private secrets in source code');
 
+console.log('\n--- PHASE 10: BUNDLE OPTIMIZATION & LAUNCH PREPARATION ---');
+const distFiles = fs.readdirSync('dist/assets');
+const jsFiles = distFiles.filter(f => f.endsWith('.js'));
+assert(jsFiles.length >= 6, `Code splitting active: ${jsFiles.length} JS chunks generated`);
+const entryFile = jsFiles.find(f => f.startsWith('index-'));
+if (entryFile) {
+  const entryStat = fs.statSync(path.join('dist/assets', entryFile));
+  assert(entryStat.size < 200 * 1024, `Entry chunk optimized: ${(entryStat.size / 1024).toFixed(1)} KB (< 200 KB target)`);
+}
+
+const appCode = fs.readFileSync('src/App.tsx', 'utf8');
+assert(appCode.includes("params.get('view') === '2d'"), '2D portfolio accessible independently via URL query ?view=2d or #2d');
+
+if (fs.existsSync('utkarsh-city-production.zip')) {
+  const zipBuf = fs.readFileSync('utkarsh-city-production.zip');
+  const zipStr = zipBuf.toString('latin1');
+  assert(!zipStr.includes('node_modules'), 'Production ZIP excludes node_modules');
+  assert(!zipStr.includes('.git/'), 'Production ZIP excludes .git');
+  assert(fs.existsSync('node_modules'), 'Working repository preserves node_modules');
+  assert(fs.existsSync('.git'), 'Working repository preserves .git');
+}
+
 console.log('\n=============================================');
 console.log(`TOTAL TESTS: ${passed + failed} | PASSED: ${passed} | FAILED: ${failed}`);
 console.log('=============================================');

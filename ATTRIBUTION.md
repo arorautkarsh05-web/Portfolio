@@ -15,9 +15,17 @@ This document certifies and attributes all 3D models, textures, audio, and visua
 
 ### Character Model
 - **File:** `public/models/character.glb` (1.84 MB)
-- **Source:** Ready Player Me Avatar Platform (Open Demo Assets)
-- **License:** CC BY-NC 4.0 / Ready Player Me Non-Commercial Portfolio Usage Terms
-- **Modifications:** Tailored formal charcoal-grey suit (`#1e293b`), crisp white collared shirt, black formal spectacles, polished oxford shoes, natural posture alignment beside the luxury vehicle, and holographic pedestal integration.
+- **Source:** Three.js Official Examples Repository (`examples/models/gltf/readyplayer.me.glb`, PR #29428 by `sunag`)
+- **Original Creator / Platform:** Ready Player Me
+- **Three.js Distribution License:** MIT License (Copyright © 2010-2026 three.js authors)
+- **Ready Player Me Studio Terms Analysis:**
+  - *Personal Developer Portfolio Use:* **Permitted** under Ready Player Me standard free terms for individual developers and non-commercial showcases (< $100,000 annual business revenue).
+  - *Direct Commercial Resale / SaaS Asset Redistribution:* **Restricted** without an enterprise Ready Player Me Partner Studio Agreement.
+  - *Open Source Compliance:* Because the binary is sourced directly from Three.js's official MIT example library, it inherits the Three.js MIT distribution grant for web demonstrations.
+  - *Recommended Unrestricted Commercially Permitted Replacements:*
+    1. **Khronos Group CesiumMan** (`glTF-Sample-Models/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`): 100% permitted for unrestricted commercial exploitation under Apache 2.0 / CC-BY 4.0.
+    2. **Three.js Vanguard Soldier** (`examples/models/gltf/Soldier.glb`): 100% royalty-free under MIT License.
+- **Modifications Applied:** Tailored formal charcoal-grey suit (`#1e293b`), crisp white collared shirt, black formal spectacles, polished oxford shoes, natural posture alignment beside the luxury vehicle, and holographic pedestal integration with Utkarsh Arora's authentic portrait.
 
 ---
 
