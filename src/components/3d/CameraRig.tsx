@@ -21,8 +21,8 @@ export const CameraRig: React.FC<CameraRigProps> = ({
   isDrivingMode,
   vehicleState
 }) => {
-  const currentPos = useRef(new THREE.Vector3(0, 55, 95));
-  const currentTarget = useRef(new THREE.Vector3(0, 6, 0));
+  const currentPos = useRef(new THREE.Vector3(0, 92, 98));
+  const currentTarget = useRef(new THREE.Vector3(0, 2, 0));
   const prevSceneIdRef = useRef<number>(currentScene.id);
 
   // GSAP Cinematic Scene Transitions for 3D Guided Tour
@@ -101,7 +101,18 @@ export const CameraRig: React.FC<CameraRigProps> = ({
         camera.updateProjectionMatrix();
       }
 
-      camera.position.copy(currentPos.current);
+      // Cinematic aerial bird's-eye panorama for Scene 01 (Utkarsh City Top View)
+      if (currentScene.id === 1) {
+        const driftX = Math.sin(state.clock.elapsedTime * 0.08) * 14;
+        const driftZ = Math.cos(state.clock.elapsedTime * 0.08) * 7;
+        camera.position.set(
+          currentPos.current.x + driftX,
+          currentPos.current.y,
+          currentPos.current.z + driftZ
+        );
+      } else {
+        camera.position.copy(currentPos.current);
+      }
       camera.lookAt(currentTarget.current);
     }
   });

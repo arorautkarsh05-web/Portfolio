@@ -5,10 +5,10 @@ export const scenesList: SceneCheckpoint[] = [
     id: 1,
     slug: "city-reveal",
     name: "01 // City Reveal",
-    district: "City Gateway Portal",
-    cameraPosition: [-46, 12, 70],
-    cameraTarget: [-64, 8, 52],
-    description: "Monumental triumphal archway and luxury metropolis gateway to Utkarsh City."
+    district: "Metropolis Aerial Panorama",
+    cameraPosition: [0, 92, 98],
+    cameraTarget: [0, 2, 0],
+    description: "Panoramic aerial bird's-eye view of Utkarsh City, the Grand Elliptical Boulevard, and all districts."
   },
   {
     id: 2,

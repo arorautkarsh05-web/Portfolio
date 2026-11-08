@@ -185,7 +185,6 @@ export function App() {
     setIsAchievementsOpen(false);
     setIsContactOpen(false);
     setIsCharacterProfileOpen(false);
-    setIsShowroomModalOpen(false);
     if (isDrivingMode) {
       resumeDrive();
     }
@@ -202,7 +201,7 @@ export function App() {
         setIsCharacterProfileOpen(true);
         break;
       case 3:
-        setIsShowroomModalOpen(true);
+        handleIgnition();
         break;
       case 4:
         setIsEducationOpen(true);
@@ -222,7 +221,7 @@ export function App() {
       default:
         break;
     }
-  }, [playChime]);
+  }, [handleIgnition, playChime]);
 
   // Keyboard shortcuts (Escape, Mute, Number keys, E to inspect near district)
   useEffect(() => {
@@ -237,7 +236,6 @@ export function App() {
         setIsAchievementsOpen(false);
         setIsContactOpen(false);
         setIsCharacterProfileOpen(false);
-        setIsShowroomModalOpen(false);
       } else if (e.key === 'e' || e.key === 'E') {
         if (isDrivingMode) {
           if (vehicleState.nearDistrict) {
@@ -255,7 +253,7 @@ export function App() {
                 closestD = d;
               }
             }
-            if (minDiff < 0.60) {
+            if (minDiff < 0.35) {
               handleInspectDistrict(closestD);
             }
           }
@@ -370,7 +368,7 @@ export function App() {
             }}
             onTriggerIgnition={() => {
               playChime(620);
-              setIsShowroomModalOpen(true);
+              handleIgnition();
             }}
             onSwitchTo2D={() => setIs2DView(true)}
           />
@@ -450,11 +448,6 @@ export function App() {
 
         <ContactModal
           isOpen={isContactOpen}
-          onClose={handleCloseModal}
-        />
-
-        <SupercarShowroomModal
-          isOpen={isShowroomModalOpen}
           onClose={handleCloseModal}
         />
 
