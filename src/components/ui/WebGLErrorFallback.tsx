@@ -31,3 +31,4 @@ export const WebGLErrorFallback: React.FC<WebGLErrorFallbackProps> = ({ onSwitch
     </div>
   );
 };
+

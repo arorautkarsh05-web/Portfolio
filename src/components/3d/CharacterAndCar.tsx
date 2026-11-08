@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -30,29 +30,17 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
   const charGLTF = useGLTF('/models/character.glb');
 
   // Clone car scene so we have independent instance with working shadow and custom materials
-  const { carScene, wheelNodes } = useMemo<{
-    carScene: THREE.Group;
-    wheelNodes: {
-      fl: THREE.Object3D | null;
-      fr: THREE.Object3D | null;
-      rl: THREE.Object3D | null;
-      rr: THREE.Object3D | null;
-    };
-  }>(() => {
+  const wheelNodesRef = useRef<{
+    fl: THREE.Object3D | null;
+    fr: THREE.Object3D | null;
+    rl: THREE.Object3D | null;
+    rr: THREE.Object3D | null;
+  }>({ fl: null, fr: null, rl: null, rr: null });
+
+  const carScene = useMemo(() => {
     const clone = carGLTF.scene.clone(true);
 
-    let fl: THREE.Object3D | null = null;
-    let fr: THREE.Object3D | null = null;
-    let rl: THREE.Object3D | null = null;
-    let rr: THREE.Object3D | null = null;
-
     clone.traverse((child) => {
-      const name = child.name.toLowerCase();
-      if (name === 'wheel_fl') fl = child;
-      else if (name === 'wheel_fr') fr = child;
-      else if (name === 'wheel_rl') rl = child;
-      else if (name === 'wheel_rr') rr = child;
-
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.castShadow = true;
@@ -78,8 +66,25 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
       }
     });
 
-    return { carScene: clone, wheelNodes: { fl, fr, rl, rr } };
+    return clone;
   }, [carGLTF.scene]);
+
+  useEffect(() => {
+    let fl: THREE.Object3D | null = null;
+    let fr: THREE.Object3D | null = null;
+    let rl: THREE.Object3D | null = null;
+    let rr: THREE.Object3D | null = null;
+
+    carScene.traverse((child) => {
+      const name = child.name.toLowerCase();
+      if (name === 'wheel_fl') fl = child;
+      else if (name === 'wheel_fr') fr = child;
+      else if (name === 'wheel_rl') rl = child;
+      else if (name === 'wheel_rr') rr = child;
+    });
+
+    wheelNodesRef.current = { fl, fr, rl, rr };
+  }, [carScene]);
 
   // Clone character scene and style formal charcoal suit & shoes
   const charScene = useMemo(() => {
@@ -129,7 +134,7 @@ export const CharacterAndCar: React.FC<CharacterAndCarProps> = ({
 
     // Wheel spin & steering
     const wheelSpin = vehicleState.speed * delta * 4.5;
-    const wheels = wheelNodes;
+    const wheels = wheelNodesRef.current;
     if (wheels.fl) {
       wheels.fl.rotation.x += wheelSpin;
       wheels.fl.rotation.y = vehicleState.steering;
